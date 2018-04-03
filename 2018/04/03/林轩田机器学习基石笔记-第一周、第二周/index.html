@@ -3,15 +3,23 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Categories | Driking math with code,CHP的个人主页</title>
+    <title>Driking math with code,CHP的个人主页</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Categories">
-<meta property="og:url" content="http://hachp1.github.io/categories/index.html">
+    <meta name="description" content="---title: 林轩田机器学习基石 第一周、第二周 date: 2018-04-03 19:34:44 tags: 机器学习 thumbnail: http://120.78.185.175/img/thumbnails/ml.jpg--- 第一周，基本概念   机器学习可以进行的条件： 1、	有某种模式可以学习。 2、	这种模式&amp;lt;font color=red&amp;gt;不知道怎么手工明确规">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Driking math with code,CHP的个人主页">
+<meta property="og:url" content="http://hachp1.github.io/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/index.html">
 <meta property="og:site_name" content="Driking math with code,CHP的个人主页">
-<meta property="og:updated_time" content="2017-08-31T04:13:03.000Z">
+<meta property="og:description" content="---title: 林轩田机器学习基石 第一周、第二周 date: 2018-04-03 19:34:44 tags: 机器学习 thumbnail: http://120.78.185.175/img/thumbnails/ml.jpg--- 第一周，基本概念   机器学习可以进行的条件： 1、	有某种模式可以学习。 2、	这种模式&amp;lt;font color=red&amp;gt;不知道怎么手工明确规">
+<meta property="og:image" content="http://120.78.185.175/img/math/1/1.png">
+<meta property="og:image" content="http://120.78.185.175/img/math/1/2.png">
+<meta property="og:image" content="http://120.78.185.175/img/math/1/3.png">
+<meta property="og:image" content="http://120.78.185.175/img/math/1/4.png">
+<meta property="og:updated_time" content="2018-04-03T11:43:26.996Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Categories">
+<meta name="twitter:title" content="Driking math with code,CHP的个人主页">
+<meta name="twitter:description" content="---title: 林轩田机器学习基石 第一周、第二周 date: 2018-04-03 19:34:44 tags: 机器学习 thumbnail: http://120.78.185.175/img/thumbnails/ml.jpg--- 第一周，基本概念   机器学习可以进行的条件： 1、	有某种模式可以学习。 2、	这种模式&amp;lt;font color=red&amp;gt;不知道怎么手工明确规">
+<meta name="twitter:image" content="http://120.78.185.175/img/math/1/1.png">
     
 
     
@@ -172,14 +180,160 @@
 </aside>
 
             
-            <section id="main"><section class="layout-wrap">
-    <div class="layout-title">
-        <span>Categories</span>
-    </div>
-    <div class="layout-wrap-inner list-categories">
+            <section id="main"><article id="post-林轩田机器学习基石笔记-第一周、第二周" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <p>---title: 林轩田机器学习基石 第一周、第二周
+date: 2018-04-03 19:34:44
+tags:
+机器学习 thumbnail: http://120.78.185.175/img/thumbnails/ml.jpg---</p>
+<h1>第一周，基本概念</h1>
+<ul>
+<li>
+<p>机器学习可以进行的条件：<br>
+1、	有某种模式可以学习。<br>
+2、	这种模式&lt;font color=red&gt;不知道怎么手工明确规定&lt;/font&gt;（如果通过编写可以实现的就不需要机器学习）。<br>
+3、	有数据资料。</p>
+</li>
+<li>
+<p>机器学习四种元素：<br>
+1、	输入X。<br>
+2、	输出Y。<br>
+3、	hypothesis H。<br>
+4、	资料 D
+数据挖掘和机器学习有很多重合点，但不是一模一样。</p>
+</li>
+</ul>
+<h1>第二周，二元是非判断</h1>
+<h3>Perceptron Hypothesis：感知器学习算法：针对线性可分的资料</h3>
+<p><img src="http://120.78.185.175/img/math/1/1.png" alt="image">
+&lt;center&gt;感知器学习算法的假设函数&lt;/center&gt;</p>
+<ul>
+<li>PLA算法（perceptron learning algorithm），两种理解方式：<br>
+①	向量纠正（比较直观，但证明很麻烦，推导不方便）
+<img src="http://120.78.185.175/img/math/1/2.png" alt="image"></li>
+</ul>
+<p>&lt;center&gt;权重向出现错误的点靠近   &lt;/center&gt;</p>
+<p>当y=+1，那么类似于第一个图，w+yx将使得新的w更加偏向于x，以使得修正后的结果为h(x)&gt;0，而类似有第二图的修正。<br>
+② 梯度下降（以点到直线的距离（带符号）为代价函数进行随机梯度下降）此方法可获得向量纠正的一样的公式及结果。<br>
+此法以误分类点到直线的距离为代价函数，使用随机梯度下降获得最优解，因如果误分类点到超平面的距离都最小时，则误分类点在线性可分的情况下变为正确分类点。
+<img src="http://120.78.185.175/img/math/1/3.png" alt="img"><br>
+&lt;center&gt; 随机梯度下降法最优化公式  &lt;/center&gt;</p>
+<p>算法特性：只能分类线性可分的模型。</p>
+<ul>
+<li>噪音相对于数据应该较小</li>
+<li>PLA变形：pocket algorithm，速度比PLA慢:<br>
+使用一个随机的g0作为起始，存贮目前为止代价函数最小的情况，迭代规定的若干次后得到结果。
+<img src="http://120.78.185.175/img/math/1/4.png" alt="img">
+&lt;center&gt;pocket algorithm运算过程&lt;/center&gt;</li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+</div>
+
+    <a data-url="http://hachp1.github.io/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/" data-id="cjfjlhzcx0002tgv48i07r01b" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+<script>
+    (function ($) {
+        // Prevent duplicate binding
+        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
+            __SHARE_BUTTON_BINDED__ = true;
+        } else {
+            return;
+        }
+        $('body').on('click', function() {
+            $('.article-share-box.on').removeClass('on');
+        }).on('click', '.article-share-link', function(e) {
+            e.stopPropagation();
+
+            var $this = $(this),
+                url = $this.attr('data-url'),
+                encodedUrl = encodeURIComponent(url),
+                id = 'article-share-box-' + $this.attr('data-id'),
+                offset = $this.offset(),
+                box;
+
+            if ($('#' + id).length) {
+                box = $('#' + id);
+
+                if (box.hasClass('on')){
+                    box.removeClass('on');
+                    return;
+                }
+            } else {
+                var html = [
+                    '<div id="' + id + '" class="article-share-box">',
+                        '<input class="article-share-input" value="' + url + '">',
+                        '<div class="article-share-links">',
+                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
+                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
+                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
+                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
+                        '</div>',
+                    '</div>'
+                ].join('');
+
+              box = $(html);
+
+              $('body').append(box);
+            }
+
+            $('.article-share-box.on').hide();
+
+            box.css({
+                top: offset.top + 25,
+                left: offset.left
+            }).addClass('on');
+
+        }).on('click', '.article-share-box', function (e) {
+            e.stopPropagation();
+        }).on('click', '.article-share-box-input', function () {
+            $(this).select();
+        }).on('click', '.article-share-box-link', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
+        });
+    })(jQuery);
+</script>
+
+            
+    
+
+        </footer>
     </div>
-</section></section>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/2018/04/03/MD数学公式测试/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">MD数学公式测试</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+
+</section>
             
                 
 <aside id="sidebar">
