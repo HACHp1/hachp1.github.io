@@ -206,7 +206,6 @@
         
             
             
-
         
         </div>
         <footer class="article-footer">
@@ -216,7 +215,7 @@
 
 </div>
 
-    <a data-url="http://hachp1.github.io/archive/index.html" data-id="cjfjtviap0001sov4kq0e3ond" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://hachp1.github.io/archive/index.html" data-id="cjfjv0rze0001ggv41p739tqi" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -295,6 +294,10 @@
 
 
     
+    
+        <section id="comments">
+	<div id="commentContainer"></div>
+</section>
     
 
 </section>
@@ -429,6 +432,22 @@
     </div>
 </footer>
         
+    
+	<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+	<script>
+		var gitment = new Gitment({
+			owner: 'hachp1#your github ID',
+			repo: 'hachp1.github.io#the repo to store comments',
+			oauth: {
+				client_id: 'b94b62c7a480e54e2826#your client ID',
+				client_secret: '9e0a4080315caed52a2c431ee51e8ac86ac53c53#your client secret',
+			},
+		})
+		gitment.render('commentContainer')
+	</script>
+	
+
 
 
     
