@@ -143,12 +143,12 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                4
+                3
                 <span>posts</span>
             </div>
             <div class="article-info-block">
-                0
-                <span>tag</span>
+                2
+                <span>tags</span>
             </div>
         </div>
         
@@ -176,149 +176,11 @@
     <div class="article-inner">
         
         
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-            <p>---title: 林轩田机器学习基石 第一周、第二周
-date: 2018-04-03 19:34:44
-tags:
-机器学习 thumbnail: http://120.78.185.175/img/thumbnails/ml.jpg---</p>
-<h1>第一周，基本概念</h1>
-<ul>
-<li>
-<p>机器学习可以进行的条件：<br>
-1、	有某种模式可以学习。<br>
-2、	这种模式&lt;font color=red&gt;不知道怎么手工明确规定&lt;/font&gt;（如果通过编写可以实现的就不需要机器学习）。<br>
-3、	有数据资料。</p>
-</li>
-<li>
-<p>机器学习四种元素：<br>
-1、	输入X。<br>
-2、	输出Y。<br>
-3、	hypothesis H。<br>
-4、	资料 D
-数据挖掘和机器学习有很多重合点，但不是一模一样。</p>
-</li>
-</ul>
-<h1>第二周，二元是非判断</h1>
-<h3>Perceptron Hypothesis：感知器学习算法：针对线性可分的资料</h3>
-<p><img src="http://120.78.185.175/img/math/1/1.png" alt="image">
-&lt;center&gt;感知器学习算法的假设函数&lt;/center&gt;</p>
-<ul>
-<li>PLA算法（perceptron learning algorithm），两种理解方式：<br>
-①	向量纠正（比较直观，但证明很麻烦，推导不方便）
-<img src="http://120.78.185.175/img/math/1/2.png" alt="image"></li>
-</ul>
-<p>&lt;center&gt;权重向出现错误的点靠近   &lt;/center&gt;</p>
-<p>当y=+1，那么类似于第一个图，w+yx将使得新的w更加偏向于x，以使得修正后的结果为h(x)&gt;0，而类似有第二图的修正。<br>
-② 梯度下降（以点到直线的距离（带符号）为代价函数进行随机梯度下降）此方法可获得向量纠正的一样的公式及结果。<br>
-此法以误分类点到直线的距离为代价函数，使用随机梯度下降获得最优解，因如果误分类点到超平面的距离都最小时，则误分类点在线性可分的情况下变为正确分类点。
-<img src="http://120.78.185.175/img/math/1/3.png" alt="img"><br>
-&lt;center&gt; 随机梯度下降法最优化公式  &lt;/center&gt;</p>
-<p>算法特性：只能分类线性可分的模型。</p>
-<ul>
-<li>噪音相对于数据应该较小</li>
-<li>PLA变形：pocket algorithm，速度比PLA慢:<br>
-使用一个随机的g0作为起始，存贮目前为止代价函数最小的情况，迭代规定的若干次后得到结果。
-<img src="http://120.78.185.175/img/math/1/4.png" alt="img">
-&lt;center&gt;pocket algorithm运算过程&lt;/center&gt;</li>
-</ul>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-
-</div>
-
-    <a data-url="http://hachp1.github.io/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/" data-id="cjfjlhzcx0002tgv48i07r01b" class="article-share-link"><i class="fa fa-share"></i>Share</a>
-<script>
-    (function ($) {
-        // Prevent duplicate binding
-        if (typeof(__SHARE_BUTTON_BINDED__) === 'undefined' || !__SHARE_BUTTON_BINDED__) {
-            __SHARE_BUTTON_BINDED__ = true;
-        } else {
-            return;
-        }
-        $('body').on('click', function() {
-            $('.article-share-box.on').removeClass('on');
-        }).on('click', '.article-share-link', function(e) {
-            e.stopPropagation();
-
-            var $this = $(this),
-                url = $this.attr('data-url'),
-                encodedUrl = encodeURIComponent(url),
-                id = 'article-share-box-' + $this.attr('data-id'),
-                offset = $this.offset(),
-                box;
-
-            if ($('#' + id).length) {
-                box = $('#' + id);
-
-                if (box.hasClass('on')){
-                    box.removeClass('on');
-                    return;
-                }
-            } else {
-                var html = [
-                    '<div id="' + id + '" class="article-share-box">',
-                        '<input class="article-share-input" value="' + url + '">',
-                        '<div class="article-share-links">',
-                            '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="fa fa-twitter article-share-twitter" target="_blank" title="Twitter"></a>',
-                            '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="fa fa-facebook article-share-facebook" target="_blank" title="Facebook"></a>',
-                            '<a href="http://pinterest.com/pin/create/button/?url=' + encodedUrl + '" class="fa fa-pinterest article-share-pinterest" target="_blank" title="Pinterest"></a>',
-                            '<a href="https://plus.google.com/share?url=' + encodedUrl + '" class="fa fa-google article-share-google" target="_blank" title="Google+"></a>',
-                        '</div>',
-                    '</div>'
-                ].join('');
-
-              box = $(html);
-
-              $('body').append(box);
-            }
-
-            $('.article-share-box.on').hide();
-
-            box.css({
-                top: offset.top + 25,
-                left: offset.left
-            }).addClass('on');
-
-        }).on('click', '.article-share-box', function (e) {
-            e.stopPropagation();
-        }).on('click', '.article-share-box-input', function () {
-            $(this).select();
-        }).on('click', '.article-share-box-link', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            window.open(this.href, 'article-share-box-window-' + Date.now(), 'width=500,height=450');
-        });
-    })(jQuery);
-</script>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
-    <article id="post-MD数学公式测试" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
             <header class="article-header">
                 
     
         <h1 itemprop="name">
-            <a class="article-title" href="/2018/04/03/MD数学公式测试/">MD数学公式测试</a>
+            <a class="article-title" href="/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/">林轩田机器学习基石 第一周、第二周</a>
         </h1>
     
 
@@ -327,14 +189,19 @@ tags:
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/04/03/MD数学公式测试/">
-            <time datetime="2018-04-03T00:15:15.000Z" itemprop="datePublished">2018-04-03</time>
+        <a href="/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/">
+            <time datetime="2018-04-03T11:34:44.000Z" itemprop="datePublished">2018-04-03</time>
         </a>
     </div>
 
 
                         
                         
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/机器学习/">机器学习</a>
+    </div>
+
                     </div>
                 
             </header>
@@ -343,12 +210,45 @@ tags:
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>$$
-\frac{7x+5}{1+y^2}<br>
-z=z_l<br>
-\frac{d}{dx}e^{ax}=ae^{ax}\quad \sum_{i=1}^{n}{(X_i - \overline{X})^2}<br>
-\sqrt{2};\sqrt[n]{3}
-$$</p>
+            <h1 id="第一周基本概念">第一周，基本概念</h1>
+<ul>
+<li><p>机器学习可以进行的条件：<br>
+1、 有某种模式可以学习。<br>
+2、 这种模式<font color="red">不知道怎么手工明确规定</font>（如果通过编写可以实现的就不需要机器学习）。<br>
+3、 有数据资料。</p></li>
+<li><p>机器学习四种元素：<br>
+1、 输入X。<br>
+2、 输出Y。<br>
+3、 hypothesis H。<br>
+4、 资料 D 数据挖掘和机器学习有很多重合点，但不是一模一样。</p></li>
+</ul>
+<h1 id="第二周二元是非判断">第二周，二元是非判断</h1>
+<h3 id="perceptron-hypothesis感知器学习算法针对线性可分的资料">Perceptron Hypothesis：感知器学习算法：针对线性可分的资料</h3>
+<img src="http://120.78.185.175/img/math/1/1.png" alt="image">
+<center>
+感知器学习算法的假设函数
+</center>
+<ul>
+<li>PLA算法（perceptron learning algorithm），两种理解方式：<br>
+① 向量纠正（比较直观，但证明很麻烦，推导不方便） <img src="http://120.78.185.175/img/math/1/2.png" alt="image"></li>
+</ul>
+<center>
+权重向出现错误的点靠近
+</center>
+当y=+1，那么类似于第一个图，w+yx将使得新的w更加偏向于x，以使得修正后的结果为h(x)&gt;0，而类似有第二图的修正。<br>
+② 梯度下降（以点到直线的距离（带符号）为代价函数进行随机梯度下降）此方法可获得向量纠正的一样的公式及结果。<br>
+此法以误分类点到直线的距离为代价函数，使用随机梯度下降获得最优解，因如果误分类点到超平面的距离都最小时，则误分类点在线性可分的情况下变为正确分类点。 <img src="http://120.78.185.175/img/math/1/3.png" alt="img"><br>
+
+<center>
+随机梯度下降法最优化公式
+</center>
+算法特性：只能分类线性可分的模型。<br>
+- 噪音相对于数据应该较小<br>
+- PLA变形：pocket algorithm，速度比PLA慢:<br>
+使用一个随机的g0作为起始，存贮目前为止代价函数最小的情况，迭代规定的若干次后得到结果。 <img src="http://120.78.185.175/img/math/1/4.png" alt="img">
+<center>
+pocket algorithm运算过程
+</center>
 
         
         </div>
@@ -359,7 +259,7 @@ $$</p>
 
 </div>
 
-    <a data-url="http://hachp1.github.io/2018/04/03/MD数学公式测试/" data-id="cjfjlhzcs0000tgv4nqi4cwsa" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://hachp1.github.io/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/" data-id="cjfjlo3pw000038v4iz2gsojb" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -460,6 +360,11 @@ $$</p>
 
                         
                         
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/心情随笔/">心情随笔</a>
+    </div>
+
                     </div>
                 
             </header>
@@ -482,7 +387,7 @@ $$</p>
 
 </div>
 
-    <a data-url="http://hachp1.github.io/2018/04/03/随想/" data-id="cjfjlhzd20006tgv446wqzwkp" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://hachp1.github.io/2018/04/03/随想/" data-id="cjfjlo3q7000538v4g0weeqt5" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -604,7 +509,7 @@ $$</p>
 
 </div>
 
-    <a data-url="http://hachp1.github.io/2018/04/02/重拾HEXO/" data-id="cjfjlhzd00004tgv42rqhixrj" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://hachp1.github.io/2018/04/02/重拾HEXO/" data-id="cjfjlo3q2000238v45qxkl0n4" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -696,7 +601,7 @@ $$</p>
                             <a href="/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/" class="thumbnail">
     
     
-        <span class="thumbnail-image thumbnail-none"></span>
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/ml.jpg)" alt="林轩田机器学习基石 第一周、第二周" class="thumbnail-image"></span>
     
 </a>
 
@@ -704,27 +609,8 @@ $$</p>
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/" class="title"></a></p>
-                            <p class="item-date"><time datetime="2018-04-03T11:34:44.837Z" itemprop="datePublished">2018-04-03</time></p>
-                        </div>
-                    </li>
-                
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/2018/04/03/MD数学公式测试/" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/cat.jpg)" alt="MD数学公式测试" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/04/03/MD数学公式测试/" class="title">MD数学公式测试</a></p>
-                            <p class="item-date"><time datetime="2018-04-03T00:15:15.000Z" itemprop="datePublished">2018-04-03</time></p>
+                            <p class="item-title"><a href="/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/" class="title">林轩田机器学习基石 第一周、第二周</a></p>
+                            <p class="item-date"><time datetime="2018-04-03T11:34:44.000Z" itemprop="datePublished">2018-04-03</time></p>
                         </div>
                     </li>
                 
@@ -777,14 +663,28 @@ $$</p>
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">4</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">3</span></li></ul>
         </div>
     </div>
 
     
         
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
     
         
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a>
+        </div>
+    </div>
+
     
         
     <div class="widget-wrap widget-list">
