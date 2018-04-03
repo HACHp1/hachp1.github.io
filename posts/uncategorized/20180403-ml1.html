@@ -3,20 +3,21 @@
 <head>
     <meta charset="utf-8">
     
-    <title>重拾HEXO | Drinking math with code,CHP的个人主页</title>
+    <title>林轩田机器学习基石 第一周、第二周 | Drinking math with code,CHP的个人主页</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="似乎从来没有开始过 之后会常来的 抛弃word 23333">
+    <meta name="description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D 数据挖掘和机器学习有很多重合点，但不是一模一样。  第二周，二元是非判断 Perceptron">
+<meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
-<meta property="og:title" content="重拾HEXO">
-<meta property="og:url" content="http://hachp1.github.io/2018/04/02/重拾HEXO/index.html">
+<meta property="og:title" content="林轩田机器学习基石 第一周、第二周">
+<meta property="og:url" content="http://hachp1.github.io/posts/uncategorized/20180403-ml1.html">
 <meta property="og:site_name" content="Drinking math with code,CHP的个人主页">
-<meta property="og:description" content="似乎从来没有开始过 之后会常来的 抛弃word 23333">
-<meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
-<meta property="og:updated_time" content="2018-04-03T15:37:48.411Z">
+<meta property="og:description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D 数据挖掘和机器学习有很多重合点，但不是一模一样。  第二周，二元是非判断 Perceptron">
+<meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
+<meta property="og:updated_time" content="2018-04-03T16:51:27.478Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="重拾HEXO">
-<meta name="twitter:description" content="似乎从来没有开始过 之后会常来的 抛弃word 23333">
-<meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
+<meta name="twitter:title" content="林轩田机器学习基石 第一周、第二周">
+<meta name="twitter:description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D 数据挖掘和机器学习有很多重合点，但不是一模一样。  第二周，二元是非判断 Perceptron">
+<meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
     
 
     
@@ -177,12 +178,12 @@
 </aside>
 
             
-            <section id="main"><article id="post-重拾HEXO" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-林轩田机器学习基石笔记-第一周、第二周" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
             
 	
-		<img src="http://120.78.185.175/img/banner/Eur3.jpg" class="article-banner" />
+		<img src="http://120.78.185.175/img/banner/ML.jpg" class="article-banner" />
 	
 
 
@@ -193,7 +194,7 @@
                 
     
         <h1 class="article-title" itemprop="name">
-            重拾HEXO
+            林轩田机器学习基石 第一周、第二周
         </h1>
     
 
@@ -202,14 +203,19 @@
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/2018/04/02/重拾HEXO/">
-            <time datetime="2018-04-02T15:27:50.000Z" itemprop="datePublished">2018-04-02</time>
+        <a href="/posts/uncategorized/20180403-ml1.html">
+            <time datetime="2018-04-03T11:34:44.000Z" itemprop="datePublished">2018-04-03</time>
         </a>
     </div>
 
 
                         
                         
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/机器学习/">机器学习</a>
+    </div>
+
                     </div>
                 
             </header>
@@ -218,10 +224,56 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>似乎从来没有开始过<br>
-之后会常来的<br>
-抛弃word 23333</p>
+            <h1 id="第一周基本概念">第一周，基本概念</h1>
+<ul>
+<li><p>机器学习可以进行的条件：<br>
+1、 有某种模式可以学习。<br>
+2、 这种模式<font color="red">不知道怎么手工明确规定</font>（如果通过编写可以实现的就不需要机器学习）。<br>
+3、 有数据资料。</p></li>
+<li><p>机器学习四种元素：<br>
+1、 输入X。<br>
+2、 输出Y。<br>
+3、 hypothesis H。<br>
+4、 资料 D 数据挖掘和机器学习有很多重合点，但不是一模一样。</p></li>
+</ul>
+<h1 id="第二周二元是非判断">第二周，二元是非判断</h1>
+<h3 id="perceptron-hypothesis感知器学习算法针对线性可分的资料">Perceptron Hypothesis：感知器学习算法：针对线性可分的资料</h3>
+<img src="http://120.78.185.175/img/math/1/1.png" alt="image">
+<center>
+感知器学习算法的假设函数
+</center>
+<ul>
+<li>PLA算法（perceptron learning algorithm），两种理解方式：<br>
+① 向量纠正（比较直观，但证明很麻烦，推导不方便） <img src="http://120.78.185.175/img/math/1/2.png" alt="image"></li>
+</ul>
+<center>
+权重向出现错误的点靠近
+</center>
+当y=+1，那么类似于第一个图，w+yx将使得新的w更加偏向于x，以使得修正后的结果为h(x)&gt;0，而类似有第二图的修正。<br>
+② 梯度下降（以点到直线的距离（带符号）为代价函数进行随机梯度下降）此方法可获得向量纠正的一样的公式及结果。<br>
+此法以误分类点到直线的距离为代价函数，使用随机梯度下降获得最优解，因如果误分类点到超平面的距离都最小时，则误分类点在线性可分的情况下变为正确分类点。 <img src="http://120.78.185.175/img/math/1/3.png" alt="img"><br>
 
+<center>
+随机梯度下降法最优化公式
+</center>
+算法特性：只能分类线性可分的模型。<br>
+- 噪音相对于数据应该较小<br>
+- PLA变形：pocket algorithm，速度比PLA慢:<br>
+使用一个随机的g0作为起始，存贮目前为止代价函数最小的情况，迭代规定的若干次后得到结果。 <img src="http://120.78.185.175/img/math/1/4.png" alt="img">
+<center>
+pocket algorithm运算过程
+</center>
+
+			
+                <div class="support-author">
+<p class="support-talk">吃土了，客官打发打发点呗（搞着玩2333）</p>
+<div name="dashmain" id="dash-main-id-879e39" class="dash-main-3 879e39-1">
+</div>
+<script type="text/javascript" charset="utf-8" src="https://www.dashangcloud.com/static/ds-2.0.js">
+</script>
+</div>
+
+            
         
         </div>
         <footer class="article-footer">
@@ -231,7 +283,7 @@
 
 </div>
 
-    <a data-url="http://hachp1.github.io/2018/04/02/重拾HEXO/" data-id="cjfjv0rzw0002ggv4lqhbvy6z" class="article-share-link"><i class="fa fa-share"></i>Share</a>
+    <a data-url="http://hachp1.github.io/posts/uncategorized/20180403-ml1.html" data-id="cjfjxcu150000jgv4h4xhnb1t" class="article-share-link"><i class="fa fa-share"></i>Share</a>
 <script>
     (function ($) {
         // Prevent duplicate binding
@@ -306,15 +358,11 @@
         
 <nav id="article-nav">
     
-        <a href="/2018/04/03/随想/" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">Newer</strong>
-            <div class="article-nav-title">
-                
-                    江城子 随想
-                
-            </div>
-        </a>
     
+        <a href="/posts/uncategorized/20180403-thinking.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">江城子 随想</div>
+        </a>
     
 </nav>
 
@@ -344,7 +392,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/" class="thumbnail">
+                            <a href="/posts/uncategorized/20180403-ml1.html" class="thumbnail">
     
     
         <span style="background-image:url(http://120.78.185.175/img/thumbnails/ml.jpg)" alt="林轩田机器学习基石 第一周、第二周" class="thumbnail-image"></span>
@@ -355,7 +403,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/04/03/林轩田机器学习基石笔记-第一周、第二周/" class="title">林轩田机器学习基石 第一周、第二周</a></p>
+                            <p class="item-title"><a href="/posts/uncategorized/20180403-ml1.html" class="title">林轩田机器学习基石 第一周、第二周</a></p>
                             <p class="item-date"><time datetime="2018-04-03T11:34:44.000Z" itemprop="datePublished">2018-04-03</time></p>
                         </div>
                     </li>
@@ -363,7 +411,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2018/04/03/随想/" class="thumbnail">
+                            <a href="/posts/uncategorized/20180403-thinking.html" class="thumbnail">
     
     
         <span style="background-image:url(http://120.78.185.175/img/thumbnails/cat.jpg)" alt="江城子 随想" class="thumbnail-image"></span>
@@ -374,7 +422,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/04/03/随想/" class="title">江城子 随想</a></p>
+                            <p class="item-title"><a href="/posts/uncategorized/20180403-thinking.html" class="title">江城子 随想</a></p>
                             <p class="item-date"><time datetime="2018-04-02T17:18:55.000Z" itemprop="datePublished">2018-04-03</time></p>
                         </div>
                     </li>
@@ -382,7 +430,7 @@
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/2018/04/02/重拾HEXO/" class="thumbnail">
+                            <a href="/posts/uncategorized/20180402-return.html" class="thumbnail">
     
     
         <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="重拾HEXO" class="thumbnail-image"></span>
@@ -393,7 +441,7 @@
                         
                         <div class="item-inner">
                             <p class="item-category"></p>
-                            <p class="item-title"><a href="/2018/04/02/重拾HEXO/" class="title">重拾HEXO</a></p>
+                            <p class="item-title"><a href="/posts/uncategorized/20180402-return.html" class="title">重拾HEXO</a></p>
                             <p class="item-date"><time datetime="2018-04-02T15:27:50.000Z" itemprop="datePublished">2018-04-02</time></p>
                         </div>
                     </li>
@@ -467,8 +515,8 @@
 	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 	<script>
 		var gitment = new Gitment({
-			owner: 'hachp1#your github ID',
-			repo: 'hachp1.github.io#the repo to store comments',
+			owner: 'HACHp1#your github ID',
+			repo: 'hachp1.github.io',
 			oauth: {
 				client_id: 'b94b62c7a480e54e2826#your client ID',
 				client_secret: '9e0a4080315caed52a2c431ee51e8ac86ac53c53#your client secret',
