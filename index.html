@@ -234,31 +234,15 @@
 </ul>
 <h1 id="第二周二元是非判断">第二周，二元是非判断</h1>
 <h3 id="perceptron-hypothesis感知器学习算法针对线性可分的资料">Perceptron Hypothesis：感知器学习算法：针对线性可分的资料</h3>
-<img src="http://120.78.185.175/img/math/1/1.png" alt="image">
-<center>
-感知器学习算法的假设函数
-</center>
-<ul>
-<li>PLA算法（perceptron learning algorithm），两种理解方式：<br>
-① 向量纠正（比较直观，但证明很麻烦，推导不方便） <img src="http://120.78.185.175/img/math/1/2.png" alt="image"></li>
-</ul>
-<center>
-权重向出现错误的点靠近
-</center>
+<p><img src="http://120.78.185.175/img/math/1/1.png" alt="感知器学习算法的假设函数"> - PLA算法（perceptron learning algorithm），两种理解方式：<br>
+① 向量纠正（比较直观，但证明很麻烦，推导不方便） <img src="http://120.78.185.175/img/math/1/2.png" alt="权重向出现错误的点靠近"><br>
 当y=+1，那么类似于第一个图，w+yx将使得新的w更加偏向于x，以使得修正后的结果为h(x)&gt;0，而类似有第二图的修正。<br>
 ② 梯度下降（以点到直线的距离（带符号）为代价函数进行随机梯度下降）此方法可获得向量纠正的一样的公式及结果。<br>
-此法以误分类点到直线的距离为代价函数，使用随机梯度下降获得最优解，因如果误分类点到超平面的距离都最小时，则误分类点在线性可分的情况下变为正确分类点。 <img src="http://120.78.185.175/img/math/1/3.png" alt="img"><br>
-
-<center>
-随机梯度下降法最优化公式
-</center>
-算法特性：只能分类线性可分的模型。<br>
+此法以误分类点到直线的距离为代价函数，使用随机梯度下降获得最优解，因如果误分类点到超平面的距离都最小时，则误分类点在线性可分的情况下变为正确分类点。 <img src="http://120.78.185.175/img/math/1/3.png" alt="随机梯度下降法最优化公式"></p>
+<p>算法特性：只能分类线性可分的模型。<br>
 - 噪音相对于数据应该较小<br>
 - PLA变形：pocket algorithm，速度比PLA慢:<br>
-使用一个随机的g0作为起始，存贮目前为止代价函数最小的情况，迭代规定的若干次后得到结果。 <img src="http://120.78.185.175/img/math/1/4.png" alt="img">
-<center>
-pocket algorithm运算过程
-</center>
+使用一个随机的g0作为起始，存贮目前为止代价函数最小的情况，迭代规定的若干次后得到结果。 <img src="http://120.78.185.175/img/math/1/4.png" alt="pocket algorithm运算过程"></p>
 
 			
         
@@ -662,10 +646,10 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 	<script>
 		var gitment = new Gitment({
 			owner: 'hachp1#your github ID',
-			repo: 'hachp1.github.io',
+			repo: 'https://github.com/HACHp1/hachp1.github.io',
 			oauth: {
-				client_id: 'b94b62c7a480e54e2826#your client ID',
-				client_secret: '9e0a4080315caed52a2c431ee51e8ac86ac53c53#your client secret',
+				client_id: '40c6629ed6b6c262d6da#your client ID',
+				client_secret: '7c49b6ebfb7ec5e6b07fb161d8d0a899bca5a188#your client secret',
 			},
 		})
 		gitment.render('commentContainer')
