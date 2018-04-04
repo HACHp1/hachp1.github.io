@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>林轩田机器学习基石 第一周、第二周 | Drinking math with code,CHP的个人主页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D 数据挖掘和机器学习有很多重合点，但不是一模一样。  第二周，二元是非判断 Perceptron">
+<meta name="keywords" content="机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="林轩田机器学习基石 第一周、第二周">
+<meta property="og:url" content="http://hachp1.github.io/posts/机器学习/20180403-ml1.html">
+<meta property="og:site_name" content="Drinking math with code,CHP的个人主页">
+<meta property="og:description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D 数据挖掘和机器学习有很多重合点，但不是一模一样。  第二周，二元是非判断 Perceptron">
+<meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
+<meta property="og:updated_time" content="2018-04-04T12:26:31.271Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="林轩田机器学习基石 第一周、第二周">
+<meta name="twitter:description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D 数据挖掘和机器学习有很多重合点，但不是一模一样。  第二周，二元是非判断 Perceptron">
+<meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Drinking math with code,CHP的个人主页</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">Home</a>
+                
+                    <a class="main-nav-link" href="/archives">Archives</a>
+                
+                    <a class="main-nav-link" href="/categories">Categories</a>
+                
+                    <a class="main-nav-link" href="/tags">Tags</a>
+                
+                    <a class="main-nav-link" href="/about">About</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">Home</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">Archives</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">Categories</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">Tags</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">About</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">CHP</h2>
+            <h3 id="title">ML准调参渣，大口吃math，大碗喝code.</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>China</span>
+            <a id="follow" target="_blank" href="https://github.com/hachp1">FOLLOW</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                3
+                <span>posts</span>
+            </div>
+            <div class="article-info-block">
+                2
+                <span>tags</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="http://github.com/hachp1" target="_blank" title="github" class=tooltip>
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-林轩田机器学习基石笔记-第一周、第二周" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            
+	
+		<img src="http://120.78.185.175/img/banner/ML.jpg" class="article-banner" />
+	
+
+
+
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            林轩田机器学习基石 第一周、第二周
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/机器学习/20180403-ml1.html">
+            <time datetime="2018-04-03T11:34:44.000Z" itemprop="datePublished">2018-04-03</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/机器学习/">机器学习</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/机器学习/">机器学习</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+            <h1 id="第一周基本概念">第一周，基本概念</h1>
+<ul>
+<li><p>机器学习可以进行的条件：<br>
+1、 有某种模式可以学习。<br>
+2、 这种模式<font color="red">不知道怎么手工明确规定</font>（如果通过编写可以实现的就不需要机器学习）。<br>
+3、 有数据资料。</p></li>
+<li><p>机器学习四种元素：<br>
+1、 输入X。<br>
+2、 输出Y。<br>
+3、 hypothesis H。<br>
+4、 资料 D 数据挖掘和机器学习有很多重合点，但不是一模一样。</p></li>
+</ul>
+<h1 id="第二周二元是非判断">第二周，二元是非判断</h1>
+<h3 id="perceptron-hypothesis感知器学习算法针对线性可分的资料">Perceptron Hypothesis：感知器学习算法：针对线性可分的资料</h3>
+<p><img src="http://120.78.185.175/img/math/1/1.png" alt="感知器学习算法的假设函数"> - PLA算法（perceptron learning algorithm），两种理解方式：<br>
+① 向量纠正（比较直观，但证明很麻烦，推导不方便） <img src="http://120.78.185.175/img/math/1/2.png" alt="权重向出现错误的点靠近"><br>
+当y=+1，那么类似于第一个图，w+yx将使得新的w更加偏向于x，以使得修正后的结果为h(x)&gt;0，而类似有第二图的修正。<br>
+② 梯度下降（以点到直线的距离（带符号）为代价函数进行随机梯度下降）此方法可获得向量纠正的一样的公式及结果。<br>
+此法以误分类点到直线的距离为代价函数，使用随机梯度下降获得最优解，因如果误分类点到超平面的距离都最小时，则误分类点在线性可分的情况下变为正确分类点。 <img src="http://120.78.185.175/img/math/1/3.png" alt="随机梯度下降法最优化公式"></p>
+<p>算法特性：只能分类线性可分的模型。<br>
+- 噪音相对于数据应该较小<br>
+- PLA变形：pocket algorithm，速度比PLA慢:<br>
+使用一个随机的g0作为起始，存贮目前为止代价函数最小的情况，迭代规定的若干次后得到结果。 <img src="http://120.78.185.175/img/math/1/4.png" alt="pocket algorithm运算过程"></p>
+
+			
+                <div class="support-author">
+<p class="support-talk">吃土了，客官打发打发点呗（搞着玩2333）</p>
+<div name="dashmain" id="dash-main-id-879e39" class="dash-main-3 879e39-1">
+</div>
+<script type="text/javascript" charset="utf-8" src="https://www.dashangcloud.com/static/ds-2.0.js">
+</script>
+</div>
+
+            
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/posts/杂文/20180403-thinking.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">江城子 随想</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+	<div id="commentContainer"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">recent</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/机器学习/20180403-ml1.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/ml.jpg)" alt="林轩田机器学习基石 第一周、第二周" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/posts/机器学习/20180403-ml1.html" class="title">林轩田机器学习基石 第一周、第二周</a></p>
+                            <p class="item-date"><time datetime="2018-04-03T11:34:44.000Z" itemprop="datePublished">2018-04-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/杂文/20180403-thinking.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/cat.jpg)" alt="江城子 随想" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/杂文/">杂文</a></p>
+                            <p class="item-title"><a href="/posts/杂文/20180403-thinking.html" class="title">江城子 随想</a></p>
+                            <p class="item-date"><time datetime="2018-04-02T17:18:55.000Z" itemprop="datePublished">2018-04-03</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/uncategorized/20180402-return.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="重拾HEXO" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"></p>
+                            <p class="item-title"><a href="/posts/uncategorized/20180402-return.html" class="title">重拾HEXO</a></p>
+                            <p class="item-date"><time datetime="2018-04-02T15:27:50.000Z" itemprop="datePublished">2018-04-02</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">categories</h3>
+        <div class="widget">
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂文/">杂文</a><span class="category-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">archives</h3>
+        <div class="widget">
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">3</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tags</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">tag cloud</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">links</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="https://github.com/HACHp1">GitHub</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2018 CHP<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+	<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+	<script>
+		var gitment = new Gitment({
+		    id: 'Tue Apr 03 2018 19:34:44 GMT+0800',
+			owner: 'HACHp1',
+			repo: 'hachp1.github.io',
+			oauth: {
+				client_id: '40c6629ed6b6c262d6da',
+				client_secret: '7c49b6ebfb7ec5e6b07fb161d8d0a899bca5a188',
+			},
+		})
+		gitment.render('commentContainer')
+	</script>
+	
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
