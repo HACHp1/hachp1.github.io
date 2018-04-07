@@ -150,11 +150,11 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                3
+                4
                 <span>posts</span>
             </div>
             <div class="article-info-block">
-                2
+                3
                 <span>tags</span>
             </div>
         </div>
@@ -179,6 +179,148 @@
 
             
             <section id="main">
+    <article id="post-terminal和VIM的分屏简单命令" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            
+	
+		<a href="/posts/Linux日常/20180406-vim&t.html" itemprop="url">
+            <img src="http://120.78.185.175/img/thumbnails/vim.jpg" class="article-banner" />
+        </a>
+	
+
+
+
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/posts/Linux日常/20180406-vim&t.html">terminal和VIM的分屏简单命令</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/Linux日常/20180406-vim&t.html">
+            <time datetime="2018-04-06T14:05:33.813Z" itemprop="datePublished">2018-04-06</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Linux日常/">Linux日常</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Linux日常/">Linux日常</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h1 id="linux下的分屏">Linux下的分屏</h1>
+<p>在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。 在这里小记一下几种简单的分屏命令。 ## 1、terminal分屏 使用tmux对terminal分屏，常用指令如下：</p>
+<ul>
+<li><p>开启tmux：在terminal中输入tmux开启分屏。</p></li>
+<li><p>tmux ls： 显示已有的tmux会话</p></li>
+<li><p>tmux attach-session -t 数字： 选择tmux</p></li>
+<li><p>tmux kill-session -t session-name：关闭tmux</p></li>
+</ul>
+<p>[ctrl+b]为tmux的指令输入前缀，以下指令为输入后的指令：</p>
+<ul>
+<li><p>上下分屏：&quot;</p></li>
+<li><p>左右分屏: %</p></li>
+<li><p>切换屏幕：o</p></li>
+<li><p>关闭一个终端：x</p></li>
+<li><p>上下分屏与左右分屏切换：空格键</p></li>
+<li><p>显示快捷键帮助：？</p></li>
+<li><p>移动到下一个窗口：n</p></li>
+<li><p>显示时钟：t （ps：显示效果还可以）</p></li>
+</ul>
+<h2 id="vim分屏">2、VIM分屏</h2>
+<p>载入文件<br>
+- 在新的垂直分屏中打开文件:vs 文件路径/文件名<br>
+- 在新的水平分屏中打开文件:sv 文件路径/文件名<br>
+与tmux类似，[ctrl+w]为VIM的指令输入前缀，以下指令为输入后的指令（同时输入）：<br>
+- 下一个分屏：w</p>
+<ul>
+<li><p>上一个分屏：p</p></li>
+<li><p>新建分屏：n（new）貌似比较鸡肋</p></li>
+<li><p>水平分屏：s（split）貌似也比较鸡肋</p></li>
+<li><p>垂直分屏：v（vsplit) 还是比较鸡肋</p></li>
+<li><p>关闭分屏：c（close）或者直接命令模式 :q</p></li>
+<li><p>使用 hjkl选择分屏</p></li>
+</ul>
+<h6 id="具体还有其他指令不会再查感觉够用了懒得记">具体还有其他指令，不会再查，感觉够用了，懒得记:)</h6>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-林轩田机器学习基石笔记-第一周、第二周" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -232,7 +374,7 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-            <h1 id="第一周基本概念">第一周，基本概念</h1>
+			<h1 id="第一周基本概念">第一周，基本概念</h1>
 <ul>
 <li><p>机器学习可以进行的条件：<br>
 1、 有某种模式可以学习。<br>
@@ -242,8 +384,9 @@
 1、 输入X。<br>
 2、 输出Y。<br>
 3、 hypothesis H。<br>
-4、 资料 D 数据挖掘和机器学习有很多重合点，但不是一模一样。</p></li>
+4、 资料 D</p></li>
 </ul>
+<p>数据挖掘和机器学习有很多重合点，但不是一模一样。</p>
 <h1 id="第二周二元是非判断">第二周，二元是非判断</h1>
 <h3 id="perceptron-hypothesis感知器学习算法针对线性可分的资料">Perceptron Hypothesis：感知器学习算法：针对线性可分的资料</h3>
 <p><img src="http://120.78.185.175/img/math/1/1.png" alt="感知器学习算法的假设函数"> - PLA算法（perceptron learning algorithm），两种理解方式：<br>
@@ -256,7 +399,6 @@
 - PLA变形：pocket algorithm，速度比PLA慢:<br>
 使用一个随机的g0作为起始，存贮目前为止代价函数最小的情况，迭代规定的若干次后得到结果。 <img src="http://120.78.185.175/img/math/1/4.png" alt="pocket algorithm运算过程"></p>
 
-			
         
         </div>
         <footer class="article-footer">
@@ -272,7 +414,8 @@
     <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
 </div>
 <script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?'];</script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
 <style>
     .bdshare_popup_box {
         border-radius: 4px;
@@ -363,12 +506,11 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>晨日暖阳斜倚窗。绿树桩，白屋房。<br>
+			<p>晨日暖阳斜倚窗。绿树桩，白屋房。<br>
 微风过面，虫鸣燕正忙。城中伊人早登墙，红笑靥，含蓄望。<br>
 料知心事不可想。蛾眉锁，轻拂妆。<br>
 路客打量，何事溢心房。遥寄命途多渴望，手心暖，思却凉。</p>
 
-			
         
         </div>
         <footer class="article-footer">
@@ -384,7 +526,8 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
 </div>
 <script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?'];</script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
 <style>
     .bdshare_popup_box {
         border-radius: 4px;
@@ -465,11 +608,10 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <div class="article-entry" itemprop="articleBody">
         
             
-            <p>似乎从来没有开始过<br>
+			<p>似乎从来没有开始过<br>
 之后会常来的<br>
 抛弃word 23333</p>
 
-			
         
         </div>
         <footer class="article-footer">
@@ -485,7 +627,8 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
 </div>
 <script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?'];</script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
 <style>
     .bdshare_popup_box {
         border-radius: 4px;
@@ -532,6 +675,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <h3 class="widget-title">recent</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Linux日常/20180406-vim&t.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/vim.jpg)" alt="terminal和VIM的分屏简单命令" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Linux日常/">Linux日常</a></p>
+                            <p class="item-title"><a href="/posts/Linux日常/20180406-vim&t.html" class="title">terminal和VIM的分屏简单命令</a></p>
+                            <p class="item-date"><time datetime="2018-04-06T14:05:33.813Z" itemprop="datePublished">2018-04-06</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -599,7 +761,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂文/">杂文</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux日常/">Linux日常</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂文/">杂文</a><span class="category-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -608,7 +770,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">3</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">4</span></li></ul>
         </div>
     </div>
 
@@ -617,7 +779,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -626,7 +788,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
-            <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a>
+            <a href="/tags/Linux日常/" style="font-size: 10px;">Linux日常</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 10px;">机器学习</a>
         </div>
     </div>
 
