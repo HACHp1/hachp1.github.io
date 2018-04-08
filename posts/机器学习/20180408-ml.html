@@ -3,17 +3,21 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Category: 机器学习 | Drinking math with code,CHP的个人博客</title>
+    <title>Fwaf短源码学习 | Drinking math with code,CHP的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="记录追逐时间的points与闪现的ideas。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Drinking math with code,CHP的个人博客">
-<meta property="og:url" content="http://hachp1.github.io/categories/机器学习/index.html">
+    <meta name="description" content="Fwaf Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。 库的使用和特征化 Fwaf使用sklearn库训练样本集。 其中，使用TfidfVectorizer对字符串进行特征化。  TfidfVectorizer TF-IDF（term frequency–inverse document freque">
+<meta name="keywords" content="机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fwaf短源码学习">
+<meta property="og:url" content="http://hachp1.github.io/posts/机器学习/20180408-ml.html">
 <meta property="og:site_name" content="Drinking math with code,CHP的个人博客">
-<meta property="og:description" content="记录追逐时间的points与闪现的ideas。">
+<meta property="og:description" content="Fwaf Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。 库的使用和特征化 Fwaf使用sklearn库训练样本集。 其中，使用TfidfVectorizer对字符串进行特征化。  TfidfVectorizer TF-IDF（term frequency–inverse document freque">
+<meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
+<meta property="og:updated_time" content="2018-04-08T12:47:30.794Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Drinking math with code,CHP的个人博客">
-<meta name="twitter:description" content="记录追逐时间的points与闪现的ideas。">
+<meta name="twitter:title" content="Fwaf短源码学习">
+<meta name="twitter:description" content="Fwaf Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。 库的使用和特征化 Fwaf使用sklearn库训练样本集。 其中，使用TfidfVectorizer对字符串进行特征化。  TfidfVectorizer TF-IDF（term frequency–inverse document freque">
+<meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
     
 
     
@@ -178,25 +182,29 @@
 </aside>
 
             
-            <section id="main">
-<div class="timeline timeline-wrap">
-    <div class="timeline-row timeline-row-major">
-        <span class="node"><i class="fa fa-folder"></i></span>
-        <h1 class="title">机器学习</h1>
-    </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
+            <section id="main"><article id="post-Fwaf短源码学习" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            
+	
+		<img src="http://120.78.185.175/img/banner/ML.jpg" class="article-banner" />
+	
+
+
+
+        
+        
+            <header class="article-header">
                 
     
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/posts/机器学习/20180408-ml.html">Fwaf短源码学习</a>
+        <h1 class="article-title" itemprop="name">
+            Fwaf短源码学习
         </h1>
     
 
-                <div class="article-meta">
-                    
+                
+                    <div class="article-meta">
+                        
     <div class="article-date">
         <i class="fa fa-calendar"></i>
         <a href="/posts/机器学习/20180408-ml.html">
@@ -205,59 +213,133 @@
     </div>
 
 
-                    
+                        
     <div class="article-category">
     	<i class="fa fa-folder"></i>
         <a class="article-category-link" href="/categories/机器学习/">机器学习</a>
     </div>
 
-                    
+                        
     <div class="article-tag">
         <i class="fa fa-tag"></i>
         <a class="tag-link" href="/tags/机器学习/">机器学习</a>
     </div>
 
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
+                    </div>
                 
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/posts/机器学习/20180403-ml1.html">林轩田机器学习基石 第一周、第二周</a>
-        </h1>
-    
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h2 id="fwaf">Fwaf</h2>
+<p>Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。</p>
+<h2 id="库的使用和特征化">库的使用和特征化</h2>
+<p>Fwaf使用sklearn库训练样本集。<br>
+其中，使用TfidfVectorizer对字符串进行特征化。</p>
+<blockquote>
+<p>TfidfVectorizer TF-IDF（term frequency–inverse document frequency）是一种用于资讯检索与文本挖掘的常用加权技术。TF-IDF是一种统计方法，用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。TF-IDF加权的各种形式常被搜索引擎应用，作为文件与用户查询之间相关程度的度量或评级。除了TF-IDF以外，互联网上的搜索引擎还会使用基于连结分析的评级方法，以确定文件在搜寻结果中出现的顺序。</p>
+</blockquote>
+<ul>
+<li>TF: Term Frequency</li>
+</ul>
+<p><span class="math display">\[
+TF(t)=\frac{n(character(i))}{n(character)}
+\]</span></p>
+<ul>
+<li>IDF: 逆向文件频率，用于衡量一个词的重要性</li>
+</ul>
+<p><span class="math display">\[
+ID(t) = log_e(\frac{numOfDocs}{numOfDocsWhichIncludeT})
+\]</span></p>
+<p><span class="math display">\[
+TF-IDF = TF*IDF   
+\]</span></p>
+<ul>
+<li>sklearn.feature_extraction.text.TfidfVectorizer：可以将文档转换成TF-IDF特征的矩阵。 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vectorizer = TfidfVectorizer(min_df = <span class="number">0.0</span>, analyzer=<span class="string">"char"</span>, sublinear_tf=<span class="keyword">True</span>, ngram_range=(<span class="number">1</span>,<span class="number">3</span>))</div></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="样本集">样本集</h2>
+<p>作者使用txt格式的样本集，每一行为一个样本，分&quot;goodqueries.txt&quot;和&quot;badqueries.txt&quot;。 截取几行： <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/top.php?stuff='uname &gt;q36497765 #</div><div class="line">/h21y8w52.nsf?<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined">cross_site_scripting.nasl</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">/ca000001.pl?action=showcart&amp;hop=\"&gt;<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined">alert('vulnerable')</span></div></pre></td></tr></table></figure></p>
+<h2 id="机器学习算法">机器学习算法</h2>
+<p>作者使用逻辑回归算法，算法虽然简单，但效果还比较好:) 比较适合刚写机器学习代码不久的我:) <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lgs = LogisticRegression(class_weight=&#123;<span class="number">1</span>: <span class="number">2</span> * validCount / badCount, <span class="number">0</span>: <span class="number">1.0</span>&#125;)</div></pre></td></tr></table></figure></p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function">Accuracy: 0.999420</span></div><div class="line"><span class="function"><span class="title">Precision</span>: 0.984403</span></div><div class="line"><span class="function"><span class="title">Recall</span>: 0.998520</span></div><div class="line"><span class="function"><span class="title">F1</span>-<span class="title">Score</span>: 0.991411</span></div></pre></td></tr></table></figure>
+<p>各项指标都很高啊2333</p>
+<p>贴上作者源代码： 源代码链接：<a href="https://github.com/faizann24/Fwaf-Machine-Learning-driven-Web-Application-Firewall" target="_blank" rel="external">Fwaf-Machine-Learning-driven-Web-Application-Firewall</a></p>
 
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/posts/机器学习/20180403-ml1.html">
-            <time datetime="2018-04-03T11:34:44.000Z" itemprop="datePublished">2018-04-03</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/机器学习/">机器学习</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/机器学习/">机器学习</a>
-    </div>
-
-                </div>
-            </div>
+        
         </div>
-    
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
 </div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/posts/Linux日常/20180406-vim&t.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">terminal和VIM的分屏简单命令</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+	<div id="commentContainer"></div>
+</section>
+    
+
 </section>
             
                 
@@ -440,7 +522,7 @@
 	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 	<script>
 		var gitment = new Gitment({
-		    id: '',
+		    id: 'Sun Apr 08 2018 20:23:59 GMT+0800',
 			owner: 'HACHp1',
 			repo: 'hachp1.github.io',
 			oauth: {
