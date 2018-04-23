@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Drinking math with code,CHP的个人博客">
 <meta property="og:description" content="Linux下的分屏 在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。 在这里小记一下几种简单的分屏命令。 1、terminal分屏 使用tmux对terminal分屏，常用指令如下：  开启tmux：在terminal中输入tmux开启分屏。 tmux ls： 显示已有的tmux会话 tmux attach-session -t 数字： 选择tmux tmux kill">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/vim.jpg">
-<meta property="og:updated_time" content="2018-04-08T11:07:05.419Z">
+<meta property="og:updated_time" content="2018-04-17T15:55:36.469Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="terminal和VIM的分屏简单命令">
 <meta name="twitter:description" content="Linux下的分屏 在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。 在这里小记一下几种简单的分屏命令。 1、terminal分屏 使用tmux对terminal分屏，常用指令如下：  开启tmux：在terminal中输入tmux开启分屏。 tmux ls： 显示已有的tmux会话 tmux attach-session -t 数字： 选择tmux tmux kill">
@@ -242,6 +242,7 @@
 <li><p>tmux ls： 显示已有的tmux会话</p></li>
 <li><p>tmux attach-session -t 数字： 选择tmux</p></li>
 <li><p>tmux kill-session -t session-name：关闭tmux</p></li>
+<li><p>开启鼠标移动、调节窗口大小等功能：[ctrl]+b+:后输入 set -g mouse on</p></li>
 </ul>
 <p>[ctrl+b]为tmux的指令输入前缀，以下指令为输入前缀指令后的指令：</p>
 <ul>
@@ -269,6 +270,12 @@
 <li><p>垂直分屏：v（vsplit) 还是比较鸡肋</p></li>
 <li><p>关闭分屏：c（close）或者直接命令模式 :q</p></li>
 <li><p>使用 hjkl选择分屏</p></li>
+<li><p>临时退出session: d</p></li>
+<li><p>列出session：tmux ls （不用前缀）</p></li>
+<li><p>进入已存在的session：tmux a -t $session_name</p></li>
+<li><p>关闭并删除所有session:[：]+ kill-server</p></li>
+<li><p>复制模式 : [ 空格标记复制开始，回车结束复制。</p></li>
+<li><p>粘贴 ：]</p></li>
 </ul>
 <h6 id="具体还有其他指令不会再查感觉够用了懒得记">具体还有其他指令，不会再查，感觉够用了，懒得记:)</h6>
 
