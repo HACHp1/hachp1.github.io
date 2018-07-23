@@ -75,7 +75,7 @@
             <div id="search-form-wrap">
 
     <form class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Buscar" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
         <button type="submit" class="search-form-submit"></button>
     </form>
     <div class="ins-search">
@@ -94,10 +94,10 @@
 (function (window) {
     var INSIGHT_CONFIG = {
         TRANSLATION: {
-            POSTS: 'Entradas',
+            POSTS: 'Posts',
             PAGES: 'Pages',
-            CATEGORIES: 'Categorias',
-            TAGS: 'Etiquetas',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
             UNTITLED: '(Untitled)',
         },
         ROOT_URL: '/',
@@ -126,7 +126,7 @@
                 <td>
                     
     <div class="search-form">
-        <input type="text" class="ins-search-input search-form-input" placeholder="Buscar" />
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
     </div>
 
                 </td>
@@ -146,16 +146,16 @@
             <h2 id="name">CHP</h2>
             <h3 id="title">ML准调参渣，大口吃math，大碗喝code.</h3>
             <span id="location"><i class="fa fa-map-marker"></i>China</span>
-            <a id="follow" target="_blank" href="https://github.com/hachp1">SEGUIR</a>
+            <a id="follow" target="_blank" href="https://github.com/hachp1">FOLLOW</a>
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
                 11
-                <span>Entradas</span>
+                <span>posts</span>
             </div>
             <div class="article-info-block">
                 5
-                <span>Etiquetas</span>
+                <span>tags</span>
             </div>
         </div>
         
@@ -247,7 +247,7 @@
 <li>进入注册界面，填入信息后，使用burp拦截并更改，将用户名改为<code>%0a$x=$_GET[a];//</code>（说明：%0a为换行符十六进制，为了在文件中换行，//是注释，将一句话后的无关代码注释掉以正常运行） <img src="http://sinacloud.net/hachp1blog/dfjk_burp.png?KID=sina,2swf65yILLB7SiiVfGEH&amp;Expires=1532333252&amp;ssig=40tuUdzXiY" alt="burp修改过程"></li>
 <li>用同样的方法注册<code>%0apassthru($x);//</code>用户。</li>
 <li>进入登录界面，按顺序依次登入以上两个用户（使用burp改用户名）此时，一句话已写入临时文件中。 <img src="http://sinacloud.net/hachp1blog/dfjk_login.png?KID=sina,2swf65yILLB7SiiVfGEH&amp;Expires=1532333252&amp;ssig=b5bwZ7pH9P" alt="用户登陆成功"></li>
-<li><font style="color:red">使用notepad++文件搜索功能搜索payload，查找到一句话文件所在位置</font>（_6d11f0be3af9c28d4120c8fd5fe65a40.php和_d403acece4ebce56a3a4237340fbbe70.php文件都可以） <img src="http://sinacloud.net/hachp1blog/dfjk_search.png?KID=sina,2swf65yILLB7SiiVfGEH&amp;Expires=1532333252&amp;ssig=rTb3FBR4xU" alt="搜索结果"></li>
+<li><font style="color:red">使用notepad++文件搜索功能搜索payload，查找到一句话文件所在位置</font>（\Runtime\Temponethink_6d11f0be3af9c28d4120c8fd5fe65a40.php和\Runtime\Temp\onethink_d403acece4ebce56a3a4237340fbbe70.php文件都可以） <img src="http://sinacloud.net/hachp1blog/dfjk_search.png?KID=sina,2swf65yILLB7SiiVfGEH&amp;Expires=1532333252&amp;ssig=rTb3FBR4xU" alt="搜索结果"></li>
 <li><p>之后访问一句话，可以执行shell命令，搜索目录后得到flag。 <img src="http://sinacloud.net/hachp1blog/dfjk_shell.png?KID=sina,2swf65yILLB7SiiVfGEH&amp;Expires=1532333252&amp;ssig=pVjHY0n1ZT" alt="本地复现取得命令执行权限执行ping命令时"></p></li>
 </ul>
 
@@ -1457,7 +1457,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
     <nav id="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Siguiente  &raquo;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
 </section>
             
@@ -1466,7 +1466,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
    
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Recientes</h3>
+        <h3 class="widget-title">recent</h3>
         <div class="widget">
             <ul id="recent-post" class="">
                 
@@ -1572,7 +1572,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Categorias</h3>
+        <h3 class="widget-title">categories</h3>
         <div class="widget">
             <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux日常/">Linux日常</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web安全/">Web安全</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂文/">杂文</a><span class="category-list-count">1</span></li></ul>
         </div>
@@ -1581,7 +1581,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Archivos</h3>
+        <h3 class="widget-title">archives</h3>
         <div class="widget">
             <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">7</span></li></ul>
         </div>
@@ -1590,7 +1590,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Etiquetas</h3>
+        <h3 class="widget-title">tags</h3>
         <div class="widget">
             <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">2</span></li></ul>
         </div>
@@ -1599,7 +1599,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     
         
     <div class="widget-wrap">
-        <h3 class="widget-title">Nube de etiquetas</h3>
+        <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
             <a href="/tags/Linux日常/" style="font-size: 15px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 10px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/机器学习初步/" style="font-size: 15px;">机器学习初步</a>
         </div>
@@ -1608,7 +1608,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     
         
     <div class="widget-wrap widget-list">
-        <h3 class="widget-title">Links</h3>
+        <h3 class="widget-title">links</h3>
         <div class="widget">
             <ul>
                 
