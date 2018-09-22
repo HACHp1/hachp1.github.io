@@ -150,7 +150,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                11
+                12
                 <span>posts</span>
             </div>
             <div class="article-info-block">
@@ -179,6 +179,150 @@
 
             
             <section id="main">
+    <article id="post-2018省赛AWD" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            
+	
+		<a href="/posts/Web安全/20180922-Websec2.html" itemprop="url">
+            <img src="http://120.78.185.175/img/math/dfjk/CTF.png" class="article-banner" />
+        </a>
+	
+
+
+
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/posts/Web安全/20180922-Websec2.html">2018省赛AWD web writeup</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/Web安全/20180922-Websec2.html">
+            <time datetime="2018-09-22T06:50:50.000Z" itemprop="datePublished">2018-09-22</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Web安全/">Web安全</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Web安全/">Web安全</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h3 id="年省赛awd-web-writeup">2018年省赛AWD web writeup</h3>
+<ul>
+<li><p>一点寒暄 &gt; 本次比赛还是有很多遗憾，AWD做的太少，再加上经验不足，导致结果不好看，下面开始填坑。</p></li>
+<li><p>网站框架、版本分析<br>
+在ThinkPHP路径下找到ThinkPHP.php文件，在其中找到版本号3.2.3，本版本存在缓存漏洞。<br>
+找到之后，搜索出相同出处的网页： <img src="http://120.78.185.175/img/blogimg/shenji1/1.png" alt="主页"> <img src="http://120.78.185.175/img/blogimg/shenji1/2.png" alt="搜索结果"> 阅读获得thinkphp缓存漏洞的提示。</p></li>
+<li><p>缓存漏洞分析<br>
+ThinkPHP缓存漏洞需要在二次开发时，调用框架的S()函数，如果传入S()函数的变量可控，并且能找到缓存的储存地址（主要是文件名），则可以直接写入并连接webshell。</p></li>
+<li>代码调试跟进<br>
+本题直接搜索并不能找出漏洞的触发点，因为S()函数并没有直接的被调用，也没有直接被调用的函数调用S()，但是既然是缓存漏洞，先找到缓存的路径，然后随意浏览网页，终于触发了漏洞点。<br>
+能够引起缓存函数执行的地方在主页的搜索框里，当进行一次搜索后，发现缓存文件夹下有文件生成了： <img src="http://120.78.185.175/img/blogimg/shenji1/3.png" alt="缓存文件位置"> 然后开始跟进。<br>
+</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>首先，清空缓存文件，在主页代码中打断点： <img src="http://120.78.185.175/img/blogimg/shenji1/4.png" alt="缓存文件夹和断点"></li>
+<li>进一步跟进，在一个执行处打下断点（因为执行之后就产生了缓存文件） <img src="http://120.78.185.175/img/blogimg/shenji1/5.png" alt="断点"></li>
+<li>继续跟进下一层网页应用执行处 <img src="http://120.78.185.175/img/blogimg/shenji1/6.png" alt="网页应用的运行"></li>
+<li>继续调试，发现了使用变量调用函数的地方，并且此处调用了search函数，search函数之中调用了S()函数，终于找到了关键位置 <img src="http://120.78.185.175/img/blogimg/shenji1/8.png" alt="invokeAction函数调用了漏洞函数"> <img src="http://120.78.185.175/img/blogimg/shenji1/9.png" alt="invokeAction函数中的search调用"></li>
+<li>进一步跟进，发现了文件名的处理： <img src="http://120.78.185.175/img/blogimg/shenji1/10.png" alt="名字变量的传入"> <img src="http://120.78.185.175/img/blogimg/shenji1/11.png" alt="文件名的变化以及文件内容"> <img src="http://120.78.185.175/img/blogimg/shenji1/12.png" alt="文件名详细处理"></li>
+<li>在文件名处理之中，存在一个C()函数，这个函数就是缓存文件名的关键所在，在函数中，<code>$_config[$name]</code>被当做了一个“随机变量”，用于与搜索的关键词组合生成md5。<br>
+查看内存中的相应变量的值： <img src="http://120.78.185.175/img/blogimg/shenji1/13.png" alt="$name的值"> <img src="http://120.78.185.175/img/blogimg/shenji1/14.png" alt="被传出的文件名"><br>
+在该变量中储存的随机变量如下，是'sdfdf'的md5码（其实并没有经过md5运算） <img src="http://120.78.185.175/img/blogimg/shenji1/15.png"></li>
+<li>最后，全局搜索该md5，发现在config.php文件中就已经赋值好了，算是一个password，可见，本漏洞是已经经过修复的漏洞，只要把密码改掉，想直接得到文件名的概率是极小的： <img src="http://120.78.185.175/img/blogimg/shenji1/16.png" alt="最终来源"></li>
+</ol>
+<ul>
+<li>总结：</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>查到之前的版本下，缓存漏洞的文件名是直接对传入的文件名进行md5摘要的，而本题的版本已经把它修复了，感觉并不算个漏洞，或者说是已经修复的漏洞。</li>
+<li>整个触发流程是：<br>
+搜索框搜索-&gt;调用invokeAction函数-&gt;调用搜索函数-&gt;搜索函数内部调用缓存函数-&gt;缓存函数读取缓存密码并拼接md5-&gt;产生文件</li>
+<li>但是当时没有改密码的时候还是很容易被打穿的，从被打穿的队伍的网页文件来看，也都是在缓存处出现了问题，可能还有别的漏洞存在。（师傅们应该找到了其他切入点吧） 懒了，先不动了:)</li>
+</ol>
+<ul>
+<li>最后，附上源码以供大家玩耍: <a href="https://github.com/HACHp1/hackable_cms_store" target="_blank" rel="external">iseccms源码</a></li>
+</ul>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-巅峰极客writeup" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1344,118 +1488,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
-    <article id="post-随想" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-            
-	
-		<a href="/posts/杂文/20180403-thinking.html" itemprop="url">
-            <img src="http://120.78.185.175/img/banner/gufeng.jpg" class="article-banner" />
-        </a>
-	
-
-
-
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/posts/杂文/20180403-thinking.html">江城子 随想</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/posts/杂文/20180403-thinking.html">
-            <time datetime="2018-04-02T17:18:55.000Z" itemprop="datePublished">2018-04-03</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/杂文/">杂文</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/心情随笔/">心情随笔</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-			<p>晨日暖阳斜倚窗。绿树桩，白屋房。<br>
-微风过面，虫鸣燕正忙。城中伊人早登墙，红笑靥，含蓄望。<br>
-料知心事不可想。蛾眉锁，轻拂妆。<br>
-路客打量，何事溢心房。遥寄命途多渴望，手心暖，思却凉。</p>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <nav id="page-nav">
         <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
@@ -1469,6 +1501,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <h3 class="widget-title">recent</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20180922-Websec2.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/eggs.jpg)" alt="2018省赛AWD web writeup" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20180922-Websec2.html" class="title">2018省赛AWD web writeup</a></p>
+                            <p class="item-date"><time datetime="2018-09-22T06:50:50.000Z" itemprop="datePublished">2018-09-22</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -1546,25 +1597,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/机器学习/20180411-logistic.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/ml.jpg)" alt="对逻辑回归的进一步理解" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
-                            <p class="item-title"><a href="/posts/机器学习/20180411-logistic.html" class="title">对逻辑回归的进一步理解</a></p>
-                            <p class="item-date"><time datetime="2018-04-11T14:32:52.000Z" itemprop="datePublished">2018-04-11</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1574,7 +1606,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux日常/">Linux日常</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web安全/">Web安全</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂文/">杂文</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux日常/">Linux日常</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web安全/">Web安全</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂文/">杂文</a><span class="category-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -1583,7 +1615,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">7</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">7</span></li></ul>
         </div>
     </div>
 
@@ -1592,7 +1624,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">2</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">2</span></li></ul>
         </div>
     </div>
 
@@ -1601,7 +1633,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 15px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 10px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/机器学习初步/" style="font-size: 15px;">机器学习初步</a>
+            <a href="/tags/Linux日常/" style="font-size: 15px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 15px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/机器学习初步/" style="font-size: 15px;">机器学习初步</a>
         </div>
     </div>
 
