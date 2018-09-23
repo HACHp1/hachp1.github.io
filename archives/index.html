@@ -728,21 +728,19 @@
 </footer>
         
     
-	<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-	<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-	<script>
-		var gitment = new Gitment({
-		    id: '',
-			owner: 'HACHp1',
-			repo: 'hachp1.github.io',
-			oauth: {
-				client_id: '40c6629ed6b6c262d6da',
-				client_secret: '7c49b6ebfb7ec5e6b07fb161d8d0a899bca5a188',
-			},
-		})
-		gitment.render('commentContainer')
-	</script>
-	
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:true,
+            verify:true,
+            app_id: 'GpqOpUBld8udMg3PSOCDbYr7-gzGzoHsz',
+            app_key: 'k6nxcdbcy4MrjOq2DssFFljB',
+            placeholder: '少侠，留下几句话，我们喝一壶啊 ヾﾉ≧∀≦)o'
+        });
+    </script>
+
 
 
 
