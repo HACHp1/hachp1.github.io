@@ -3,17 +3,21 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Archivo | Math &amp; Sec ，CHP的个人博客</title>
+    <title>数据预处理及训练结果评估 | Math &amp; Sec ，CHP的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="记录追逐时间的points与闪现的ideas。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Math &amp; Sec ，CHP的个人博客">
-<meta property="og:url" content="http://hachp1.github.io/archives/page/2/index.html">
+    <meta name="description" content="数据预处理及训练结果评估 归一化(标准化) 1234#库名from sklearn import preprocessing#使用方法X_scaled = preprocessing.scale(X) K折验证 12345from sklearn.model_selection import train_test_splitX, y = np.arange(10).reshape((5,">
+<meta name="keywords" content="机器学习初步">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据预处理及训练结果评估">
+<meta property="og:url" content="http://hachp1.github.io/posts/机器学习/20181009-metrics.html">
 <meta property="og:site_name" content="Math &amp; Sec ，CHP的个人博客">
-<meta property="og:description" content="记录追逐时间的points与闪现的ideas。">
+<meta property="og:description" content="数据预处理及训练结果评估 归一化(标准化) 1234#库名from sklearn import preprocessing#使用方法X_scaled = preprocessing.scale(X) K折验证 12345from sklearn.model_selection import train_test_splitX, y = np.arange(10).reshape((5,">
+<meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
+<meta property="og:updated_time" content="2018-10-09T04:42:05.900Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Math &amp; Sec ，CHP的个人博客">
-<meta name="twitter:description" content="记录追逐时间的points与闪现的ideas。">
+<meta name="twitter:title" content="数据预处理及训练结果评估">
+<meta name="twitter:description" content="数据预处理及训练结果评估 归一化(标准化) 1234#库名from sklearn import preprocessing#使用方法X_scaled = preprocessing.scale(X) K折验证 12345from sklearn.model_selection import train_test_splitX, y = np.arange(10).reshape((5,">
+<meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
     
 
     
@@ -178,116 +182,146 @@
 </aside>
 
             
-            <section id="main"><div class="timeline timeline-wrap">
-    
-            <div class="timeline-row timeline-row-major">
-                <span class="node"><i class="fa fa-calendar"></i></span>
-                <h1 class="title">2018</h1>
-            </div>
+            <section id="main"><article id="post-数据预处理及训练结果评估" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
+            
+	
+		<img src="http://120.78.185.175/img/banner/ML.jpg" class="article-banner" />
+	
+
+
+
+        
+        
+            <header class="article-header">
                 
     
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/posts/机器学习/20180403-ml1.html">林轩田机器学习基石 第一周、第二周</a>
+        <h1 class="article-title" itemprop="name">
+            数据预处理及训练结果评估
         </h1>
     
 
-                <div class="article-meta">
-                    
+                
+                    <div class="article-meta">
+                        
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/posts/机器学习/20180403-ml1.html">
-            <time datetime="2018-04-03T11:34:44.000Z" itemprop="datePublished">2018-04-03</time>
+        <a href="/posts/机器学习/20181009-metrics.html">
+            <time datetime="2018-10-09T04:37:58.000Z" itemprop="datePublished">2018-10-09</time>
         </a>
     </div>
 
 
-                    
+                        
     <div class="article-category">
     	<i class="fa fa-folder"></i>
         <a class="article-category-link" href="/categories/机器学习/">机器学习</a>
     </div>
 
-                    
+                        
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/机器学习/">机器学习</a>
+        <a class="tag-link" href="/tags/机器学习初步/">机器学习初步</a>
     </div>
 
-                </div>
-            </div>
-        </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
+                    </div>
                 
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/posts/杂文/20180403-thinking.html">江城子 随想</a>
-        </h1>
-    
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h3 id="数据预处理及训练结果评估">数据预处理及训练结果评估</h3>
+<h4 id="归一化标准化">归一化(标准化)</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#库名</span></div><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</div><div class="line"><span class="comment">#使用方法</span></div><div class="line">X_scaled = preprocessing.scale(X)</div></pre></td></tr></table></figure>
+<h4 id="k折验证">K折验证</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</div><div class="line">X, y = np.arange(<span class="number">10</span>).reshape((<span class="number">5</span>, <span class="number">2</span>)), range(<span class="number">5</span>)</div><div class="line"></div><div class="line">X_train, X_test, y_train, y_test = train_test_split(</div><div class="line">    X, y, test_size=<span class="number">0.125</span>, random_state=<span class="number">0</span>) <span class="comment"># 8折验证</span></div></pre></td></tr></table></figure>
+<h4 id="准确率召回率等">准确率、召回率等</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">from sklearn.metrics import precision_score</div><div class="line"></div><div class="line">print(precision_score(y_test,y_predict,average=&apos;micro&apos;))</div><div class="line">#其中，average可选（常用）：</div><div class="line">&apos;&apos;&apos;</div><div class="line">宏平均（Macro-averaging），是先对每一个类统计指标值，然后在对所有类求算术平均值。</div><div class="line">微平均（Micro-averaging），是对数据集中的每一个实例不分类别进行统计建立全局混淆矩阵，然后计算相应指标。</div><div class="line"></div><div class="line">&apos;micro&apos;:</div><div class="line">    计算准确率</div><div class="line">    </div><div class="line">&apos;macro&apos;:</div><div class="line">    计算每个标签的准确率</div><div class="line">    </div><div class="line">&apos;weighted&apos;:</div><div class="line">   根据每个标签出现的数量按权重计算其准确率</div><div class="line"></div><div class="line">&apos;binary&apos;:</div><div class="line">   * 计算二分类的准确率（预测为1的准确率）</div><div class="line">   * 在召回率中，则计算预测为1的占总数的百分比</div><div class="line">&apos;&apos;&apos;</div></pre></td></tr></table></figure>
+<h4 id="召回率">召回率</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">from sklearn.metrics import recall_score</div><div class="line"> recall_score(y_true, y_pred, average=&apos;micro&apos;) </div><div class="line"> # average和上一个类似</div></pre></td></tr></table></figure>
+<h4 id="f1-score">f1-score</h4>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">f1score(y_true, y_pred, average=&apos;micro&apos;)</div><div class="line"> # average和上一个类似</div></pre></td></tr></table></figure>
+<h4 id="准确率sklearn训练">准确率（sklearn训练）</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">print(clf.score(x_train, y_train))</div></pre></td></tr></table></figure>
+<h4 id="pca降维">PCA降维</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sklearn.decomposition.pca <span class="keyword">as</span> PCA</div><div class="line"><span class="comment">#PCA降维</span></div><div class="line">mypca=PCA.PCA(n_components=<span class="number">2</span>)</div><div class="line">x_test_de=mypca.fit_transform(x_test)</div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">其中</span></div><div class="line"><span class="string">explained_variance_：方差值</span></div><div class="line"><span class="string">explained_variance_ratio_：方差占比</span></div><div class="line"><span class="string">singular_values_：分解得到的奇异值（不是奇异向量）</span></div><div class="line"><span class="string">inverse_transform(X)：按降维操作逆向升维</span></div><div class="line"><span class="string">'''</span></div></pre></td></tr></table></figure>
 
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/posts/杂文/20180403-thinking.html">
-            <time datetime="2018-04-02T17:18:55.000Z" itemprop="datePublished">2018-04-03</time>
-        </a>
-    </div>
-
-
-                    
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/杂文/">杂文</a>
-    </div>
-
-                    
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/心情随笔/">心情随笔</a>
-    </div>
-
-                </div>
-            </div>
+        
         </div>
-    
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
-                
-    
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/posts/uncategorized/20180402-return.html">重拾HEXO</a>
-        </h1>
-    
-
-                <div class="article-meta">
-                    
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/posts/uncategorized/20180402-return.html">
-            <time datetime="2018-04-02T15:27:50.000Z" itemprop="datePublished">2018-04-02</time>
-        </a>
-    </div>
+        <footer class="article-footer">
+            <div class="share-container">
 
 
-                    
-                    
-                </div>
-            </div>
-        </div>
-    
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
 </div>
 
-    <nav id="page-nav">
-        <a class="extend prev" rel="prev" href="/archives/">&laquo; Anterior</a><a class="page-number" href="/archives/">1</a><span class="page-number current">2</span>
-    </nav>
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/posts/Web安全/20180922-Websec2.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Más viejo</strong>
+            <div class="article-nav-title">2018省赛AWD web writeup</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
 </section>
             
                 
