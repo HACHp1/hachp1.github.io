@@ -150,11 +150,11 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                13
+                14
                 <span>posts</span>
             </div>
             <div class="article-info-block">
-                5
+                6
                 <span>tags</span>
             </div>
         </div>
@@ -165,8 +165,20 @@
                     
                     
                     <td>
-                        <a href="http://github.com/hachp1" target="_blank" title="github" class=tooltip>
-                            <i class="fa fa-github"></i>
+                        <a href="https://redogwu.github.io" target="_blank" title="redogWu" class=tooltip>
+                            <i class="fa fa-redogWu"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="http://grootsec.org/" target="_blank" title="grootsec" class=tooltip>
+                            <i class="fa fa-grootsec"></i>
+                        </a>
+                    </td>
+                    
+                    <td>
+                        <a href="https://hpasserby.me" target="_blank" title="Hpasserby的pwn" class=tooltip>
+                            <i class="fa fa-Hpasserby的pwn"></i>
                         </a>
                     </td>
                     
@@ -179,6 +191,215 @@
 
             
             <section id="main">
+    <article id="post-树相关-从决策树到kaggle大杀器" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+            
+	
+		<a href="/posts/机器学习/20181204-treeAlgorithm.html" itemprop="url">
+            <img src="http://120.78.185.175/img/banner/tree.png" class="article-banner" />
+        </a>
+	
+
+
+
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/posts/机器学习/20181204-treeAlgorithm.html">树相关-从决策树到kaggle大杀器</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/机器学习/20181204-treeAlgorithm.html">
+            <time datetime="2018-12-04T04:19:41.000Z" itemprop="datePublished">2018-12-04</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/机器学习/">机器学习</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/机器学习-算法/">机器学习-算法</a>
+    </div>
+
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h1 id="决策树">决策树</h1>
+<h2 id="决策树的最优分支选择">决策树的最优分支选择</h2>
+<h3 id="分类树">分类树</h3>
+<ol style="list-style-type: decimal">
+<li>枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。</li>
+<li>设定一个阈值，若超过，则分裂。</li>
+</ol>
+<h2 id="回归树">回归树</h2>
+<ol style="list-style-type: decimal">
+<li>在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。</li>
+<li>预测时，<strong>使用分组的组内平均数作为该组所有元素的预测值</strong>；损失函数可以用该组的各值与该组的平均数的残差平方和。</li>
+</ol>
+<h3 id="普通回归树的训练过程">普通回归树的训练过程</h3>
+<ul>
+<li>对回归树结果的不太恰当的通俗理解：在一个局部范围内用平均值来预测这个局部内的所有点的值。</li>
+<li>回归树的训练过程是一个递归的过程，首先，从分析一个递归环节开始：</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>随机选取一个特征</li>
+<li>先找到对这个特征的各个二划分点</li>
+<li>分别对每个划分点作如下计算： 因为每组的预测值为平均数，第i个分组（一共两个分组）的损失函数L(i)为： <span class="math display">\[
+L(i)=\sum_{j=0}^{1}{(y_i^{(j)}-mean_i)^2}
+\]</span> 其中，<span class="math inline">\(j\)</span>为对第i组中每个数的遍历序数，<span class="math inline">\(mean_i\)</span>为第i组的平均数 整个树在此划分下的损失函数为： <span class="math display">\[
+L=\sum_i{L(i)}
+\]</span></li>
+<li>比较所有划分，在回归树本次分裂时，取<span class="math inline">\(L\)</span>最小的划分点作为本次划分点，完成一次递归。</li>
+<li>经过n次递归达到给定的要求时，回归树停止分裂。</li>
+</ol>
+<h2 id="集成树">集成树</h2>
+<ul>
+<li>集成树是树模型的一大类模型(boost模型)，采用各个树的预测值相加作为预测结果的计算方法进行预测。</li>
+</ul>
+<h3 id="adaboost">AdaBoost</h3>
+<p>一些特征： 1. 首先，AdaBoost是一种<strong>二分类算法</strong>。<br>
+2. 加性模型，使用<strong>前向分步算法</strong>作为各个数学公式的来源和依据（即公式为啥长这样）。<br>
+3. 从训练数据中学习一系列弱分类器或基本分类器，然后将这些弱分类器组合成一个强分类器<br>
+4. 通俗理解思想：增大被分错的数据的权重，减小错误率高的弱分类器的作用。<font style="color:red">整个学习过程就像是先粗略的对整个数据集进行划分（在递归中的第一个分类器），然后对剩下的分错的数据集抽出来重点对待再次划分（递归中的第二个分类器）</font>；<strong>通过两种权重的组合（数据权重和弱分类器权重）作用巧妙地得出最终的分类器</strong>。这个思想和泰勒展开有着异曲同工之妙，即先大概分，再细分；先整体符合，再对细节下手。<br>
+5. 关键：1、如何更新数据的权重。2、如何组合弱分类器（分类器权重）。<br>
+整个函数的目的是将<span class="math inline">\(X\)</span>映射到<span class="math inline">\(\{-1,1\}\)</span>，即求函数:<span class="math inline">\(G_m(x)→\{-1,1\}\)</span></p>
+<hr>
+<ul>
+<li>整个过程：</li>
+<li>权值初始化，所有权值最开始时都被赋予相同的值： <span class="math display">\[
+\frac{1}{N}
+\]</span> 其中，N是总弱学习器的个数。</li>
+<li>构建弱分类器<br>
+使用具有权值分布<span class="math inline">\(D_m\)</span>的训练数据集学习，得到基本分类器（具体过程：穷举每个阈值，使用公式计算误差<span class="math inline">\(e_m\)</span>（公式见后文）选取让误差最低的阈值来设计基本分类器，即一个简单的二分类器）</li>
+<li><strong>计算弱分类器权重</strong>：思想为根据错误率调整权重的大小，错误率越大，权值越小。整个权值更新过程如下： 首先，计算中间系数<span class="math inline">\(α_m\)</span>，公式为： <span class="math display">\[
+α_m=\frac{1}{2}ln\frac{1-e_m}{e_m}
+\]</span></li>
+<li><span class="math inline">\(e_m\)</span>为误差，<strong>计算公式为</strong>： <span class="math display">\[
+e_m=P(G_m(x_i)≠y_i)=\sum_{i=1}^{N}w_{mi}I(G_m(x_i)≠y_i)
+\]</span></li>
+<li><span class="math inline">\(w_{mi}\)</span>为当前的权重。<br>
+</li>
+<li><span class="math inline">\(I\)</span>为指示函数，代表的是指示函数（indicator function）。 它的含义是：当输入为True的时候，输出为1，输入为False的时候，输出为0。 然后，<strong>更新数据权重</strong>，过程为： <span class="math display">\[
+D_{m+1}=(w_{m+1,1},...,w_{m+1,i},...,w_{m+1,N})   
+\]</span> <span class="math display">\[
+w_{m+1,i}=\frac{w_{mi}}{Z_m}e^{-α_my_iG_m(x_i)},i=1,2,...,N
+\]</span> 其中，<span class="math inline">\(Z_m\)</span>的计算过程： <span class="math display">\[
+Z_m=\sum_{i=1}^{N}w_{mi}e^{-α_my_iG_m(x_i)}
+\]</span> 重复以上步骤（从构造弱分类器开始），直到触发某终止条件。<br>
+最后，将获得的所有弱分类器与其权值相乘并相加，得到最终分类器： <span class="math display">\[
+G(x)=sign(f(x))=sign(\sum^{M}_{m=1}α_mG_m(x))
+\]</span></li>
+</ul>
+<p>此外，最后获得的分类器的误差值<span class="math inline">\(e_m\)</span>有一个上界，其值为： <span class="math display">\[
+\frac{1}{N}\sum^N_{i=1}I(G(x_i)≠y_i)\le\frac{1}{N}\sum_ie^{-y_if(x_i)}=\prod_m{Z_m}
+\]</span> 还有一些数学特征详见书上。<br>
+参考资料:李航《统计学习方法》<br>
+<strong>知乎上的一篇精彩解说</strong> <a href="https://www.zhihu.com/question/54626685/answer/140610056" target="_blank" rel="external">机器学习算法中GBDT与Adaboost的区别与联系是什么？- Frankenstein</a><br>
+推荐blog <a href="https://blog.csdn.net/mousever/article/details/52038198" target="_blank" rel="external">AdaBoost原理（包含权重详细解释）</a></p>
+<h3 id="gbdtgradient-boosting-decision-tree梯度上升树">GBDT(Gradient Boosting Decision Tree)梯度上升树</h3>
+<h4 id="gradient-boosting是对adaboost的推广">Gradient Boosting是对AdaBoost的推广。</h4>
+<ul>
+<li>AdaBoost算法中，计算过程没有涉及到凸优化过程，整个过程是通过调整两个权重展开的。</li>
+<li>而GBDT从侧面用到了梯度上升的概念（恰巧完成了一个梯度下降的操作）。因此相比AdaBoost, Gradient Boosting<strong>可以使用更多种类的目标函数</strong>。<br>
+</li>
+<li>GBDT和AdaBoost都结合“从整体到细节”的思想，使每个弱分类器对剩下的细节（即残差或误差量，GBDT是残差）进一步拟合，最后就得到了结果。</li>
+<li>整理一下思路，GBDT的过程为：首先通过某种拟合方法找到第一个函数（回归树）<span class="math inline">\(h_1(x)\)</span>（已经通过梯度下降最优化），然后对残差 <span class="math display">\[
+\sum_iy_i-h_1(x_i)
+\]</span> 计算并以之为目标函数拟合第二棵回归树。以这种做法递归下去直到达到某种条件即可停止训练。最后的预测函数即 <span class="math display">\[
+F(X)=\sum_i{h(x_i)}
+\]</span></li>
+<li>注意，对每个弱分类器的优化是独立于GBDT算法的，优化过程参考以往的学习方法进行，如：梯度下降、穷举。</li>
+<li>可以观察到GBDT的一个重要的特性，也就是<strong>梯度</strong>出现的地方：<font style="color:red">用回归树去拟合残差其实就是用回归树去拟合目标方程关于<span class="math inline">\(F(x_i)\)</span>的梯度</font>。换句话说，就是拟合残差这一个操作恰巧和梯度下降一步是一样的。 证明： 训练过程中，当前的预测函数即 <span class="math display">\[
+F(X)=\sum_i{h(x_i)}
+\]</span> 考虑使用最小二乘代价函数： <span class="math display">\[
+L=\frac{1}{2}\sum_i(y_i-F(x_i))^2
+\]</span> L对<strong>上一个</strong>弱分类器求偏导有： <span class="math display">\[
+\frac{\partial{L}}{\partial{F(x_i)}}=\frac{\partial\frac{1}{2}\sum_{i}(y_i-F(x_i))^2}{\partial{F(x_i)}}=-(y_i-F(x_i))
+\]</span> 而<span class="math inline">\(y_i-F(x_i)\)</span>是我们要拟合的对象（GBDT中），所以我们拟合的是代价函数<strong>对上一个弱分类器的负梯度</strong>。这里联想梯度下降的过程：<strong>要更新哪个参数，就对哪个参数求导</strong>，所以在这里，我们更新的是弱分类器本身（<strong>把上一个分类器当作参数</strong>）。将拟合后的结果加入到目标函数中也就相当于对<strong>上一阶段</strong>加入的弱分类器<strong>做了梯度下降</strong>。<br>
+这就是GBDT中的G（梯度）的来源。</li>
+</ul>
+<h3 id="xgboost">XgBoost</h3>
+<ul>
+<li><strong>XgBoost</strong>是GBDT的改进。 XgBoost对GBDT的代价函数加入了正则化项防止过拟合。如，最小二乘代价函数变形为： <span class="math display">\[
+L=\frac{1}{2}\sum_i(y_i-F(x_i))^2+\sum_kΩ(f_k)
+\]</span> 同时，XgBoost使用二阶泰勒展开来代替GBDT中对上一个弱分类器的一阶导数。</li>
+</ul>
+<p>XgBoost相关的解释计划在下一篇继续。</p>
+
+        
+        </div>
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+</article>
+
+
+
     <article id="post-数据预处理及训练结果评估" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -755,6 +976,8 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> matplotlib.colors <span class="keyword">import</span> ListedColormap</div><div class="line">...</div><div class="line">colors = (<span class="string">'red'</span>, <span class="string">'blue'</span>, <span class="string">'lightgreen'</span>, <span class="string">'gray'</span>, <span class="string">'cyan'</span>)</div><div class="line">cmap = ListedColormap(colors[:len(np.unique(y))])</div><div class="line"></div><div class="line"><span class="keyword">for</span> idx, cl <span class="keyword">in</span> enumerate(np.unique(y)):</div><div class="line">    plt.scatter(x=X[y == cl, <span class="number">0</span>], y=X[y == cl, <span class="number">1</span>], alpha=<span class="number">0.8</span>, c=cmap(idx), label=cl)</div></pre></td></tr></table></figure>
 <h4 id="三维图的创建">三维图的创建</h4>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> mpl_toolkits.mplot3d <span class="keyword">import</span> Axes3D</div><div class="line"><span class="keyword">import</span> itertools</div><div class="line">...</div><div class="line">fig = plt.figure()</div><div class="line">ax = fig.add_subplot(<span class="number">111</span>, projection=<span class="string">'3d'</span>)</div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">A = X</span></div><div class="line"><span class="string">B = Y</span></div><div class="line"><span class="string">Z = np.array(Z)</span></div><div class="line"><span class="string">'''</span></div><div class="line">Z = Z.flatten()</div><div class="line"></div><div class="line">C = np.array([i <span class="keyword">for</span> i <span class="keyword">in</span> itertools.product(A, B)])</div><div class="line">A = C[:, <span class="number">0</span>]</div><div class="line">B = C[:, <span class="number">1</span>]</div><div class="line"></div><div class="line">ax.plot_trisurf(A, B, Z, cmap=<span class="string">'rainbow'</span>)</div><div class="line">plt.show()</div></pre></td></tr></table></figure>
+<h4 id="图像填色">图像填色</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">填充与坐标轴之间的图形</span></div><div class="line"><span class="string">'''</span></div><div class="line">plt.fill(x, y, color = <span class="string">"g"</span>, alpha = <span class="number">0.3</span>)</div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">填充两曲线之间的空间</span></div><div class="line"><span class="string">'''</span></div><div class="line">plt.fill_between(x, y1, y2, facecolor = <span class="string">"yellow"</span>)</div><div class="line">plt.fill_between(x, y1, y2, where= y1 &gt;= y2, facecolor = <span class="string">"blue"</span>, interpolate= <span class="keyword">True</span>)</div><div class="line">plt.fill_between(x, y1, y2, where= y2 &gt; y1, facecolor = <span class="string">"yellow"</span>, interpolate= <span class="keyword">True</span>)</div></pre></td></tr></table></figure>
 
         
         </div>
@@ -1135,6 +1358,8 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 <ul>
 <li>使用数组时不要犯低级错误，注意行数和列数，不要搞反了。<br>
 </li>
+<li><code>np.array</code><strong>转化宽度不一致的数组时会出现未知错误</strong>，使用时要谨慎。</li>
+<li>numpy使用元组作为引用，容易和多维数组按层拆分搞混，<strong>多维数组不支持元组索引</strong>（numpy也支持按层拆分）如：<code>a[1,2]</code>和<code>b[1][2]</code>。</li>
 <li>注意矩阵乘法转置。<br>
 </li>
 <li>注意numpy不是默认二维数组， 若矩阵为向量，则只有shape[0](即向量长度为shape[0]而不是它作为矩阵时的shape[1]): [1,2,3,4] 看作矩阵： shape:[1,4] 看作向量：shape:[4]</li>
@@ -1149,7 +1374,12 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 </ol>
 <h4 id="对数据点按标记值创建分类组">对数据点按标记值创建分类组</h4>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np <span class="comment"># 注：必须要numpy才能成功</span></div><div class="line"></div><div class="line">x = np.array([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>])</div><div class="line">y = np.array([<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">2</span>])</div><div class="line"></div><div class="line">test = x[y == <span class="number">0</span>]</div><div class="line">print(test)</div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">输出：[2 3]</span></div><div class="line"><span class="string">'''</span></div></pre></td></tr></table></figure>
-<p>```</p>
+<h4 id="shuffle_data函数对整个数据集进行洗牌但x与y绑定">shuffle_data函数（对整个数据集进行洗牌，但x与y绑定）</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np </div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">shuffle_data</span><span class="params">(train_data, train_target)</span>:</span></div><div class="line">    batch_size= len(train_target)</div><div class="line">    index = [i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, batch_size)]</div><div class="line">    np.random.shuffle(index)</div><div class="line">    batch_data = []</div><div class="line">    batch_target = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, batch_size):</div><div class="line">        batch_data.append(train_data[index[i]])</div><div class="line">        batch_target.append(train_target[index[i]])</div><div class="line">    <span class="keyword">return</span> batch_data, batch_target</div></pre></td></tr></table></figure>
+<h4 id="填充">填充</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 直接用</span></div><div class="line">lenth=<span class="number">10</span></div><div class="line">a=np.array([[<span class="number">6</span>,<span class="number">6</span>],</div><div class="line">           [<span class="number">6</span>,<span class="number">6</span>]])</div><div class="line">a=np.pad(a,((<span class="number">0</span>,<span class="number">0</span>),(<span class="number">0</span>,lenth-a.shape[<span class="number">1</span>])),</div><div class="line">         <span class="string">'constant'</span>, constant_values=<span class="number">0</span>)</div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">[[6 6 0 0 0 0 0 0 0 0]</span></div><div class="line"><span class="string"> [6 6 0 0 0 0 0 0 0 0]]</span></div><div class="line"><span class="string">'''</span></div><div class="line"><span class="comment"># 其他详细操作</span></div><div class="line">a=np.array([[<span class="number">6</span>,<span class="number">6</span>],</div><div class="line">           [<span class="number">6</span>,<span class="number">6</span>]])</div><div class="line"></div><div class="line">b=np.pad(a,((<span class="number">1</span>,<span class="number">2</span>),(<span class="number">3</span>,<span class="number">4</span>)),</div><div class="line">         <span class="string">'constant'</span>, constant_values=(<span class="number">0</span>, <span class="number">1</span>))</div><div class="line">print(b)</div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">[[0 0 0 0 0 1 1 1 1]</span></div><div class="line"><span class="string"> [0 0 0 6 6 1 1 1 1]</span></div><div class="line"><span class="string"> [0 0 0 6 6 1 1 1 1]</span></div><div class="line"><span class="string"> [0 0 0 1 1 1 1 1 1]</span></div><div class="line"><span class="string"> [0 0 0 1 1 1 1 1 1]]</span></div><div class="line"><span class="string">'''</span></div><div class="line"></div><div class="line">a=np.array([[<span class="number">6</span>,<span class="number">6</span>],</div><div class="line">           [<span class="number">6</span>,<span class="number">6</span>]])</div><div class="line"></div><div class="line">b=np.pad(a,((<span class="number">0</span>,<span class="number">0</span>),(<span class="number">0</span>,<span class="number">4</span>)),</div><div class="line">         <span class="string">'constant'</span>, constant_values=( <span class="number">0</span>))</div><div class="line">print(b)</div><div class="line"><span class="string">'''</span></div><div class="line"><span class="string">[[6 6 0 0 0 0]</span></div><div class="line"><span class="string"> [6 6 0 0 0 0]]</span></div><div class="line"><span class="string">'''</span></div></pre></td></tr></table></figure>
+<h4 id="二进制保存">二进制保存</h4>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">m=np.array(n)</div><div class="line">m.tofile(<span class="string">'test/m.bin'</span>)</div><div class="line">...</div><div class="line">m=fromfile(<span class="string">'test/m.bin'</span>,dtype=np.float).reshape(<span class="number">-1</span>,x,x)</div><div class="line"></div><div class="line">np.save(<span class="string">'test/m.npy'</span>,m)</div><div class="line">m=np.load(<span class="string">'test/m.npy'</span>)</div></pre></td></tr></table></figure>
 
         
         </div>
@@ -1347,159 +1577,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 
 
 
-    <article id="post-terminal和VIM的分屏简单命令" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-            
-	
-		<a href="/posts/Linux日常/20180406-vim&t.html" itemprop="url">
-            <img src="http://120.78.185.175/img/thumbnails/vim.jpg" class="article-banner" />
-        </a>
-	
-
-
-
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/posts/Linux日常/20180406-vim&t.html">terminal和VIM的分屏简单命令</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/posts/Linux日常/20180406-vim&t.html">
-            <time datetime="2018-04-06T14:05:33.813Z" itemprop="datePublished">2018-04-06</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/Linux日常/">Linux日常</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Linux日常/">Linux日常</a>
-    </div>
-
-                    </div>
-                
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-			<h1 id="linux下的分屏">Linux下的分屏</h1>
-<p>在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。 在这里小记一下几种简单的分屏命令。</p>
-<h2 id="terminal分屏">1、terminal分屏</h2>
-<p>使用tmux对terminal分屏，常用指令如下：</p>
-<ul>
-<li><p>开启tmux：在terminal中输入tmux开启分屏。</p></li>
-<li><p>tmux ls： 显示已有的tmux会话</p></li>
-<li><p>tmux attach-session -t 数字： 选择tmux</p></li>
-<li><p>tmux kill-session -t session-name：关闭tmux</p></li>
-<li><p>开启鼠标移动、调节窗口大小等功能：[ctrl]+b+:后输入 set -g mouse on</p></li>
-</ul>
-<p>[ctrl+b]为tmux的指令输入前缀，以下指令为输入前缀指令后的指令：</p>
-<ul>
-<li><p>上下分屏：&quot;</p></li>
-<li><p>左右分屏: %</p></li>
-<li><p>切换屏幕：o</p></li>
-<li><p>关闭一个终端：x</p></li>
-<li><p>上下分屏与左右分屏切换：空格键 还可以调整分屏大小（平均化）</p></li>
-<li><p>显示快捷键帮助：？</p></li>
-<li><p>移动到下一个窗口：n 貌似比较鸡肋</p></li>
-<li><p>显示时钟：t （ps：显示效果还可以）</p></li>
-<li><p>临时退出session: d</p></li>
-<li><p>列出session：tmux ls （不用前缀）</p></li>
-<li><p>进入已存在的session：tmux a -t $session_name</p></li>
-<li><p>关闭并删除所有session:[：]+ kill-server</p></li>
-<li><p>复制模式 : [ 空格标记复制开始，回车结束复制。</p></li>
-<li><p>粘贴 ：]</p></li>
-</ul>
-<h2 id="vim分屏">2、VIM分屏</h2>
-<p>载入文件</p>
-<ul>
-<li><p>在新的垂直分屏中打开文件:vs 文件路径/文件名</p></li>
-<li><p>在新的水平分屏中打开文件:sv 文件路径/文件名</p></li>
-</ul>
-<p>与tmux类似，[ctrl+w]为VIM的指令输入前缀，以下指令为输入指令前缀后的指令：</p>
-<ul>
-<li><p>下一个分屏：w</p></li>
-<li><p>上一个分屏：p</p></li>
-<li><p>使用 hjkl选择分屏</p></li>
-<li><p>新建分屏：n（new）貌似比较鸡肋</p></li>
-<li><p>水平分屏：s（split）貌似也比较鸡肋</p></li>
-<li><p>垂直分屏：v（vsplit) 还是比较鸡肋</p></li>
-<li><p>关闭分屏：c（close）或者直接命令模式 :q</p></li>
-</ul>
-<h6 id="具体还有其他指令不会再查感觉够用了懒得记">具体还有其他指令，不会再查，感觉够用了，懒得记:)</h6>
-
-        
-        </div>
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-
-        </footer>
-    </div>
-    
-</article>
-
-
-
     <nav id="page-nav">
         <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
     </nav>
@@ -1513,6 +1590,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <h3 class="widget-title">recent</h3>
         <div class="widget">
             <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/机器学习/20181204-treeAlgorithm.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/ml.jpg)" alt="树相关-从决策树到kaggle大杀器" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/posts/机器学习/20181204-treeAlgorithm.html" class="title">树相关-从决策树到kaggle大杀器</a></p>
+                            <p class="item-date"><time datetime="2018-12-04T04:19:41.000Z" itemprop="datePublished">2018-12-04</time></p>
+                        </div>
+                    </li>
                 
                     <li>
                         
@@ -1590,25 +1686,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/机器学习/20180602-matplotlib1.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="matplotlib初步学习" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
-                            <p class="item-title"><a href="/posts/机器学习/20180602-matplotlib1.html" class="title">matplotlib初步学习</a></p>
-                            <p class="item-date"><time datetime="2018-06-02T15:04:59.000Z" itemprop="datePublished">2018-06-02</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1618,7 +1695,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">categories</h3>
         <div class="widget">
-            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux日常/">Linux日常</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web安全/">Web安全</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂文/">杂文</a><span class="category-list-count">1</span></li></ul>
+            <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux日常/">Linux日常</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Web安全/">Web安全</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/机器学习/">机器学习</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/杂文/">杂文</a><span class="category-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -1627,7 +1704,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">archives</h3>
         <div class="widget">
-            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">7</span></li></ul>
+            <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">December 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">October 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">September 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a><span class="archive-list-count">7</span></li></ul>
         </div>
     </div>
 
@@ -1636,7 +1713,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -1645,7 +1722,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 13.33px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 13.33px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/机器学习初步/" style="font-size: 16.67px;">机器学习初步</a>
+            <a href="/tags/Linux日常/" style="font-size: 13.33px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 13.33px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 10px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 16.67px;">机器学习初步</a>
         </div>
     </div>
 
