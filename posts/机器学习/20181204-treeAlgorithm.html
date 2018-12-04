@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，CHP的个人博客">
 <meta property="og:description" content="决策树 决策树的最优分支选择 分类树  枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。 设定一个阈值，若超过，则分裂。  回归树  在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。 预测时，使用分组的组内平均数作为该组所有元素的预测值；损失函数可以用该组的各值与该组的平均数的">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
-<meta property="og:updated_time" content="2018-12-04T05:04:25.899Z">
+<meta property="og:updated_time" content="2018-12-04T05:06:03.883Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="树相关-从决策树到kaggle大杀器">
 <meta name="twitter:description" content="决策树 决策树的最优分支选择 分类树  枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。 设定一个阈值，若超过，则分裂。  回归树  在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。 预测时，使用分组的组内平均数作为该组所有元素的预测值；损失函数可以用该组的各值与该组的平均数的">
@@ -304,8 +304,9 @@ G(x)=sign(f(x))=sign(\sum^{M}_{m=1}α_mG_m(x))
 <p>此外，最后获得的分类器的误差值<span class="math inline">\(e_m\)</span>有一个上界，其值为： <span class="math display">\[
 \frac{1}{N}\sum^N_{i=1}I(G(x_i)≠y_i)\le\frac{1}{N}\sum_ie^{-y_if(x_i)}=\prod_m{Z_m}
 \]</span> 还有一些数学特征详见书上。</p>
+<h4 id="参考资料">参考资料:</h4>
 <ul>
-<li>参考资料:李航《统计学习方法》<br>
+<li>李航《统计学习方法》<br>
 </li>
 <li><strong>知乎上的一篇精彩解说</strong> <a href="https://www.zhihu.com/question/54626685/answer/140610056" target="_blank" rel="external">机器学习算法中GBDT与Adaboost的区别与联系是什么？- Frankenstein</a><br>
 </li>
