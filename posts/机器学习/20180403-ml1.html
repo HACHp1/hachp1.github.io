@@ -5,18 +5,18 @@
     
     <title>林轩田机器学习基石 第一周、第二周 | Math &amp; Sec ，CHP的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D  数据挖掘和机器学习有很多重合点，但不是一模一样。 第二周，二元是非判断 Perceptron">
+    <meta name="description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D  数据挖掘和机器学习有很多重合点，但不是一模一样。">
 <meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="林轩田机器学习基石 第一周、第二周">
 <meta property="og:url" content="http://hachp1.github.io/posts/机器学习/20180403-ml1.html">
 <meta property="og:site_name" content="Math &amp; Sec ，CHP的个人博客">
-<meta property="og:description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D  数据挖掘和机器学习有很多重合点，但不是一模一样。 第二周，二元是非判断 Perceptron">
+<meta property="og:description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D  数据挖掘和机器学习有很多重合点，但不是一模一样。">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
-<meta property="og:updated_time" content="2018-04-07T02:48:42.042Z">
+<meta property="og:updated_time" content="2019-01-24T13:31:39.197Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="林轩田机器学习基石 第一周、第二周">
-<meta name="twitter:description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D  数据挖掘和机器学习有很多重合点，但不是一模一样。 第二周，二元是非判断 Perceptron">
+<meta name="twitter:description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D  数据挖掘和机器学习有很多重合点，但不是一模一样。">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
     
 
@@ -249,10 +249,8 @@
 3、 hypothesis H。<br>
 4、 资料 D</p></li>
 </ul>
-<p>数据挖掘和机器学习有很多重合点，但不是一模一样。</p>
-<h1 id="第二周二元是非判断">第二周，二元是非判断</h1>
-<h3 id="perceptron-hypothesis感知器学习算法针对线性可分的资料">Perceptron Hypothesis：感知器学习算法：针对线性可分的资料</h3>
-<p><img src="http://120.78.185.175/img/math/1/1.png" alt="感知器学习算法的假设函数"> - PLA算法（perceptron learning algorithm），两种理解方式：<br>
+<p>数据挖掘和机器学习有很多重合点，但不是一模一样。 <a id="more"></a> # 第二周，二元是非判断 ### Perceptron Hypothesis：感知器学习算法：针对线性可分的资料<br>
+<img src="http://120.78.185.175/img/math/1/1.png" alt="感知器学习算法的假设函数"> - PLA算法（perceptron learning algorithm），两种理解方式：<br>
 ① 向量纠正（比较直观，但证明很麻烦，推导不方便） <img src="http://120.78.185.175/img/math/1/2.png" alt="权重向出现错误的点靠近"><br>
 当y=+1，那么类似于第一个图，w+yx将使得新的w更加偏向于x，以使得修正后的结果为h(x)&gt;0，而类似有第二图的修正。<br>
 ② 梯度下降（以点到直线的距离（带符号）为代价函数进行随机梯度下降）此方法可获得向量纠正的一样的公式及结果。<br>

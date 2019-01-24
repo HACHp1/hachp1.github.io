@@ -5,18 +5,18 @@
     
     <title>数据预处理及训练结果评估 | Math &amp; Sec ，CHP的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="数据预处理及训练结果评估 归一化(标准化) 1234#库名from sklearn import preprocessing#使用方法X_scaled = preprocessing.scale(X) K折验证 12345from sklearn.model_selection import train_test_splitX, y = np.arange(10).reshape((5,">
+    <meta name="description" content="数据预处理及训练结果评估 归一化(标准化) 1234#库名from sklearn import preprocessing#使用方法X_scaled = preprocessing.scale(X)">
 <meta name="keywords" content="机器学习初步">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据预处理及训练结果评估">
 <meta property="og:url" content="http://hachp1.github.io/posts/机器学习/20181009-metrics.html">
 <meta property="og:site_name" content="Math &amp; Sec ，CHP的个人博客">
-<meta property="og:description" content="数据预处理及训练结果评估 归一化(标准化) 1234#库名from sklearn import preprocessing#使用方法X_scaled = preprocessing.scale(X) K折验证 12345from sklearn.model_selection import train_test_splitX, y = np.arange(10).reshape((5,">
+<meta property="og:description" content="数据预处理及训练结果评估 归一化(标准化) 1234#库名from sklearn import preprocessing#使用方法X_scaled = preprocessing.scale(X)">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
-<meta property="og:updated_time" content="2018-10-09T04:42:05.900Z">
+<meta property="og:updated_time" content="2019-01-24T13:26:57.904Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据预处理及训练结果评估">
-<meta name="twitter:description" content="数据预处理及训练结果评估 归一化(标准化) 1234#库名from sklearn import preprocessing#使用方法X_scaled = preprocessing.scale(X) K折验证 12345from sklearn.model_selection import train_test_splitX, y = np.arange(10).reshape((5,">
+<meta name="twitter:description" content="数据预处理及训练结果评估 归一化(标准化) 1234#库名from sklearn import preprocessing#使用方法X_scaled = preprocessing.scale(X)">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
     
 
@@ -240,6 +240,7 @@
 			<h3 id="数据预处理及训练结果评估">数据预处理及训练结果评估</h3>
 <h4 id="归一化标准化">归一化(标准化)</h4>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#库名</span></div><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</div><div class="line"><span class="comment">#使用方法</span></div><div class="line">X_scaled = preprocessing.scale(X)</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <h4 id="k折验证">K折验证</h4>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</div><div class="line">X, y = np.arange(<span class="number">10</span>).reshape((<span class="number">5</span>, <span class="number">2</span>)), range(<span class="number">5</span>)</div><div class="line"></div><div class="line">X_train, X_test, y_train, y_test = train_test_split(</div><div class="line">    X, y, test_size=<span class="number">0.125</span>, random_state=<span class="number">0</span>) <span class="comment"># 8折验证</span></div></pre></td></tr></table></figure>
 <h4 id="准确率召回率等">准确率、召回率等</h4>

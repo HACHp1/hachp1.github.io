@@ -5,18 +5,18 @@
     
     <title>Thinkphp 5.x RCE漏洞 | Math &amp; Sec ，CHP的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。 0x1 基础知识 Thinkphp 兼容模式 兼容模式是用于不支持PATHINFO的特殊环境，使用时，URL地址形如：  http://localhost/?s=/">
+    <meta name="description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Thinkphp 5.x RCE漏洞">
 <meta property="og:url" content="http://hachp1.github.io/posts/Web安全/20190124-5.x RCE.html">
 <meta property="og:site_name" content="Math &amp; Sec ，CHP的个人博客">
-<meta property="og:description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。 0x1 基础知识 Thinkphp 兼容模式 兼容模式是用于不支持PATHINFO的特殊环境，使用时，URL地址形如：  http://localhost/?s=/">
+<meta property="og:description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/eggs.jpg">
-<meta property="og:updated_time" content="2019-01-24T11:57:52.584Z">
+<meta property="og:updated_time" content="2019-01-24T13:25:55.123Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Thinkphp 5.x RCE漏洞">
-<meta name="twitter:description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。 0x1 基础知识 Thinkphp 兼容模式 兼容模式是用于不支持PATHINFO的特殊环境，使用时，URL地址形如：  http://localhost/?s=/">
+<meta name="twitter:description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/eggs.jpg">
     
 
@@ -240,8 +240,7 @@
 			<h1 id="thinkphp-5.x-rce漏洞">Thinkphp 5.x RCE漏洞</h1>
 <h2 id="x0-概要">0x0 概要</h2>
 <p>Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。<br>
-由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。</p>
-<h2 id="x1-基础知识">0x1 基础知识</h2>
+由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。 <a id="more"></a> ## 0x1 基础知识</p>
 <h3 id="thinkphp-兼容模式">Thinkphp 兼容模式</h3>
 <p>兼容模式是用于不支持PATHINFO的特殊环境，使用时，URL地址形如：</p>
 <ul>
