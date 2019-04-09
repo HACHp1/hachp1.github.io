@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，CHP的个人博客">
 <meta property="og:description" content="决策树 决策树的最优分支选择 分类树  枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。 设定一个阈值，若超过，则分裂。  回归树  在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。 预测时，使用分组的组内平均数作为该组所有元素的预测值；损失函数可以用该组的各值与该组的平均数的">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
-<meta property="og:updated_time" content="2019-04-04T15:43:23.842Z">
+<meta property="og:updated_time" content="2019-04-09T01:13:06.215Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="树相关-从决策树到kaggle大杀器">
 <meta name="twitter:description" content="决策树 决策树的最优分支选择 分类树  枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。 设定一个阈值，若超过，则分裂。  回归树  在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。 预测时，使用分组的组内平均数作为该组所有元素的预测值；损失函数可以用该组的各值与该组的平均数的">
@@ -158,7 +158,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                15
+                16
                 <span>posts</span>
             </div>
             <div class="article-info-block">
@@ -333,7 +333,7 @@ F(X)=\sum_i{h(x_i)}
 F(X)=\sum_i{h(x_i)}
 \]</span> 考虑使用最小二乘代价函数： <span class="math display">\[
 L=\frac{1}{2}\sum_i(y_i-F(x_i))^2
-\]</span> L对<strong>上一个</strong>弱分类器求偏导有： <span class="math display">\[
+\]</span> L对<strong>上一个</strong>弱分类器单个样本点求偏导有： <span class="math display">\[
 \frac{\partial{L}}{\partial{F(x_i)}}=\frac{\partial\frac{1}{2}\sum_{i}(y_i-F(x_i))^2}{\partial{F(x_i)}}=-(y_i-F(x_i))
 \]</span> 而<span class="math inline">\(y_i-F(x_i)\)</span>是我们要拟合的对象（GBDT中），所以我们拟合的是代价函数<strong>对上一个弱分类器的负梯度</strong>。这里联想梯度下降的过程：<strong>要更新哪个参数，就对哪个参数求导</strong>，所以在这里，我们更新的是弱分类器本身（<strong>把上一个分类器当作参数</strong>）。将拟合后的结果加入到目标函数中也就相当于对<strong>上一阶段</strong>加入的弱分类器<strong>做了梯度下降</strong>。<br>
 这就是GBDT中的G（梯度）的来源。</li>
@@ -345,6 +345,11 @@ L=\frac{1}{2}\sum_i(y_i-F(x_i))^2+\sum_kΩ(f_k)
 \]</span> 同时，XgBoost使用二阶泰勒展开来代替GBDT中对上一个弱分类器的一阶导数。</li>
 </ul>
 <p>XgBoost相关的解释计划在下一篇继续。</p>
+<h4 id="参考资料-1">参考资料</h4>
+<ul>
+<li><a href="https://arxiv.org/pdf/1603.02754.pdf" target="_blank" rel="external">XGBoost: A Scalable Tree Boosting System</a></li>
+<li><a href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf" target="_blank" rel="external">Introduction to Boosted Trees</a></li>
+</ul>
 
         
         </div>
@@ -442,6 +447,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/posts/机器学习/20190409-treeAlgorithm2.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/ml.jpg)" alt="树相关-XGBoost与LightGBM" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/posts/机器学习/20190409-treeAlgorithm2.html" class="title">树相关-XGBoost与LightGBM</a></p>
+                            <p class="item-date"><time datetime="2019-04-09T09:49:27.000Z" itemprop="datePublished">2019-04-09</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/posts/Web安全/20190124-5.x RCE.html" class="thumbnail">
     
     
@@ -515,25 +539,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20180723-Websec.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_yellow.jpg)" alt="2018年巅峰极客 Web部分writeup" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20180723-Websec.html" class="title">2018年巅峰极客 Web部分writeup</a></p>
-                            <p class="item-date"><time datetime="2018-07-23T07:10:57.000Z" itemprop="datePublished">2018-07-23</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -543,7 +548,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -552,7 +557,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 13.33px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 16.67px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 10px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 16.67px;">机器学习初步</a>
+            <a href="/tags/Linux日常/" style="font-size: 13.33px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 16.67px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 13.33px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 16.67px;">机器学习初步</a>
         </div>
     </div>
 
