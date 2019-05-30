@@ -5,18 +5,18 @@
     
     <title>2018年巅峰极客 Web部分writeup | Math &amp; Sec ，CHP的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="A simple cms writeup做此题之前刚好做了一道原题，比赛的时候是做到最后一步的，但是出了差错没有出flag，很气。  首先，打开连接，发现是onethink1.0框架。搜索该框架的漏洞，果然发现了getshell利用过程，原理如下: 该框架是对thinkphp框架的二次开发，会将注册后的用户名内容存入临时php文件中。我们使用一句话来作为用户名注册账户，在登录后就将其存入缓存文件，">
+    <meta name="description" content="A simple cms writeup 做此题之前刚好做了一道原题，比赛的时候是做到最后一步的，但是出了差错没有出flag，很气。  首先，打开连接，发现是onethink1.0框架。搜索该框架的漏洞，果然发现了getshell利用过程，原理如下: &amp;gt; 该框架是对thinkphp框架的二次开发，会将注册后的用户名内容存入临时php文件中。 我们使用一句话来作为用户名注册账户，在登录">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2018年巅峰极客 Web部分writeup">
 <meta property="og:url" content="http://hachp1.github.io/posts/Web安全/20180723-Websec.html">
 <meta property="og:site_name" content="Math &amp; Sec ，CHP的个人博客">
-<meta property="og:description" content="A simple cms writeup做此题之前刚好做了一道原题，比赛的时候是做到最后一步的，但是出了差错没有出flag，很气。  首先，打开连接，发现是onethink1.0框架。搜索该框架的漏洞，果然发现了getshell利用过程，原理如下: 该框架是对thinkphp框架的二次开发，会将注册后的用户名内容存入临时php文件中。我们使用一句话来作为用户名注册账户，在登录后就将其存入缓存文件，">
+<meta property="og:description" content="A simple cms writeup 做此题之前刚好做了一道原题，比赛的时候是做到最后一步的，但是出了差错没有出flag，很气。  首先，打开连接，发现是onethink1.0框架。搜索该框架的漏洞，果然发现了getshell利用过程，原理如下: &amp;gt; 该框架是对thinkphp框架的二次开发，会将注册后的用户名内容存入临时php文件中。 我们使用一句话来作为用户名注册账户，在登录">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_yellow.jpg">
 <meta property="og:updated_time" content="2019-01-24T13:26:54.587Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2018年巅峰极客 Web部分writeup">
-<meta name="twitter:description" content="A simple cms writeup做此题之前刚好做了一道原题，比赛的时候是做到最后一步的，但是出了差错没有出flag，很气。  首先，打开连接，发现是onethink1.0框架。搜索该框架的漏洞，果然发现了getshell利用过程，原理如下: 该框架是对thinkphp框架的二次开发，会将注册后的用户名内容存入临时php文件中。我们使用一句话来作为用户名注册账户，在登录后就将其存入缓存文件，">
+<meta name="twitter:description" content="A simple cms writeup 做此题之前刚好做了一道原题，比赛的时候是做到最后一步的，但是出了差错没有出flag，很气。  首先，打开连接，发现是onethink1.0框架。搜索该框架的漏洞，果然发现了getshell利用过程，原理如下: &amp;gt; 该框架是对thinkphp框架的二次开发，会将注册后的用户名内容存入临时php文件中。 我们使用一句话来作为用户名注册账户，在登录">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/planet_yellow.jpg">
     
 
@@ -237,30 +237,23 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h4 id="A-simple-cms-writeup"><a href="#A-simple-cms-writeup" class="headerlink" title="A simple cms writeup"></a>A simple cms writeup</h4><p>做此题之前刚好做了一道原题，比赛的时候是做到最后一步的，但是出了差错没有出flag，很气。</p>
+			<h4 id="a-simple-cms-writeup">A simple cms writeup</h4>
+<p>做此题之前刚好做了一道原题，比赛的时候是做到最后一步的，但是出了差错没有出flag，很气。</p>
 <ul>
-<li>首先，打开连接，发现是onethink1.0框架。搜索该框架的漏洞，果然发现了getshell利用过程，原理如下:<blockquote>
-<p>该框架是对thinkphp框架的二次开发，会将注册后的用户名内容存入临时php文件中。<br>我们使用一句话来作为用户名注册账户，在登录后就将其存入缓存文件，最后访问缓存文件即可完成getshell。  </p>
-</blockquote>
-</li>
+<li>首先，打开连接，发现是onethink1.0框架。搜索该框架的漏洞，果然发现了getshell利用过程，原理如下: &gt; 该框架是对thinkphp框架的二次开发，会将注册后的用户名内容存入临时php文件中。<br>
+我们使用一句话来作为用户名注册账户，在登录后就将其存入缓存文件，最后访问缓存文件即可完成getshell。</li>
 </ul>
-<p>原理比较简单，但是具体利用过程有几个关键点:</p>
-<ol>
-<li>注册用户名由于特殊字符不能直接输入进输入框。</li>
-<li>存放一句话的临时文件名并不知道。      <a id="more"></a></li>
-</ol>
+<p>原理比较简单，但是具体利用过程有几个关键点: 1. 注册用户名由于特殊字符不能直接输入进输入框。 2. 存放一句话的临时文件名并不知道。<br>
+<a id="more"></a> * 对于问题1，可以通过burp修改包完成。 问题二则需要一定技巧。</p>
 <ul>
-<li><p>对于问题1，可以通过burp修改包完成。<br>问题二则需要一定技巧。    </p>
-</li>
-<li><p>首先，使用工具扫描网站路径，发现<a href="http://www.zip文件可以直接下载，解压后发现是onethink打包。此时考虑本地复现，从而解决问题2。" target="_blank" rel="external">www.zip文件可以直接下载，解压后发现是onethink打包。此时考虑本地复现，从而解决问题2。</a> </p>
-</li>
+<li>首先，使用工具扫描网站路径，发现www.zip文件可以直接下载，解压后发现是onethink打包。此时考虑本地复现，从而解决问题2。</li>
 <li>解压至xampp文件夹后，访问本地网页发现并不能成功访问，出现数据库错误字样，这是因为本地数据库没有配置的缘故。此处只能<font style="color:red;">重装</font>onethink来解决。</li>
 <li>搜索onethink重装方法，按教程搜索并删除子文件夹中的.lock文件，打开install.php文件，完成安装。</li>
-<li>进入注册界面，填入信息后，使用burp拦截并更改，将用户名改为<code>%0a$x=$_GET[a];//</code>（说明：%0a为换行符十六进制，为了在文件中换行，//是注释，将一句话后的无关代码注释掉以正常运行）<br><img src="http://120.78.185.175/img/math/dfjk/dfjk_burp.png" alt="burp修改过程"></li>
+<li>进入注册界面，填入信息后，使用burp拦截并更改，将用户名改为<code>%0a$x=$_GET[a];//</code>（说明：%0a为换行符十六进制，为了在文件中换行，//是注释，将一句话后的无关代码注释掉以正常运行） <img src="http://120.78.185.175/img/math/dfjk/dfjk_burp.png" alt="burp修改过程"></li>
 <li>用同样的方法注册<code>%0apassthru($x);//</code>用户。</li>
-<li>进入登录界面，按顺序依次登入以上两个用户（使用burp改用户名）此时，一句话已写入临时文件中。<br><img src="http://120.78.185.175/img/math/dfjk/dfjk_login.png" alt="用户登陆成功"></li>
-<li><font style="color:red">使用notepad++文件搜索功能搜索payload，查找到一句话文件所在位置</font>（\Runtime\Temponethink_6d11f0be3af9c28d4120c8fd5fe65a40.php和\Runtime\Temp\onethink_d403acece4ebce56a3a4237340fbbe70.php文件都可以）<br><img src="http://120.78.185.175/img/math/dfjk/dfjk_search.png" alt="搜索结果"></li>
-<li>之后访问一句话，可以执行shell命令，搜索目录后得到flag。<br><img src="http://120.78.185.175/img/math/dfjk/dfjk_shell.png" alt="本地复现取得命令执行权限执行ping命令时"></li>
+<li>进入登录界面，按顺序依次登入以上两个用户（使用burp改用户名）此时，一句话已写入临时文件中。 <img src="http://120.78.185.175/img/math/dfjk/dfjk_login.png" alt="用户登陆成功"></li>
+<li><font style="color:red">使用notepad++文件搜索功能搜索payload，查找到一句话文件所在位置</font>（\Runtime\Temponethink_6d11f0be3af9c28d4120c8fd5fe65a40.php和\Runtime\Temp\onethink_d403acece4ebce56a3a4237340fbbe70.php文件都可以） <img src="http://120.78.185.175/img/math/dfjk/dfjk_search.png" alt="搜索结果"></li>
+<li>之后访问一句话，可以执行shell命令，搜索目录后得到flag。 <img src="http://120.78.185.175/img/math/dfjk/dfjk_shell.png" alt="本地复现取得命令执行权限执行ping命令时"></li>
 </ul>
 
         
