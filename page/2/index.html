@@ -235,16 +235,16 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h2 id="概要">概要</h2>
-<ul>
-<li><p>逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。</p></li>
-<li><p>逻辑回归使用<span class="math inline">\(θX\)</span>作为划分数据的边界。</p></li>
-<li><p>逻辑回归使用</p></li>
+            <p><h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><ul>
+<li><p>逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。</p>
+</li>
+<li><p>逻辑回归使用$θX$作为划分数据的边界。</p>
+</li>
+<li><p>逻辑回归使用</p>
+</li>
 </ul>
-<p><span class="math display">\[
-g( Z) =\frac{1}{1+e^{Z}}
-\]</span></p>
-<p>替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：从理论上来讲，此时的似然函数应该是最大的，可以用梯度上升法求之。</p>
+<p>$$<br>g( Z) =\frac{1}{1+e^{Z}}<br>$$</p>
+<p>替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：从理论上来讲，此时的似然函数应该是最大的，可以用梯度上升法求之。<br></p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20180411-logistic.html#more">Read More</a>
             </p>
@@ -354,28 +354,21 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h2 id="numpy数组常用处理函数">numpy数组常用处理函数</h2>
-<ul>
-<li>numpy 数组是python机器学习常用的数据结构，在这里简单记下常见的使用方法和一些初学时遇到的问题<br>
-</li>
+            <p><h2 id="numpy数组常用处理函数"><a href="#numpy数组常用处理函数" class="headerlink" title="numpy数组常用处理函数"></a>numpy数组常用处理函数</h2><ul>
+<li>numpy 数组是python机器学习常用的数据结构，在这里简单记下常见的使用方法和一些初学时遇到的问题   </li>
 </ul>
-<ol style="list-style-type: decimal">
-<li>注意事项<br>
-</li>
+<ol>
+<li>注意事项   </li>
 </ol>
 <ul>
-<li>使用数组时不要犯低级错误，注意行数和列数，不要搞反了。<br>
-</li>
+<li>使用数组时不要犯低级错误，注意行数和列数，不要搞反了。   </li>
 <li><code>np.array</code><strong>转化宽度不一致的数组时会出现未知错误</strong>，使用时要谨慎。</li>
 <li>numpy使用元组作为引用，容易和多维数组按层拆分搞混，<strong>多维数组不支持元组索引</strong>（numpy也支持按层拆分）如：<code>a[1,2]</code>和<code>b[1][2]</code>。</li>
-<li>注意矩阵乘法转置。<br>
-</li>
-<li>注意numpy不是默认二维数组， 若矩阵为向量，则只有shape[0](即向量长度为shape[0]而不是它作为矩阵时的shape[1]): [1,2,3,4] 看作矩阵： shape:[1,4] 看作向量：shape:[4]</li>
+<li>注意矩阵乘法转置。    </li>
+<li>注意numpy不是默认二维数组，<br>若矩阵为向量，则只有shape[0](即向量长度为shape[0]而不是它作为矩阵时的shape[1]):<br>[1,2,3,4]<br>看作矩阵： shape:[1,4]<br>看作向量：shape:[4]</li>
 <li>在维度不匹配的时候可以加上shape先判断。</li>
-<li>矩阵第一个参数为行数，第二个为列数...申请空白2维矩阵:(0,2)</li>
-<li>添加新行：<br>
-<code>np.append(red,[vx],axis=0)</code><font style="color:red">此处的vx必须升维到与大矩阵相同，axis表示添加一行</font><br>
-或<code>yellow=np.r_[yellow,[vx]]</code>，道理同上</p>
+<li>矩阵第一个参数为行数，第二个为列数…申请空白2维矩阵:(0,2)</li>
+<li>添加新行：<br><code>np.append(red,[vx],axis=0)</code><font style="color:red">此处的vx必须升维到与大矩阵相同，axis表示添加一行</font><br>或<code>yellow=np.r_[yellow,[vx]]</code>，道理同上</p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20180409-numpy.html#more">Read More</a>
             </p>
@@ -485,13 +478,10 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h2 id="fwaf">Fwaf</h2>
-<p>Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。</p>
-<h2 id="库的使用和特征化">库的使用和特征化</h2>
-<p>Fwaf使用sklearn库训练样本集。<br>
-其中，使用TfidfVectorizer对字符串进行特征化。</p>
+            <p><h2 id="Fwaf"><a href="#Fwaf" class="headerlink" title="Fwaf   "></a>Fwaf   </h2><p>Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。  </p>
+<h2 id="库的使用和特征化"><a href="#库的使用和特征化" class="headerlink" title="库的使用和特征化"></a>库的使用和特征化</h2><p>Fwaf使用sklearn库训练样本集。<br>其中，使用TfidfVectorizer对字符串进行特征化。</p>
 <blockquote>
-<p>TfidfVectorizer TF-IDF（term frequency–inverse document frequency）是一种用于资讯检索与文本挖掘的常用加权技术。TF-IDF是一种统计方法，用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。TF-IDF加权的各种形式常被搜索引擎应用，作为文件与用户查询之间相关程度的度量或评级。除了TF-IDF以外，互联网上的搜索引擎还会使用基于连结分析的评级方法，以确定文件在搜寻结果中出现的顺序。</p>
+<p>TfidfVectorizer   TF-IDF（term frequency–inverse document frequency）是一种用于资讯检索与文本挖掘的常用加权技术。TF-IDF是一种统计方法，用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。TF-IDF加权的各种形式常被搜索引擎应用，作为文件与用户查询之间相关程度的度量或评级。除了TF-IDF以外，互联网上的搜索引擎还会使用基于连结分析的评级方法，以确定文件在搜寻结果中出现的顺序。<br></p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20180408-ml.html#more">Read More</a>
             </p>
@@ -601,16 +591,19 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="linux下的分屏">Linux下的分屏</h1>
-<p>在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。 在这里小记一下几种简单的分屏命令。</p>
-<h2 id="terminal分屏">1、terminal分屏</h2>
-<p>使用tmux对terminal分屏，常用指令如下：</p>
+            <p><h1 id="Linux下的分屏"><a href="#Linux下的分屏" class="headerlink" title="Linux下的分屏"></a>Linux下的分屏</h1><p>在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。<br>在这里小记一下几种简单的分屏命令。</p>
+<h2 id="1、terminal分屏"><a href="#1、terminal分屏" class="headerlink" title="1、terminal分屏"></a>1、terminal分屏</h2><p>使用tmux对terminal分屏，常用指令如下：</p>
 <ul>
-<li><p>开启tmux：在terminal中输入tmux开启分屏。</p></li>
-<li><p>tmux ls： 显示已有的tmux会话</p></li>
-<li><p>tmux attach-session -t 数字： 选择tmux</p></li>
-<li><p>tmux kill-session -t session-name：关闭tmux</p></li>
-<li><p>开启鼠标移动、调节窗口大小等功能：[ctrl]+b+:后输入 set -g mouse on</p></li>
+<li><p>开启tmux：在terminal中输入tmux开启分屏。  </p>
+</li>
+<li><p>tmux ls： 显示已有的tmux会话   </p>
+</li>
+<li><p>tmux attach-session -t 数字： 选择tmux   </p>
+</li>
+<li><p>tmux kill-session -t session-name：关闭tmux    </p>
+</li>
+<li><p>开启鼠标移动、调节窗口大小等功能：[ctrl]+b+:后输入 set -g mouse on</p>
+</li>
 </ul></p>
             <p class="article-more-link">
                 <a href="/posts/Linux日常/20180406-vim&t.html#more">Read More</a>
@@ -721,19 +714,13 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="第一周基本概念">第一周，基本概念</h1>
-<ul>
-<li><p>机器学习可以进行的条件：<br>
-1、 有某种模式可以学习。<br>
-2、 这种模式<font color="red">不知道怎么手工明确规定</font>（如果通过编写可以实现的就不需要机器学习）。<br>
-3、 有数据资料。</p></li>
-<li><p>机器学习四种元素：<br>
-1、 输入X。<br>
-2、 输出Y。<br>
-3、 hypothesis H。<br>
-4、 资料 D</p></li>
+            <p><h1 id="第一周，基本概念"><a href="#第一周，基本概念" class="headerlink" title="第一周，基本概念"></a>第一周，基本概念</h1><ul>
+<li><p>机器学习可以进行的条件：<br>1、    有某种模式可以学习。<br>2、    这种模式<font color="red">不知道怎么手工明确规定</font>（如果通过编写可以实现的就不需要机器学习）。<br>3、    有数据资料。</p>
+</li>
+<li><p>机器学习四种元素：<br>1、    输入X。<br>2、    输出Y。<br>3、    hypothesis H。<br>4、    资料 D</p>
+</li>
 </ul>
-<p>数据挖掘和机器学习有很多重合点，但不是一模一样。</p>
+<p>数据挖掘和机器学习有很多重合点，但不是一模一样。<br></p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20180403-ml1.html#more">Read More</a>
             </p>
@@ -844,10 +831,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <div class="article-entry" itemprop="articleBody">
         
             
-			<p>晨日暖阳斜倚窗。绿树桩，白屋房。<br>
-微风过面，虫鸣燕正忙。城中伊人早登墙，红笑靥，含蓄望。<br>
-料知心事不可想。蛾眉锁，轻拂妆。<br>
-路客打量，何事溢心房。遥寄命途多渴望，手心暖，思却凉。</p>
+			<p>晨日暖阳斜倚窗。绿树桩，白屋房。<br>微风过面，虫鸣燕正忙。城中伊人早登墙，红笑靥，含蓄望。<br>料知心事不可想。蛾眉锁，轻拂妆。<br>路客打量，何事溢心房。遥寄命途多渴望，手心暖，思却凉。  </p>
 
         
         </div>
@@ -946,9 +930,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <div class="article-entry" itemprop="articleBody">
         
             
-			<p>似乎从来没有开始过<br>
-之后会常来的<br>
-抛弃word 23333</p>
+			<p>似乎从来没有开始过<br>之后会常来的<br>抛弃word 23333  </p>
 
         
         </div>
