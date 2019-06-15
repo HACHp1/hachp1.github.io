@@ -5,18 +5,18 @@
     
     <title>2019国赛西南赛区部分WEB WP | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="2019国赛西南赛区部分WEB WP 前言  国赛区域赛打完了，太菜了，就当公费旅游了。趁这几天有空复现了一下几道题。  day1  划水并且上别人的车。源码忘了拷，血亏。只做出一道yml反序列化的题，还是上的别人的车。  day2 web1  先膜一发evoA师傅，感谢大师傅给的思路。 这题思路很骚，虽然做题点都学过，但是思路很巧妙。 &amp;gt; 考点：htaccess文件">
+    <meta name="description" content="2019国赛西南赛区部分WEB WP 前言  国赛区域赛打完了，太菜了，就当公费旅游了。趁这几天有空复现了一下几道题。  day1  划水并且上别人的车。源码忘了拷，血亏。只做出一道yml反序列化的题，还是上的别人的车。  day2 web1  先膜一发evoA师傅，感谢大师傅给的思路。 这题思路很骚，虽然做题点都学过，但是思路很巧妙。   考点：htaccess文件">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2019国赛西南赛区部分WEB WP">
 <meta property="og:url" content="http://hachp1.github.io/posts/Web安全/20190615-19guosaixx.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="2019国赛西南赛区部分WEB WP 前言  国赛区域赛打完了，太菜了，就当公费旅游了。趁这几天有空复现了一下几道题。  day1  划水并且上别人的车。源码忘了拷，血亏。只做出一道yml反序列化的题，还是上的别人的车。  day2 web1  先膜一发evoA师傅，感谢大师傅给的思路。 这题思路很骚，虽然做题点都学过，但是思路很巧妙。 &amp;gt; 考点：htaccess文件">
+<meta property="og:description" content="2019国赛西南赛区部分WEB WP 前言  国赛区域赛打完了，太菜了，就当公费旅游了。趁这几天有空复现了一下几道题。  day1  划水并且上别人的车。源码忘了拷，血亏。只做出一道yml反序列化的题，还是上的别人的车。  day2 web1  先膜一发evoA师傅，感谢大师傅给的思路。 这题思路很骚，虽然做题点都学过，但是思路很巧妙。   考点：htaccess文件">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
-<meta property="og:updated_time" content="2019-06-15T09:03:00.243Z">
+<meta property="og:updated_time" content="2019-06-15T09:06:25.484Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2019国赛西南赛区部分WEB WP">
-<meta name="twitter:description" content="2019国赛西南赛区部分WEB WP 前言  国赛区域赛打完了，太菜了，就当公费旅游了。趁这几天有空复现了一下几道题。  day1  划水并且上别人的车。源码忘了拷，血亏。只做出一道yml反序列化的题，还是上的别人的车。  day2 web1  先膜一发evoA师傅，感谢大师傅给的思路。 这题思路很骚，虽然做题点都学过，但是思路很巧妙。 &amp;gt; 考点：htaccess文件">
+<meta name="twitter:description" content="2019国赛西南赛区部分WEB WP 前言  国赛区域赛打完了，太菜了，就当公费旅游了。趁这几天有空复现了一下几道题。  day1  划水并且上别人的车。源码忘了拷，血亏。只做出一道yml反序列化的题，还是上的别人的车。  day2 web1  先膜一发evoA师傅，感谢大师傅给的思路。 这题思路很骚，虽然做题点都学过，但是思路很巧妙。   考点：htaccess文件">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
     
 
@@ -249,9 +249,11 @@
 <h2 id="day2-web1">day2 web1</h2>
 <ul>
 <li>先膜一发<strong>evoA</strong>师傅，感谢大师傅给的思路。</li>
-<li>这题思路很骚，虽然做题点都学过，但是思路很巧妙。 &gt; 考点：htaccess文件写入</li>
-<li>首先，提示是文件上传，但是文件上传处被过滤的死死的；整个目录中相对宽松的地方就只有login-lock.php处的代码了，通过post time参数可以写入任意代码： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">"time"</span>])) &#123;</div><div class="line">    $time = $_POST[<span class="string">"time"</span>];</div><div class="line">    $lock = fopen(<span class="string">"files/"</span> . $_SESSION[<span class="string">"name"</span>], <span class="string">"w"</span>);</div><div class="line">    fwrite($lock, $time);</div><div class="line">    fclose($lock);</div><div class="line">    sleep(<span class="number">2</span>);<span class="comment">//假装处理要消耗不少时间 让动画好看一点</span></div><div class="line">    <span class="keyword">echo</span> <span class="string">"files/"</span> . $_SESSION[<span class="string">"name"</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure></li>
+<li>这题思路很骚，虽然做题点都学过，但是思路很巧妙。</li>
 </ul>
+<blockquote>
+<p>考点：htaccess文件写入 * 首先，提示是文件上传，但是文件上传处被过滤的死死的；整个目录中相对宽松的地方就只有login-lock.php处的代码了，通过post time参数可以写入任意代码： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>($_POST[<span class="string">"time"</span>])) &#123;</div><div class="line">    $time = $_POST[<span class="string">"time"</span>];</div><div class="line">    $lock = fopen(<span class="string">"files/"</span> . $_SESSION[<span class="string">"name"</span>], <span class="string">"w"</span>);</div><div class="line">    fwrite($lock, $time);</div><div class="line">    fclose($lock);</div><div class="line">    sleep(<span class="number">2</span>);<span class="comment">//假装处理要消耗不少时间 让动画好看一点</span></div><div class="line">    <span class="keyword">echo</span> <span class="string">"files/"</span> . $_SESSION[<span class="string">"name"</span>];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+</blockquote>
 <p>但是，生成的文件名使用的name是用户名，而在注册用户时，用户名过滤比较严格： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">preg_match(<span class="string">'/(.+)(?=\.)/'</span>, $name, $matches); <span class="comment">//只要发现.前面有东西就干死</span></div></pre></td></tr></table></figure></p>
 <p>其实回过头来才看出来作者是在提示：.前面有东西就干死 :)，那前面没东西不就好了。<br>
 所以这里可以创建一个用户名为<code>.htaccess</code>的用户，在其中将jpg文件解析为php；然后再创一个正常用户，上传一个图片马即可getshell（不能用.htaccess用户是因为php默认不解析包含htaccess关键字的文件，而上传的图片名也为用户名）<br>
