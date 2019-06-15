@@ -5,18 +5,18 @@
     
     <title>树相关-从决策树到kaggle大杀器 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="决策树决策树的最优分支选择分类树 枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。 设定一个阈值，若超过，则分裂。  回归树 在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。 预测时，使用分组的组内平均数作为该组所有元素的预测值；损失函数可以用该组的各值与该组的平均数的残差平方和。">
+    <meta name="description" content="决策树 决策树的最优分支选择 分类树  枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。 设定一个阈值，若超过，则分裂。  回归树  在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。 预测时，使用分组的组内平均数作为该组所有元素的预测值；损失函数可以用该组的各值与该组的平均数的">
 <meta name="keywords" content="机器学习-算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="树相关-从决策树到kaggle大杀器">
 <meta property="og:url" content="http://hachp1.github.io/posts/机器学习/20181204-treeAlgorithm.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="决策树决策树的最优分支选择分类树 枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。 设定一个阈值，若超过，则分裂。  回归树 在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。 预测时，使用分组的组内平均数作为该组所有元素的预测值；损失函数可以用该组的各值与该组的平均数的残差平方和。">
+<meta property="og:description" content="决策树 决策树的最优分支选择 分类树  枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。 设定一个阈值，若超过，则分裂。  回归树  在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。 预测时，使用分组的组内平均数作为该组所有元素的预测值；损失函数可以用该组的各值与该组的平均数的">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
 <meta property="og:updated_time" content="2019-04-09T01:13:06.215Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="树相关-从决策树到kaggle大杀器">
-<meta name="twitter:description" content="决策树决策树的最优分支选择分类树 枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。 设定一个阈值，若超过，则分裂。  回归树 在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。 预测时，使用分组的组内平均数作为该组所有元素的预测值；损失函数可以用该组的各值与该组的平均数的残差平方和。">
+<meta name="twitter:description" content="决策树 决策树的最优分支选择 分类树  枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。 设定一个阈值，若超过，则分裂。  回归树  在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。 预测时，使用分组的组内平均数作为该组所有元素的预测值；损失函数可以用该组的各值与该组的平均数的">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
     
 
@@ -158,7 +158,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                17
+                18
                 <span>posts</span>
             </div>
             <div class="article-info-block">
@@ -237,70 +237,118 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="决策树"><a href="#决策树" class="headerlink" title="决策树"></a>决策树</h1><h2 id="决策树的最优分支选择"><a href="#决策树的最优分支选择" class="headerlink" title="决策树的最优分支选择"></a>决策树的最优分支选择</h2><h3 id="分类树"><a href="#分类树" class="headerlink" title="分类树"></a>分类树</h3><ol>
+			<h1 id="决策树">决策树</h1>
+<h2 id="决策树的最优分支选择">决策树的最优分支选择</h2>
+<h3 id="分类树">分类树</h3>
+<ol style="list-style-type: decimal">
 <li>枚举所有可能的划分，每次计算一个代价值，取代价最低的分裂方法。</li>
 <li>设定一个阈值，若超过，则分裂。</li>
 </ol>
-<h2 id="回归树"><a href="#回归树" class="headerlink" title="回归树"></a>回归树</h2><ol>
+<h2 id="回归树">回归树</h2>
+<ol style="list-style-type: decimal">
 <li>在一次分裂时，遍历所有划分方法（每次划分为两组，分别计算损失函数并相加），找出损失函数和最小的作为本次分裂；然后使用递归划分出所有可能。</li>
-<li>预测时，<strong>使用分组的组内平均数作为该组所有元素的预测值</strong>；损失函数可以用该组的各值与该组的平均数的残差平方和。<a id="more"></a>
-</li>
+<li>预测时，<strong>使用分组的组内平均数作为该组所有元素的预测值</strong>；损失函数可以用该组的各值与该组的平均数的残差平方和。 <a id="more"></a></li>
 </ol>
-<h3 id="普通回归树的训练过程"><a href="#普通回归树的训练过程" class="headerlink" title="普通回归树的训练过程"></a>普通回归树的训练过程</h3><ul>
+<h3 id="普通回归树的训练过程">普通回归树的训练过程</h3>
+<ul>
 <li>对回归树结果的不太恰当的通俗理解：在一个局部范围内用平均值来预测这个局部内的所有点的值。</li>
 <li>回归树的训练过程是一个递归的过程，首先，从分析一个递归环节开始：</li>
 </ul>
-<ol>
+<ol style="list-style-type: decimal">
 <li>随机选取一个特征</li>
 <li>先找到对这个特征的各个二划分点</li>
-<li>分别对每个划分点作如下计算：<br>因为每组的预测值为平均数，第i个分组（一共两个分组）的损失函数L(i)为：<br>$$<br>L(i)=\sum_{j=0}^{1}{(y_i^{(j)}-mean_i)^2}<br>$$<br>其中，$j$为对第i组中每个数的遍历序数，$mean_i$为第i组的平均数<br>整个树在此划分下的损失函数为：<br>$$<br>L=\sum_i{L(i)}<br>$$</li>
-<li>比较所有划分，在回归树本次分裂时，取$L$最小的划分点作为本次划分点，完成一次递归。</li>
+<li>分别对每个划分点作如下计算： 因为每组的预测值为平均数，第i个分组（一共两个分组）的损失函数L(i)为： <span class="math display">\[
+L(i)=\sum_{j=0}^{1}{(y_i^{(j)}-mean_i)^2}
+\]</span> 其中，<span class="math inline">\(j\)</span>为对第i组中每个数的遍历序数，<span class="math inline">\(mean_i\)</span>为第i组的平均数 整个树在此划分下的损失函数为： <span class="math display">\[
+L=\sum_i{L(i)}
+\]</span></li>
+<li>比较所有划分，在回归树本次分裂时，取<span class="math inline">\(L\)</span>最小的划分点作为本次划分点，完成一次递归。</li>
 <li>经过n次递归达到给定的要求时，回归树停止分裂。</li>
 </ol>
-<h2 id="集成树"><a href="#集成树" class="headerlink" title="集成树"></a>集成树</h2><ul>
+<h2 id="集成树">集成树</h2>
+<ul>
 <li>集成树是树模型的一大类模型(boost模型)，采用各个树的预测值相加作为预测结果的计算方法进行预测。</li>
 </ul>
-<h3 id="AdaBoost"><a href="#AdaBoost" class="headerlink" title="AdaBoost"></a>AdaBoost</h3><p>一些特征：   </p>
-<ol>
-<li>首先，AdaBoost是一种<strong>二分类算法</strong>。   </li>
-<li>加性模型，使用<strong>前向分步算法</strong>作为各个数学公式的来源和依据（即公式为啥长这样）。    </li>
-<li>从训练数据中学习一系列弱分类器或基本分类器，然后将这些弱分类器组合成一个强分类器    </li>
-<li>通俗理解思想：增大被分错的数据的权重，减小错误率高的弱分类器的作用。<font style="color:red">整个学习过程就像是先粗略的对整个数据集进行划分（在递归中的第一个分类器），然后对剩下的分错的数据集抽出来重点对待再次划分（递归中的第二个分类器）</font>；<strong>通过两种权重的组合（数据权重和弱分类器权重）作用巧妙地得出最终的分类器</strong>。这个思想和泰勒展开有着异曲同工之妙，即先大概分，再细分；先整体符合，再对细节下手。     </li>
-<li>关键：1、如何更新数据的权重。2、如何组合弱分类器（分类器权重）。<br>整个函数的目的是将$X$映射到${-1,1}$，即求函数:$G_m(x)→{-1,1}$</li>
-</ol>
+<h3 id="adaboost">AdaBoost</h3>
+<p>一些特征：<br>
+1. 首先，AdaBoost是一种<strong>二分类算法</strong>。<br>
+2. 加性模型，使用<strong>前向分步算法</strong>作为各个数学公式的来源和依据（即公式为啥长这样）。<br>
+3. 从训练数据中学习一系列弱分类器或基本分类器，然后将这些弱分类器组合成一个强分类器<br>
+4. 通俗理解思想：增大被分错的数据的权重，减小错误率高的弱分类器的作用。<font style="color:red">整个学习过程就像是先粗略的对整个数据集进行划分（在递归中的第一个分类器），然后对剩下的分错的数据集抽出来重点对待再次划分（递归中的第二个分类器）</font>；<strong>通过两种权重的组合（数据权重和弱分类器权重）作用巧妙地得出最终的分类器</strong>。这个思想和泰勒展开有着异曲同工之妙，即先大概分，再细分；先整体符合，再对细节下手。<br>
+5. 关键：1、如何更新数据的权重。2、如何组合弱分类器（分类器权重）。<br>
+整个函数的目的是将<span class="math inline">\(X\)</span>映射到<span class="math inline">\(\{-1,1\}\)</span>，即求函数:<span class="math inline">\(G_m(x)→\{-1,1\}\)</span></p>
 <hr>
 <ul>
 <li>整个过程：</li>
-<li>权值初始化，所有权值最开始时都被赋予相同的值：<br>$$<br>\frac{1}{N}<br>$$<br>其中，N是总弱学习器的个数。   </li>
-<li>构建弱分类器<br>使用具有权值分布$D_m$的训练数据集学习，得到基本分类器（具体过程：穷举每个阈值，使用公式计算误差$e_m$（公式见后文）选取让误差最低的阈值来设计基本分类器，即一个简单的二分类器）</li>
-<li><strong>计算弱分类器权重</strong>：思想为根据错误率调整权重的大小，错误率越大，权值越小。整个权值更新过程如下：<br>首先，计算中间系数$α_m$，公式为：<br>$$<br>α_m=\frac{1}{2}ln\frac{1-e_m}{e_m}<br>$$</li>
-<li>$e_m$为误差，<strong>计算公式为</strong>：<br>$$<br>e_m=P(G_m(x_i)≠y_i)=\sum_{i=1}^{N}w_{mi}I(G_m(x_i)≠y_i)<br>$$</li>
-<li>$w_{mi}$为当前的权重。   </li>
-<li>$I$为指示函数，代表的是指示函数（indicator function）。   它的含义是：当输入为True的时候，输出为1，输入为False的时候，输出为0。<br>然后，<strong>更新数据权重</strong>，过程为：<br>$$<br>D_{m+1}=(w_{m+1,1},…,w_{m+1,i},…,w_{m+1,N})<br>$$<br>$$<br>w_{m+1,i}=\frac{w_{mi}}{Z_m}e^{-α_my_iG_m(x_i)},i=1,2,…,N<br>$$<br>其中，$Z_m$的计算过程：<br>$$<br>Z_m=\sum_{i=1}^{N}w_{mi}e^{-α_my_iG_m(x_i)}<br>$$<br>重复以上步骤（从构造弱分类器开始），直到触发某终止条件。<br>最后，将获得的所有弱分类器与其权值相乘并相加，得到最终分类器：<br>$$<br>G(x)=sign(f(x))=sign(\sum^{M}_{m=1}α_mG_m(x))<br>$$</li>
-</ul>
-<p>此外，最后获得的分类器的误差值$e_m$有一个上界，其值为：<br>$$<br>\frac{1}{N}\sum^N_{i=1}I(G(x_i)≠y_i)\le\frac{1}{N}\sum_ie^{-y_if(x_i)}=\prod_m{Z_m}<br>$$<br>还有一些数学特征详见书上。   </p>
-<h4 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料:"></a>参考资料:</h4><ul>
-<li>李航《统计学习方法》  </li>
-<li><strong>知乎上的一篇精彩解说</strong><br><a href="https://www.zhihu.com/question/54626685/answer/140610056" target="_blank" rel="external">机器学习算法中GBDT与Adaboost的区别与联系是什么？- Frankenstein</a>    </li>
-<li>推荐blog <a href="https://blog.csdn.net/mousever/article/details/52038198" target="_blank" rel="external">AdaBoost原理（包含权重详细解释）</a> </li>
-</ul>
-<h3 id="GBDT-Gradient-Boosting-Decision-Tree-梯度上升树"><a href="#GBDT-Gradient-Boosting-Decision-Tree-梯度上升树" class="headerlink" title="GBDT(Gradient Boosting Decision Tree)梯度上升树"></a>GBDT(Gradient Boosting Decision Tree)梯度上升树</h3><h4 id="Gradient-Boosting是对AdaBoost的推广。"><a href="#Gradient-Boosting是对AdaBoost的推广。" class="headerlink" title="Gradient Boosting是对AdaBoost的推广。"></a>Gradient Boosting是对AdaBoost的推广。</h4><ul>
-<li>AdaBoost算法中，计算过程没有涉及到凸优化过程，整个过程是通过调整两个权重展开的。</li>
-<li>而GBDT从侧面用到了梯度上升的概念（恰巧完成了一个梯度下降的操作）。因此相比AdaBoost, Gradient Boosting<strong>可以使用更多种类的目标函数</strong>。   </li>
-<li>GBDT和AdaBoost都结合“从整体到细节”的思想，使每个弱分类器对剩下的细节（即残差或误差量，GBDT是残差）进一步拟合，最后就得到了结果。<ul>
-<li>整理一下思路，GBDT的过程为：首先通过某种拟合方法找到第一个函数（回归树）$h_1(x)$（已经通过梯度下降最优化），然后对残差<br>$$<br>\sum_iy_i-h_1(x_i)<br>$$<br>计算并以之为目标函数拟合第二棵回归树。以这种做法递归下去直到达到某种条件即可停止训练。最后的预测函数即<br>$$<br>F(X)=\sum_i{h(x_i)}<br>$$</li>
-<li>注意，对每个弱分类器的优化是独立于GBDT算法的，优化过程参考以往的学习方法进行，如：梯度下降、穷举。</li>
-<li>可以观察到GBDT的一个重要的特性，也就是<strong>梯度</strong>出现的地方：<font style="color:red">用回归树去拟合残差其实就是用回归树去拟合目标方程关于$F(x_i)$的梯度</font>。换句话说，就是拟合残差这一个操作恰巧和梯度下降一步是一样的。<br>证明：<br>训练过程中，当前的预测函数即<br>$$<br>F(X)=\sum_i{h(x_i)}<br>$$<br>考虑使用最小二乘代价函数：<br>$$<br>L=\frac{1}{2}\sum_i(y_i-F(x_i))^2<br>$$<br>L对<strong>上一个</strong>弱分类器单个样本点求偏导有：<br>$$<br>\frac{\partial{L}}{\partial{F(x_i)}}=\frac{\partial\frac{1}{2}\sum_{i}(y_i-F(x_i))^2}{\partial{F(x_i)}}=-(y_i-F(x_i))<br>$$<br>而$y_i-F(x_i)$是我们要拟合的对象（GBDT中），所以我们拟合的是代价函数<strong>对上一个弱分类器的负梯度</strong>。这里联想梯度下降的过程：<strong>要更新哪个参数，就对哪个参数求导</strong>，所以在这里，我们更新的是弱分类器本身（<strong>把上一个分类器当作参数</strong>）。将拟合后的结果加入到目标函数中也就相当于对<strong>上一阶段</strong>加入的弱分类器<strong>做了梯度下降</strong>。<br>这就是GBDT中的G（梯度）的来源。</li>
-</ul>
+<li>权值初始化，所有权值最开始时都被赋予相同的值： <span class="math display">\[
+\frac{1}{N}
+\]</span> 其中，N是总弱学习器的个数。<br>
 </li>
+<li>构建弱分类器<br>
+使用具有权值分布<span class="math inline">\(D_m\)</span>的训练数据集学习，得到基本分类器（具体过程：穷举每个阈值，使用公式计算误差<span class="math inline">\(e_m\)</span>（公式见后文）选取让误差最低的阈值来设计基本分类器，即一个简单的二分类器）</li>
+<li><strong>计算弱分类器权重</strong>：思想为根据错误率调整权重的大小，错误率越大，权值越小。整个权值更新过程如下： 首先，计算中间系数<span class="math inline">\(α_m\)</span>，公式为： <span class="math display">\[
+α_m=\frac{1}{2}ln\frac{1-e_m}{e_m}
+\]</span></li>
+<li><span class="math inline">\(e_m\)</span>为误差，<strong>计算公式为</strong>： <span class="math display">\[
+e_m=P(G_m(x_i)≠y_i)=\sum_{i=1}^{N}w_{mi}I(G_m(x_i)≠y_i)
+\]</span></li>
+<li><span class="math inline">\(w_{mi}\)</span>为当前的权重。<br>
+</li>
+<li><span class="math inline">\(I\)</span>为指示函数，代表的是指示函数（indicator function）。 它的含义是：当输入为True的时候，输出为1，输入为False的时候，输出为0。 然后，<strong>更新数据权重</strong>，过程为： <span class="math display">\[
+D_{m+1}=(w_{m+1,1},...,w_{m+1,i},...,w_{m+1,N})   
+\]</span> <span class="math display">\[
+w_{m+1,i}=\frac{w_{mi}}{Z_m}e^{-α_my_iG_m(x_i)},i=1,2,...,N
+\]</span> 其中，<span class="math inline">\(Z_m\)</span>的计算过程： <span class="math display">\[
+Z_m=\sum_{i=1}^{N}w_{mi}e^{-α_my_iG_m(x_i)}
+\]</span> 重复以上步骤（从构造弱分类器开始），直到触发某终止条件。<br>
+最后，将获得的所有弱分类器与其权值相乘并相加，得到最终分类器： <span class="math display">\[
+G(x)=sign(f(x))=sign(\sum^{M}_{m=1}α_mG_m(x))
+\]</span></li>
 </ul>
-<h3 id="XgBoost"><a href="#XgBoost" class="headerlink" title="XgBoost"></a>XgBoost</h3><ul>
-<li><strong>XgBoost</strong>是GBDT的改进。<br>XgBoost对GBDT的代价函数加入了正则化项防止过拟合。如，最小二乘代价函数变形为：<br>$$<br>L=\frac{1}{2}\sum_i(y_i-F(x_i))^2+\sum_kΩ(f_k)<br>$$<br>同时，XgBoost使用二阶泰勒展开来代替GBDT中对上一个弱分类器的一阶导数。</li>
+<p>此外，最后获得的分类器的误差值<span class="math inline">\(e_m\)</span>有一个上界，其值为： <span class="math display">\[
+\frac{1}{N}\sum^N_{i=1}I(G(x_i)≠y_i)\le\frac{1}{N}\sum_ie^{-y_if(x_i)}=\prod_m{Z_m}
+\]</span> 还有一些数学特征详见书上。</p>
+<h4 id="参考资料">参考资料:</h4>
+<ul>
+<li>李航《统计学习方法》<br>
+</li>
+<li><strong>知乎上的一篇精彩解说</strong> <a href="https://www.zhihu.com/question/54626685/answer/140610056" target="_blank" rel="external">机器学习算法中GBDT与Adaboost的区别与联系是什么？- Frankenstein</a><br>
+</li>
+<li>推荐blog <a href="https://blog.csdn.net/mousever/article/details/52038198" target="_blank" rel="external">AdaBoost原理（包含权重详细解释）</a></li>
+</ul>
+<h3 id="gbdtgradient-boosting-decision-tree梯度上升树">GBDT(Gradient Boosting Decision Tree)梯度上升树</h3>
+<h4 id="gradient-boosting是对adaboost的推广">Gradient Boosting是对AdaBoost的推广。</h4>
+<ul>
+<li>AdaBoost算法中，计算过程没有涉及到凸优化过程，整个过程是通过调整两个权重展开的。</li>
+<li>而GBDT从侧面用到了梯度上升的概念（恰巧完成了一个梯度下降的操作）。因此相比AdaBoost, Gradient Boosting<strong>可以使用更多种类的目标函数</strong>。<br>
+</li>
+<li>GBDT和AdaBoost都结合“从整体到细节”的思想，使每个弱分类器对剩下的细节（即残差或误差量，GBDT是残差）进一步拟合，最后就得到了结果。</li>
+<li>整理一下思路，GBDT的过程为：首先通过某种拟合方法找到第一个函数（回归树）<span class="math inline">\(h_1(x)\)</span>（已经通过梯度下降最优化），然后对残差 <span class="math display">\[
+\sum_iy_i-h_1(x_i)
+\]</span> 计算并以之为目标函数拟合第二棵回归树。以这种做法递归下去直到达到某种条件即可停止训练。最后的预测函数即 <span class="math display">\[
+F(X)=\sum_i{h(x_i)}
+\]</span></li>
+<li>注意，对每个弱分类器的优化是独立于GBDT算法的，优化过程参考以往的学习方法进行，如：梯度下降、穷举。</li>
+<li>可以观察到GBDT的一个重要的特性，也就是<strong>梯度</strong>出现的地方：<font style="color:red">用回归树去拟合残差其实就是用回归树去拟合目标方程关于<span class="math inline">\(F(x_i)\)</span>的梯度</font>。换句话说，就是拟合残差这一个操作恰巧和梯度下降一步是一样的。 证明： 训练过程中，当前的预测函数即 <span class="math display">\[
+F(X)=\sum_i{h(x_i)}
+\]</span> 考虑使用最小二乘代价函数： <span class="math display">\[
+L=\frac{1}{2}\sum_i(y_i-F(x_i))^2
+\]</span> L对<strong>上一个</strong>弱分类器单个样本点求偏导有： <span class="math display">\[
+\frac{\partial{L}}{\partial{F(x_i)}}=\frac{\partial\frac{1}{2}\sum_{i}(y_i-F(x_i))^2}{\partial{F(x_i)}}=-(y_i-F(x_i))
+\]</span> 而<span class="math inline">\(y_i-F(x_i)\)</span>是我们要拟合的对象（GBDT中），所以我们拟合的是代价函数<strong>对上一个弱分类器的负梯度</strong>。这里联想梯度下降的过程：<strong>要更新哪个参数，就对哪个参数求导</strong>，所以在这里，我们更新的是弱分类器本身（<strong>把上一个分类器当作参数</strong>）。将拟合后的结果加入到目标函数中也就相当于对<strong>上一阶段</strong>加入的弱分类器<strong>做了梯度下降</strong>。<br>
+这就是GBDT中的G（梯度）的来源。</li>
+</ul>
+<h3 id="xgboost">XgBoost</h3>
+<ul>
+<li><strong>XgBoost</strong>是GBDT的改进。 XgBoost对GBDT的代价函数加入了正则化项防止过拟合。如，最小二乘代价函数变形为： <span class="math display">\[
+L=\frac{1}{2}\sum_i(y_i-F(x_i))^2+\sum_kΩ(f_k)
+\]</span> 同时，XgBoost使用二阶泰勒展开来代替GBDT中对上一个弱分类器的一阶导数。</li>
 </ul>
 <p>XgBoost相关的解释计划在下一篇继续。</p>
-<h4 id="参考资料-1"><a href="#参考资料-1" class="headerlink" title="参考资料"></a>参考资料</h4><ul>
+<h4 id="参考资料-1">参考资料</h4>
+<ul>
 <li><a href="https://arxiv.org/pdf/1603.02754.pdf" target="_blank" rel="external">XGBoost: A Scalable Tree Boosting System</a></li>
-<li><a href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf" target="_blank" rel="external">Introduction to Boosted Trees </a></li>
+<li><a href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf" target="_blank" rel="external">Introduction to Boosted Trees</a></li>
 </ul>
 
         
@@ -399,6 +447,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20190615-19guosaixx.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="2019国赛西南赛区部分WEB WP" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20190615-19guosaixx.html" class="title">2019国赛西南赛区部分WEB WP</a></p>
+                            <p class="item-date"><time datetime="2019-06-15T09:00:00.000Z" itemprop="datePublished">2019-06-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/posts/Web安全/20190530-19qwb.html" class="thumbnail">
     
     
@@ -472,25 +539,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/机器学习/20181009-metrics.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/ml.jpg)" alt="数据预处理及训练结果评估" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
-                            <p class="item-title"><a href="/posts/机器学习/20181009-metrics.html" class="title">数据预处理及训练结果评估</a></p>
-                            <p class="item-date"><time datetime="2018-10-09T04:37:58.000Z" itemprop="datePublished">2018-10-09</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -500,7 +548,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">tags</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li></ul>
         </div>
     </div>
 
@@ -509,7 +557,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">tag cloud</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 13.33px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 20px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 13.33px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 16.67px;">机器学习初步</a>
+            <a href="/tags/Linux日常/" style="font-size: 12.5px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 17.5px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 12.5px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 15px;">机器学习初步</a>
         </div>
     </div>
 
