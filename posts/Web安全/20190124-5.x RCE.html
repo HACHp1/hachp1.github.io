@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/eggs.jpg">
-<meta property="og:updated_time" content="2019-07-04T07:12:33.791Z">
+<meta property="og:updated_time" content="2019-07-04T07:24:29.096Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Thinkphp 5.x RCE漏洞">
 <meta name="twitter:description" content="Thinkphp 5.x RCE漏洞 0x0 概要 Thinkphp为MVC处理结构，通过对路由的解析，使用控制器调用函数。 由于对兼容模式的路由处理没有进行过滤等，可以调用命名空间下的任意函数，从而产生了RCE漏洞。">
@@ -258,7 +258,7 @@
 <p>可以看到，代码没有对操作做出任何过滤和检测，直接将模块、控制器（命名空间）和操作函数解析了。 运行到此处时，path已经被分割为三部分。 之后，代码就会执行解析好的函数： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$data = <span class="keyword">self</span>::exec($dispatch, $config);</div></pre></td></tr></table></figure></p>
 <p>执行函数 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (is_callable([$instance, $action])) &#123;</div><div class="line">           <span class="comment">// 执行操作方法</span></div><div class="line">           $call = [$instance, $action];</div><div class="line">           <span class="comment">// 严格获取当前操作方法名</span></div><div class="line">           $reflect    = <span class="keyword">new</span> \ReflectionMethod($instance, $action);</div><div class="line">           $methodName = $reflect-&gt;getName();</div><div class="line">           $suffix     = $config[<span class="string">'action_suffix'</span>];</div><div class="line">           $actionName = $suffix ? substr($methodName, <span class="number">0</span>, -strlen($suffix)) : $methodName;</div><div class="line">           $request-&gt;action($actionName);</div><div class="line"></div><div class="line">       &#125;</div></pre></td></tr></table></figure></p>
 <p>此时，invokefunction已经将传入的函数执行。</p>
-<h2 id="x3一些坑以及查阅资料得到">0x3一些坑以及查阅资料得到</h2>
+<h2 id="x3-一些坑以及查阅资料得到">0x3 一些坑以及查阅资料得到</h2>
 <ul>
 <li>对于windows和linux系统，该漏洞的触发情况不一样，windows系统是对大小写敏感的，所以一些函数无法调用。</li>
 <li>在本机（windows系统）下测试网上的写入webshell和执行系统命令的POC都失败了，并且在跟踪的过程中发现源代码也不太一样，一是本地测试使用的5.0.22非完整版本，二是本地服务器的安全设置问题。</li>
