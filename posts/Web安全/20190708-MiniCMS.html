@@ -5,18 +5,18 @@
     
     <title>代码审计 MiniCMS从头开始 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="代码审计 MiniCMS从头开始写在之前最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。">
+    <meta name="description" content="代码审计 MiniCMS从头开始 写在之前 最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="代码审计 MiniCMS从头开始">
 <meta property="og:url" content="http://hachp1.github.io/posts/Web安全/20190708-MiniCMS.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="代码审计 MiniCMS从头开始写在之前最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。">
+<meta property="og:description" content="代码审计 MiniCMS从头开始 写在之前 最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/eggs.jpg">
 <meta property="og:updated_time" content="2019-07-08T07:22:53.170Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="代码审计 MiniCMS从头开始">
-<meta name="twitter:description" content="代码审计 MiniCMS从头开始写在之前最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。">
+<meta name="twitter:description" content="代码审计 MiniCMS从头开始 写在之前 最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/eggs.jpg">
     
 
@@ -237,37 +237,35 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="代码审计-MiniCMS从头开始"><a href="#代码审计-MiniCMS从头开始" class="headerlink" title="代码审计 MiniCMS从头开始"></a>代码审计 MiniCMS从头开始</h1><h2 id="写在之前"><a href="#写在之前" class="headerlink" title="写在之前"></a>写在之前</h2><p>最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。<br><a id="more"></a></p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>MiniCMS是由<a href="https://github.com/bg5sbk" target="_blank" rel="external">达达</a>设计编写的一个针对个人网站设计的微型内容管理系统。它的特点是：</p>
-<ol>
-<li>不需要数据库在支持，只需要一个可以运行PHP的Web环境</li>
-<li>只针对个人网站设计，没有复杂的成员管理和权限设置</li>
-<li>没有分类只有标签，免除发布文章时到底该怎么分类的纠结</li>
-<li>只有“文章”和“页面”两该个系统，没有“评论”、“插件”、“主题”，让你更专注于创造内容</li>
-</ol>
-<p>项目地址：<a href="https://github.com/bg5sbk/MiniCMS" target="_blank" rel="external">https://github.com/bg5sbk/MiniCMS</a></p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
+			<h1 id="代码审计-minicms从头开始">代码审计 MiniCMS从头开始</h1>
+<h2 id="写在之前">写在之前</h2>
+<p>最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。 <a id="more"></a></p>
+<h2 id="简介">简介</h2>
+<p>MiniCMS是由<a href="https://github.com/bg5sbk" target="_blank" rel="external">达达</a>设计编写的一个针对个人网站设计的微型内容管理系统。它的特点是： 1. 不需要数据库在支持，只需要一个可以运行PHP的Web环境 2. 只针对个人网站设计，没有复杂的成员管理和权限设置 3. 没有分类只有标签，免除发布文章时到底该怎么分类的纠结 4. 只有“文章”和“页面”两该个系统，没有“评论”、“插件”、“主题”，让你更专注于创造内容</p>
+<p>项目地址：https://github.com/bg5sbk/MiniCMS</p>
+<h2 id="安装">安装</h2>
+<ul>
 <li>解压</li>
 <li>复制并重命名install.txt为install.php</li>
 <li>在PHP环境下，浏览器打开install.php，填写网站路径、网站名等信息，点击安装即可（此处填写网站信息等可以注入命令造成RCE，但是由于install.php在安装完成后会自动删除，漏洞不可利用，所以并没有太大的威胁）</li>
 </ul>
-<h2 id="安装完成后的目录结构"><a href="#安装完成后的目录结构" class="headerlink" title="安装完成后的目录结构"></a>安装完成后的目录结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">│  build.php</div><div class="line">│  index.php 整个项目的入口，首先引入核心库mc-core.php，然后进行路由，对路由结果进行相应的渲染，相当于MVC中的C</div><div class="line">│  install.txt 复制为php文件后，用来安装MiniCMS</div><div class="line">│  README.md</div><div class="line">│</div><div class="line">├─mc-admin 管理功能的实现</div><div class="line">│      conf.php 用户设置页面，包括接收和保存更改的设置</div><div class="line">│      editor.php 编辑器的大小、样式调整的库</div><div class="line">│      foot.php html&lt;foot&gt;标签构造</div><div class="line">│      head.php token验证，html&lt;head&gt;标签构造；若验证失败，跳转至主页</div><div class="line">│      index.php 后台登陆身份验证页面</div><div class="line">│      page-edit.php 页面编写处理逻辑，包括显示编辑页面、接收提交的页面、页面序列化储存</div><div class="line">│      page.php 管理页面的库，声明加载数据、删除页面、还原页面（从回收站还原）</div><div class="line">│      post-edit.php 文章编写处理逻辑，包括显示编辑页面、接收提交的页面、页面序列化储存</div><div class="line">│      post.php 管理文章的库，声明加载数据、删除文章、还原文章（从回收站还原）</div><div class="line">│      style.css 后台用到的CSS</div><div class="line">│</div><div class="line">└─mc-files</div><div class="line">    │  markdown.php 一个开源的markdown解析库</div><div class="line">    │  mc-conf.php 配置文件，包含用户名和密码等敏感信息</div><div class="line">    │  mc-core.php 引入mc-tags、mc-conf，声明404函数</div><div class="line">    │  mc-rss.php 订购RSS的链接</div><div class="line">    │  mc-tags.php 相当于M，引入markdown、包括一些核心函数，包括了加载各种信息的函数（网站名、文章数、前进后退等，中间有各种过滤，可以重点分析）</div><div class="line">    │</div><div class="line">    ├─pages</div><div class="line">    │  └─index</div><div class="line">    │          delete.php 使用数组储存了删除页面的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          draft.php 使用数组储存了草稿页面的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          publish.php 使用数组储存了已发布的页面的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │</div><div class="line">    ├─posts</div><div class="line">    │  ├─data 储存了文章内容的反序列化数据（文章内容等）</div><div class="line">    │  └─index</div><div class="line">    │          delete.php 使用数组储存了删除的文章的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          draft.php 使用数组储存了草稿文章的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          publish.php 使用数组储存了已发布文章的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │</div><div class="line">    └─theme</div><div class="line">            index.php 主题文件，决定了页面的风格，将C传入的信息显示出来，相当于V</div><div class="line">            style.css 主题使用的CSS风格</div></pre></td></tr></table></figure>
-<h2 id="访客端"><a href="#访客端" class="headerlink" title="访客端"></a>访客端</h2><h3 id="路由与控制器-MVC-C"><a href="#路由与控制器-MVC-C" class="headerlink" title="路由与控制器(MVC-C)"></a>路由与控制器(MVC-C)</h3><ul>
-<li>MiniCMS在index.php页面进行简单的正则匹配和字符串对比路由，index.php会取出<code>$_SERVER[&#39;QUERY_STRING&#39;]</code>并进行正则匹配；主要有以下几种路由：<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="number">1.</span> preg_match(<span class="string">'|^post/([a-z0-5]&#123;6&#125;)$|'</span>, $qs, $matches) <span class="comment">// 路由至查看文章功能</span></div><div class="line"><span class="number">2.</span> preg_match(<span class="string">'|^tag/([^/]+)/(\?page=([0-9]+))&#123;0,1&#125;$|'</span>, $qs, $matches) <span class="comment">// 路由至查看页面功能</span></div><div class="line"><span class="number">3.</span> preg_match(<span class="string">'|^date/([0-9]&#123;4&#125;-[0-9]&#123;2&#125;)/(\?page=([0-9]+))&#123;0,1&#125;$|'</span>, $qs, $matches) <span class="comment">// 路由至按日期查看文章</span></div><div class="line"><span class="number">4.</span> preg_match(<span class="string">'|^archive/$|'</span>, $qs, $matches) <span class="comment">// 路由至按archive查看文章</span></div><div class="line"><span class="number">5.</span> $qs == <span class="string">'rss/'</span> <span class="comment">// 路由至返回RSS订阅</span></div><div class="line"><span class="number">6.</span> preg_match(<span class="string">'|^(([-a-zA-Z0-5]+/)+)$|'</span>, $qs, $matches) <span class="comment">// 路由至page查看文章</span></div><div class="line"><span class="number">7.</span> <span class="keyword">default</span>:index <span class="comment">// 其他情况，路由至主页</span></div></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="视图-MVC-V"><a href="#视图-MVC-V" class="headerlink" title="视图(MVC-V)"></a>视图(MVC-V)</h3><ul>
-<li>mc_files/theme/index.php文件中，通过<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div class="content"&gt;&lt;?php mc_the_content(); ?&gt;&lt;/div&gt;</div></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>直接渲染路由到的内容。</p>
+<h2 id="安装完成后的目录结构">安装完成后的目录结构</h2>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">│  build.php</div><div class="line">│  index.php 整个项目的入口，首先引入核心库mc-core.php，然后进行路由，对路由结果进行相应的渲染，相当于MVC中的C</div><div class="line">│  install.txt 复制为php文件后，用来安装MiniCMS</div><div class="line">│  README.md</div><div class="line">│</div><div class="line">├─mc-admin 管理功能的实现</div><div class="line">│      conf.php 用户设置页面，包括接收和保存更改的设置</div><div class="line">│      editor.php 编辑器的大小、样式调整的库</div><div class="line">│      foot.php html&lt;foot&gt;标签构造</div><div class="line">│      head.php token验证，html&lt;head&gt;标签构造；若验证失败，跳转至主页</div><div class="line">│      index.php 后台登陆身份验证页面</div><div class="line">│      page-edit.php 页面编写处理逻辑，包括显示编辑页面、接收提交的页面、页面序列化储存</div><div class="line">│      page.php 管理页面的库，声明加载数据、删除页面、还原页面（从回收站还原）</div><div class="line">│      post-edit.php 文章编写处理逻辑，包括显示编辑页面、接收提交的页面、页面序列化储存</div><div class="line">│      post.php 管理文章的库，声明加载数据、删除文章、还原文章（从回收站还原）</div><div class="line">│      style.css 后台用到的CSS</div><div class="line">│</div><div class="line">└─mc-files</div><div class="line">    │  markdown.php 一个开源的markdown解析库</div><div class="line">    │  mc-conf.php 配置文件，包含用户名和密码等敏感信息</div><div class="line">    │  mc-core.php 引入mc-tags、mc-conf，声明404函数</div><div class="line">    │  mc-rss.php 订购RSS的链接</div><div class="line">    │  mc-tags.php 相当于M，引入markdown、包括一些核心函数，包括了加载各种信息的函数（网站名、文章数、前进后退等，中间有各种过滤，可以重点分析）</div><div class="line">    │</div><div class="line">    ├─pages</div><div class="line">    │  └─index</div><div class="line">    │          delete.php 使用数组储存了删除页面的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          draft.php 使用数组储存了草稿页面的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          publish.php 使用数组储存了已发布的页面的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │</div><div class="line">    ├─posts</div><div class="line">    │  ├─data 储存了文章内容的反序列化数据（文章内容等）</div><div class="line">    │  └─index</div><div class="line">    │          delete.php 使用数组储存了删除的文章的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          draft.php 使用数组储存了草稿文章的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          publish.php 使用数组储存了已发布文章的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │</div><div class="line">    └─theme</div><div class="line">            index.php 主题文件，决定了页面的风格，将C传入的信息显示出来，相当于V</div><div class="line">            style.css 主题使用的CSS风格</div></pre></td></tr></table></figure>
+<h2 id="访客端">访客端</h2>
+<h3 id="路由与控制器mvc-c">路由与控制器(MVC-C)</h3>
 <ul>
-<li>通过mc-files/theme/style.css修改主页的CSS风格。</li>
+<li>MiniCMS在index.php页面进行简单的正则匹配和字符串对比路由，index.php会取出<code>$_SERVER['QUERY_STRING']</code>并进行正则匹配；主要有以下几种路由： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="number">1.</span> preg_match(<span class="string">'|^post/([a-z0-5]&#123;6&#125;)$|'</span>, $qs, $matches) <span class="comment">// 路由至查看文章功能</span></div><div class="line"><span class="number">2.</span> preg_match(<span class="string">'|^tag/([^/]+)/(\?page=([0-9]+))&#123;0,1&#125;$|'</span>, $qs, $matches) <span class="comment">// 路由至查看页面功能</span></div><div class="line"><span class="number">3.</span> preg_match(<span class="string">'|^date/([0-9]&#123;4&#125;-[0-9]&#123;2&#125;)/(\?page=([0-9]+))&#123;0,1&#125;$|'</span>, $qs, $matches) <span class="comment">// 路由至按日期查看文章</span></div><div class="line"><span class="number">4.</span> preg_match(<span class="string">'|^archive/$|'</span>, $qs, $matches) <span class="comment">// 路由至按archive查看文章</span></div><div class="line"><span class="number">5.</span> $qs == <span class="string">'rss/'</span> <span class="comment">// 路由至返回RSS订阅</span></div><div class="line"><span class="number">6.</span> preg_match(<span class="string">'|^(([-a-zA-Z0-5]+/)+)$|'</span>, $qs, $matches) <span class="comment">// 路由至page查看文章</span></div><div class="line"><span class="number">7.</span> <span class="keyword">default</span>:index <span class="comment">// 其他情况，路由至主页</span></div></pre></td></tr></table></figure></li>
 </ul>
-<h3 id="模型-MVC-M"><a href="#模型-MVC-M" class="headerlink" title="模型(MVC-M)"></a>模型(MVC-M)</h3><ul>
-<li>模型M相关的功能主要在 mc-files/mc-tags.php中实现。<br>主要函数有：</li>
+<h3 id="视图mvc-v">视图(MVC-V)</h3>
+<ul>
+<li>mc_files/theme/index.php文件中，通过 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div class="content"&gt;&lt;?php mc_the_content(); ?&gt;&lt;/div&gt;</div></pre></td></tr></table></figure></li>
 </ul>
-<ol>
+<p>直接渲染路由到的内容。 * 通过mc-files/theme/style.css修改主页的CSS风格。</p>
+<h3 id="模型mvc-m">模型(MVC-M)</h3>
+<ul>
+<li>模型M相关的功能主要在 mc-files/mc-tags.php中实现。 主要函数有：</li>
+</ul>
+<ol style="list-style-type: decimal">
 <li>mc_site_name 获取网站名</li>
 <li>mc_site_desc 获取网站标题后缀</li>
 <li>mc_site_link 获取网站链接</li>
@@ -297,12 +295,15 @@
 <li>mc_can_comment 返回是否能够评论</li>
 <li>mc_comment_code 获取填入的第三方评论代码</li>
 </ol>
-<h2 id="后台管理端"><a href="#后台管理端" class="headerlink" title="后台管理端"></a>后台管理端</h2><p>后台管理端直接用代码按功能写入文件，各文件的功能如下：</p>
+<h2 id="后台管理端">后台管理端</h2>
+<p>后台管理端直接用代码按功能写入文件，各文件的功能如下：</p>
 <ul>
 <li>conf.php 用户设置页面，包括接收和保存更改的设置</li>
 <li>editor.php 编辑器的大小、样式调整的库</li>
 <li>foot.php html<foot>标签构造</foot></li>
-<li>head.php token验证，html<head>标签构造；若验证失败，跳转至主页</head></li>
+<li>head.php token验证，html
+<head>
+标签构造；若验证失败，跳转至主页</head></li>
 <li>index.php 后台登陆身份验证页面</li>
 <li>page-edit.php 页面编写处理逻辑，包括显示编辑页面、接收提交的页面、页面序列化储存</li>
 <li>page.php 管理页面的库，声明加载数据、删除页面、还原页面（从回收站还原）</li>
@@ -310,23 +311,38 @@
 <li>post.php 管理文章的库，声明加载数据、删除文章、还原文章（从回收站还原）</li>
 <li>style.css 后台用到的CSS</li>
 </ul>
-<h2 id="CVE漏洞"><a href="#CVE漏洞" class="headerlink" title="CVE漏洞"></a>CVE漏洞</h2><p>在MiniCMS公开期间，爆出了多个CVE漏洞，并且至今未修复，主要如下（按时间先后顺序排列）： </p>
+<h2 id="cve漏洞">CVE漏洞</h2>
+<p>在MiniCMS公开期间，爆出了多个CVE漏洞，并且至今未修复，主要如下（按时间先后顺序排列）：</p>
 <ul>
-<li>CVE-2018-1000638  反射型XSS 存在位置：/MiniCMS-master/mc-admin/page.php处date参数存在XSS漏洞    </li>
-<li>CVE-2018-10227 储存型XSS 存在位置：/MiniCMS-master/MiniCMS-master/mc-admin/conf.php 在设置中修改网站地址处存在XSS漏洞，可直接储存XSS payload   </li>
-<li>CVE-2018-10296 储存型XSS 存在位置： /MiniCMS-master/mc-admin/post-edit.php 编辑文章标题处可直接储存XSS payload    </li>
-<li>CVE-2018-10423 个人认为不是漏洞，只是个BUG，此处的BUG只是网页中的超链接错误地指向了网站根目录，点击后就会去访问网站根目录，这个时候，洞主的apache配置没有关文件遍历，就误认为是CMS的漏洞，显然是不对的，洞主应该是刷分的，没想到竟然过了:)   </li>
-<li>CVE-2018-10424 物理路径泄露  存在位置：/MiniCMS-master/mc-admin/post-edit.php处将GET的参数id改为不存在的文件名，会爆出物理地址    </li>
-<li>CVE-2018-15899 反射型XSS   存在位置：/minicms/mc-admin/page.php的GET参数date存在XSS（似乎与CVE-2018-1000638重复了。。）    </li>
-<li>CVE-2018-16233 反射型XSS   存在位置：/MiniCMS-1.10/mc-admin/post-edit.php处的POST参数tags存在XSS    </li>
-<li>CVE-2018-16298 反射型XSS 存在位置：/MiniCMS-1.10/mc-admin/post.php的GET参数tag存在XSS          </li>
-<li>CVE-2018-17039 反射型XSS 存在位置：/mc-admin/index.php使用任意GET参数并取XSS payload，可在IE浏览器中执行JS   </li>
-<li>CVE-2018-18890 物理路径泄露  存在位置：post.php?delete=qe54cn&amp;state=delete删除不存在的文章时爆出物理路径   </li>
-<li>CVE-2018-18891 部分文件删除（逻辑漏洞，删除操作在身份认证之前进行） 存在位置：/mc-admin/post.php?delete=qe54cn&amp;state=delete不用登陆可直接删除文章   </li>
-<li>CVE-2018-18892 鸡肋的RCE 存在位置： install.php在安装时在配置处可以向配置文件直接注入PHP代码；由于在MiniCMS安装完毕后此文件会自我删除，在实际情况下并没有太大的作用  </li>
-<li>CVE-2018-20520 反射型XSS   存在位置：类似于CVE-2018-17039，/MiniCMS1/mc-admin/post-edit.php使用任意GET参数并取XSS payload，可在IE浏览器中执行JS   </li>
-<li>CVE-2018-9092 CSRF 存在位置： <a href="http://127.0.0.1//MiniCMS/mc-admin/post.php?delete=aaaaaa&amp;state=publish&amp;date=&amp;tag=" target="_blank" rel="external">http://127.0.0.1//MiniCMS/mc-admin/post.php?delete=aaaaaa&amp;state=publish&amp;date=&amp;tag=</a> 此处的CSRF会导致任意文章删除：     </li>
-<li>CVE-2019-9603 CSRF 存在位置：/minicms/mc-admin/conf.php 此处的CSRF会导致任意修改网站配置   </li>
+<li>CVE-2018-1000638 反射型XSS 存在位置：/MiniCMS-master/mc-admin/page.php处date参数存在XSS漏洞<br>
+</li>
+<li>CVE-2018-10227 储存型XSS 存在位置：/MiniCMS-master/MiniCMS-master/mc-admin/conf.php 在设置中修改网站地址处存在XSS漏洞，可直接储存XSS payload<br>
+</li>
+<li>CVE-2018-10296 储存型XSS 存在位置： /MiniCMS-master/mc-admin/post-edit.php 编辑文章标题处可直接储存XSS payload<br>
+</li>
+<li>CVE-2018-10423 个人认为不是漏洞，只是个BUG，此处的BUG只是网页中的超链接错误地指向了网站根目录，点击后就会去访问网站根目录，这个时候，洞主的apache配置没有关文件遍历，就误认为是CMS的漏洞，显然是不对的，洞主应该是刷分的，没想到竟然过了:)<br>
+</li>
+<li>CVE-2018-10424 物理路径泄露 存在位置：/MiniCMS-master/mc-admin/post-edit.php处将GET的参数id改为不存在的文件名，会爆出物理地址<br>
+</li>
+<li>CVE-2018-15899 反射型XSS 存在位置：/minicms/mc-admin/page.php的GET参数date存在XSS（似乎与CVE-2018-1000638重复了。。）<br>
+</li>
+<li>CVE-2018-16233 反射型XSS 存在位置：/MiniCMS-1.10/mc-admin/post-edit.php处的POST参数tags存在XSS<br>
+</li>
+<li>CVE-2018-16298 反射型XSS 存在位置：/MiniCMS-1.10/mc-admin/post.php的GET参数tag存在XSS<br>
+</li>
+<li>CVE-2018-17039 反射型XSS 存在位置：/mc-admin/index.php使用任意GET参数并取XSS payload，可在IE浏览器中执行JS<br>
+</li>
+<li>CVE-2018-18890 物理路径泄露 存在位置：post.php?delete=qe54cn&amp;state=delete删除不存在的文章时爆出物理路径<br>
+</li>
+<li>CVE-2018-18891 部分文件删除（逻辑漏洞，删除操作在身份认证之前进行） 存在位置：/mc-admin/post.php?delete=qe54cn&amp;state=delete不用登陆可直接删除文章<br>
+</li>
+<li>CVE-2018-18892 鸡肋的RCE 存在位置： install.php在安装时在配置处可以向配置文件直接注入PHP代码；由于在MiniCMS安装完毕后此文件会自我删除，在实际情况下并没有太大的作用<br>
+</li>
+<li>CVE-2018-20520 反射型XSS 存在位置：类似于CVE-2018-17039，/MiniCMS1/mc-admin/post-edit.php使用任意GET参数并取XSS payload，可在IE浏览器中执行JS<br>
+</li>
+<li>CVE-2018-9092 CSRF 存在位置： http://127.0.0.1//MiniCMS/mc-admin/post.php?delete=aaaaaa&amp;state=publish&amp;date=&amp;tag= 此处的CSRF会导致任意文章删除：<br>
+</li>
+<li>CVE-2019-9603 CSRF 存在位置：/minicms/mc-admin/conf.php 此处的CSRF会导致任意修改网站配置</li>
 </ul>
 
         
