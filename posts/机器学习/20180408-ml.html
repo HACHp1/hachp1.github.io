@@ -5,18 +5,18 @@
     
     <title>Fwaf短源码学习 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Fwaf Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。 库的使用和特征化 Fwaf使用sklearn库训练样本集。 其中，使用TfidfVectorizer对字符串进行特征化。  TfidfVectorizer TF-IDF（term frequency–inverse document freque">
+    <meta name="description" content="Fwaf   Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。   库的使用和特征化Fwaf使用sklearn库训练样本集。其中，使用TfidfVectorizer对字符串进行特征化。  TfidfVectorizer   TF-IDF（term frequency–inverse document frequenc">
 <meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Fwaf短源码学习">
 <meta property="og:url" content="http://hachp1.github.io/posts/机器学习/20180408-ml.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="Fwaf Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。 库的使用和特征化 Fwaf使用sklearn库训练样本集。 其中，使用TfidfVectorizer对字符串进行特征化。  TfidfVectorizer TF-IDF（term frequency–inverse document freque">
+<meta property="og:description" content="Fwaf   Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。   库的使用和特征化Fwaf使用sklearn库训练样本集。其中，使用TfidfVectorizer对字符串进行特征化。  TfidfVectorizer   TF-IDF（term frequency–inverse document frequenc">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
 <meta property="og:updated_time" content="2019-01-24T13:31:30.924Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Fwaf短源码学习">
-<meta name="twitter:description" content="Fwaf Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。 库的使用和特征化 Fwaf使用sklearn库训练样本集。 其中，使用TfidfVectorizer对字符串进行特征化。  TfidfVectorizer TF-IDF（term frequency–inverse document freque">
+<meta name="twitter:description" content="Fwaf   Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。   库的使用和特征化Fwaf使用sklearn库训练样本集。其中，使用TfidfVectorizer对字符串进行特征化。  TfidfVectorizer   TF-IDF（term frequency–inverse document frequenc">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
     
 
@@ -237,37 +237,33 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h2 id="fwaf">Fwaf</h2>
-<p>Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。</p>
-<h2 id="库的使用和特征化">库的使用和特征化</h2>
-<p>Fwaf使用sklearn库训练样本集。<br>
-其中，使用TfidfVectorizer对字符串进行特征化。</p>
+			<h2 id="Fwaf"><a href="#Fwaf" class="headerlink" title="Fwaf   "></a>Fwaf   </h2><p>Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。  </p>
+<h2 id="库的使用和特征化"><a href="#库的使用和特征化" class="headerlink" title="库的使用和特征化"></a>库的使用和特征化</h2><p>Fwaf使用sklearn库训练样本集。<br>其中，使用TfidfVectorizer对字符串进行特征化。</p>
 <blockquote>
-<p>TfidfVectorizer TF-IDF（term frequency–inverse document frequency）是一种用于资讯检索与文本挖掘的常用加权技术。TF-IDF是一种统计方法，用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。TF-IDF加权的各种形式常被搜索引擎应用，作为文件与用户查询之间相关程度的度量或评级。除了TF-IDF以外，互联网上的搜索引擎还会使用基于连结分析的评级方法，以确定文件在搜寻结果中出现的顺序。 <a id="more"></a> * TF: Term Frequency</p>
+<p>TfidfVectorizer   TF-IDF（term frequency–inverse document frequency）是一种用于资讯检索与文本挖掘的常用加权技术。TF-IDF是一种统计方法，用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。TF-IDF加权的各种形式常被搜索引擎应用，作为文件与用户查询之间相关程度的度量或评级。除了TF-IDF以外，互联网上的搜索引擎还会使用基于连结分析的评级方法，以确定文件在搜寻结果中出现的顺序。<br><a id="more"></a></p>
+<ul>
+<li>TF: Term Frequency</li>
+</ul>
 </blockquote>
-<p><span class="math display">\[
-TF(t)=\frac{n(character(i))}{n(character)}
-\]</span></p>
+<p>$$<br>TF(t)=\frac{n(character(i))}{n(character)}<br>$$</p>
 <ul>
 <li>IDF: 逆向文件频率，用于衡量一个词的重要性</li>
 </ul>
-<p><span class="math display">\[
-ID(t) = log_e(\frac{numOfDocs}{numOfDocsWhichIncludeT})
-\]</span></p>
-<p><span class="math display">\[
-TF-IDF = TF*IDF   
-\]</span></p>
+<p>$$<br>ID(t) = log_e(\frac{numOfDocs}{numOfDocsWhichIncludeT})<br>$$</p>
+<p>$$<br>TF-IDF = TF*IDF<br>$$</p>
 <ul>
-<li><p>sklearn.feature_extraction.text.TfidfVectorizer：可以将文档转换成TF-IDF特征的矩阵。</p></li>
-<li><p>ngram_range：词组切分的长度范围。该范围之内的n元feature都会被提取出来，这个参数要根据自己的需求调整。 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vectorizer = TfidfVectorizer(min_df = <span class="number">0.0</span>, analyzer=<span class="string">"char"</span>, sublinear_tf=<span class="keyword">True</span>, ngram_range=(<span class="number">1</span>,<span class="number">3</span>))</div></pre></td></tr></table></figure></p></li>
+<li><p>sklearn.feature_extraction.text.TfidfVectorizer：可以将文档转换成TF-IDF特征的矩阵。</p>
+</li>
+<li><p>ngram_range：词组切分的长度范围。该范围之内的n元feature都会被提取出来，这个参数要根据自己的需求调整。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">vectorizer = TfidfVectorizer(min_df = <span class="number">0.0</span>, analyzer=<span class="string">"char"</span>, sublinear_tf=<span class="keyword">True</span>, ngram_range=(<span class="number">1</span>,<span class="number">3</span>))</div></pre></td></tr></table></figure>
+</li>
 </ul>
-<h2 id="样本集">样本集</h2>
-<p>作者使用txt格式的样本集，每一行为一个样本，分&quot;goodqueries.txt&quot;和&quot;badqueries.txt&quot;。 截取几行： <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/top.php?stuff='uname &gt;q36497765 #</div><div class="line">/h21y8w52.nsf?<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined">cross_site_scripting.nasl</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">/ca000001.pl?action=showcart&amp;hop=\"&gt;<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined">alert('vulnerable')</span></div></pre></td></tr></table></figure></p>
-<h2 id="机器学习算法">机器学习算法</h2>
-<p>作者使用逻辑回归算法，算法虽然简单，但效果还比较好:) 比较适合刚写机器学习代码不久的我:) <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lgs = LogisticRegression(class_weight=&#123;<span class="number">1</span>: <span class="number">2</span> * validCount / badCount, <span class="number">0</span>: <span class="number">1.0</span>&#125;)</div></pre></td></tr></table></figure></p>
+<h2 id="样本集"><a href="#样本集" class="headerlink" title="样本集"></a>样本集</h2><p>作者使用txt格式的样本集，每一行为一个样本，分”goodqueries.txt”和”badqueries.txt”。<br>截取几行：<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/top.php?stuff='uname &gt;q36497765 #</div><div class="line">/h21y8w52.nsf?<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined">cross_site_scripting.nasl</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">/ca000001.pl?action=showcart&amp;hop=\"&gt;<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined">alert('vulnerable')</span></div></pre></td></tr></table></figure></p>
+<h2 id="机器学习算法"><a href="#机器学习算法" class="headerlink" title="机器学习算法"></a>机器学习算法</h2><p>作者使用逻辑回归算法，算法虽然简单，但效果还比较好:) 比较适合刚写机器学习代码不久的我:)<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">lgs = LogisticRegression(class_weight=&#123;<span class="number">1</span>: <span class="number">2</span> * validCount / badCount, <span class="number">0</span>: <span class="number">1.0</span>&#125;)</div></pre></td></tr></table></figure></p>
 <figure class="highlight cmd"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function">Accuracy: 0.999420</span></div><div class="line"><span class="function"><span class="title">Precision</span>: 0.984403</span></div><div class="line"><span class="function"><span class="title">Recall</span>: 0.998520</span></div><div class="line"><span class="function"><span class="title">F1</span>-<span class="title">Score</span>: 0.991411</span></div></pre></td></tr></table></figure>
 <p>各项指标都很高啊2333</p>
-<p>贴上作者源代码： 源代码链接：<a href="https://github.com/faizann24/Fwaf-Machine-Learning-driven-Web-Application-Firewall" target="_blank" rel="external">Fwaf-Machine-Learning-driven-Web-Application-Firewall</a></p>
+<p>贴上作者源代码：<br>源代码链接：<a href="https://github.com/faizann24/Fwaf-Machine-Learning-driven-Web-Application-Firewall" target="_blank" rel="external">Fwaf-Machine-Learning-driven-Web-Application-Firewall
+</a></p>
 
         
         </div>
