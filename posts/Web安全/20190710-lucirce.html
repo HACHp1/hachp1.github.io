@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="CVE-2019-12272 OpenWrt图形化管理界面LuCI命令注入分析 漏洞简介  OpenWrt LuCI是一款用于OpenWrt（Linux发行版）的图形化配置界面。  OpenWrt LuCI 0.10及之前版本中的admin/status/realtime/bandwidth_status和admin/status/realtime/wireless_status端点存在">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
-<meta property="og:updated_time" content="2019-07-10T04:11:56.619Z">
+<meta property="og:updated_time" content="2019-07-10T04:16:31.064Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CVE-2019-12272 OpenWrt图形化管理界面LuCI命令注入分析">
 <meta name="twitter:description" content="CVE-2019-12272 OpenWrt图形化管理界面LuCI命令注入分析 漏洞简介  OpenWrt LuCI是一款用于OpenWrt（Linux发行版）的图形化配置界面。  OpenWrt LuCI 0.10及之前版本中的admin/status/realtime/bandwidth_status和admin/status/realtime/wireless_status端点存在">
@@ -246,15 +246,19 @@
 </ul>
 <a id="more"></a>
 <h2 id="环境搭建">环境搭建</h2>
-<p>由于OpenWrt中自带LuCI，只需要使用虚拟机正常运行OpenWrt即可，在这里使用VMware运行OpenWrt虚拟机。<br>
-* OpenWrt版本：Chaos Calmer OpenWrt 15.05.1<br>
-* 下载地址：https://archive.openwrt.org/chaos_calmer/15.05.1/x86/generic/openwrt-15.05.1-x86-generic-combined-ext4.img.gz<br>
-安装成功后成功访问LuCI主页： <img src="http://120.78.185.175/img/blogimg/lucirce/img/1.png"></p>
+<ul>
+<li>由于OpenWrt中自带LuCI，只需要使用虚拟机正常运行OpenWrt即可，在这里使用VMware运行OpenWrt虚拟机。<br>
+</li>
+<li>OpenWrt版本：Chaos Calmer OpenWrt 15.05.1<br>
+</li>
+<li>下载地址：https://archive.openwrt.org/chaos_calmer/15.05.1/x86/generic/openwrt-15.05.1-x86-generic-combined-ext4.img.gz<br>
+安装成功后成功访问LuCI主页： <img src="http://120.78.185.175/img/blogimg/lucirce/img/1.png"></li>
+</ul>
 <p>设置登陆密码后成功登陆： <img src="http://120.78.185.175/img/blogimg/lucirce/img/2.png"></p>
 <p>为了直接分析LuCI源码，在虚拟机中找到LuCI的地址并使用tar打包： <img src="http://120.78.185.175/img/blogimg/lucirce/img/3.png"></p>
 <p>由于openwrt中没有文件下载工具，而LuCI已经把目录映射了，直接将打包文件移动至http映射目录下，走http下载LuCI源码： <img src="http://120.78.185.175/img/blogimg/lucirce/img/4.png"></p>
 <h2 id="poc">POC</h2>
-<p>传入Payload: http://192.168.153.4/cgi-bin/luci/admin/status/realtime/bandwidth_status/eth0$(id&gt;cmd)： <img src="http://120.78.185.175/img/blogimg/lucirce/img/5.png"></p>
+<p>传入Payload: <code>http://192.168.153.4/cgi-bin/luci/admin/status/realtime/bandwidth_status/eth0$(id&gt;cmd)</code>： <img src="http://120.78.185.175/img/blogimg/lucirce/img/5.png"></p>
 <p>成功执行命令： <img src="http://120.78.185.175/img/blogimg/lucirce/img/6.png"></p>
 <h2 id="漏洞分析">漏洞分析</h2>
 <ul>
