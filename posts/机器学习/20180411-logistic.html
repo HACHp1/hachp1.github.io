@@ -5,18 +5,18 @@
     
     <title>对逻辑回归的进一步理解 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="概要  逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。 逻辑回归使用\(θX\)作为划分数据的边界。 逻辑回归使用  \[ g( Z) =\frac{1}{1+e^{Z}} \] 替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：">
+    <meta name="description" content="概要 逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。  逻辑回归使用$θX$作为划分数据的边界。  逻辑回归使用   $$g( Z) =\frac{1}{1+e^{Z}}$$ 替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：从理论上来讲，此时的似">
 <meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="对逻辑回归的进一步理解">
 <meta property="og:url" content="http://hachp1.github.io/posts/机器学习/20180411-logistic.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="概要  逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。 逻辑回归使用\(θX\)作为划分数据的边界。 逻辑回归使用  \[ g( Z) =\frac{1}{1+e^{Z}} \] 替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：">
+<meta property="og:description" content="概要 逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。  逻辑回归使用$θX$作为划分数据的边界。  逻辑回归使用   $$g( Z) =\frac{1}{1+e^{Z}}$$ 替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：从理论上来讲，此时的似">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
 <meta property="og:updated_time" content="2019-01-24T13:31:17.539Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="对逻辑回归的进一步理解">
-<meta name="twitter:description" content="概要  逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。 逻辑回归使用\(θX\)作为划分数据的边界。 逻辑回归使用  \[ g( Z) =\frac{1}{1+e^{Z}} \] 替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：">
+<meta name="twitter:description" content="概要 逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。  逻辑回归使用$θX$作为划分数据的边界。  逻辑回归使用   $$g( Z) =\frac{1}{1+e^{Z}}$$ 替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：从理论上来讲，此时的似">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
     
 
@@ -237,40 +237,32 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h2 id="概要">概要</h2>
-<ul>
-<li><p>逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。</p></li>
-<li><p>逻辑回归使用<span class="math inline">\(θX\)</span>作为划分数据的边界。</p></li>
-<li><p>逻辑回归使用</p></li>
+			<h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><ul>
+<li><p>逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。</p>
+</li>
+<li><p>逻辑回归使用$θX$作为划分数据的边界。</p>
+</li>
+<li><p>逻辑回归使用</p>
+</li>
 </ul>
-<p><span class="math display">\[
-g( Z) =\frac{1}{1+e^{Z}}
-\]</span></p>
-<p>替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：从理论上来讲，此时的似然函数应该是最大的，可以用梯度上升法求之。 <a id="more"></a> 对边界的理解 --- 显然，<font style="color:red">Z=θX这个“超平面”可以作为划分整个空间的依据</font>。本来到这里就可以用分段函数完成估计了，但是（1）分布函数是离散的，（2）并且不利于计算靠近分界时的概率，所以引入了S函数使分布函数连续化且能估计在边界附近的概率值，一举两得。</p>
-<h2 id="对代价函数的证明与理解">对代价函数的证明与理解</h2>
-<ul>
-<li><p>在证明的时候，本来是要分别讨论y=1和y=0时的分布函数的，在得出代价函数的时候使用了一个技巧统一了公式</p></li>
-<li><p>我们知道，在实际情况下的点为<span class="math inline">\((y_{i},X_{i})\)</span>，而<span class="math inline">\(y_i\)</span>只能为0或1,所以有如下讨论：<br>
-<span class="math display">\[h(X)=p(y=1|X_{i},θ)\]</span> 显然，只有以上这个等式我们并不能用到y=0的点，所以有如下公式：<br>
-<span class="math display">\[1-h(X)=p(y=0|X_{i},θ)\]</span></p></li>
+<p>$$<br>g( Z) =\frac{1}{1+e^{Z}}<br>$$</p>
+<p>替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：从理论上来讲，此时的似然函数应该是最大的，可以用梯度上升法求之。<br><a id="more"></a></p>
+<h2 id="对边界的理解"><a href="#对边界的理解" class="headerlink" title="对边界的理解"></a>对边界的理解</h2><p>显然，<font style="color:red">Z=θX这个“超平面”可以作为划分整个空间的依据</font>。本来到这里就可以用分段函数完成估计了，但是（1）分布函数是离散的，（2）并且不利于计算靠近分界时的概率，所以引入了S函数使分布函数连续化且能估计在边界附近的概率值，一举两得。</p>
+<h2 id="对代价函数的证明与理解"><a href="#对代价函数的证明与理解" class="headerlink" title="对代价函数的证明与理解"></a>对代价函数的证明与理解</h2><ul>
+<li><p>在证明的时候，本来是要分别讨论y=1和y=0时的分布函数的，在得出代价函数的时候使用了一个技巧统一了公式</p>
+</li>
+<li><p>我们知道，在实际情况下的点为$(y_{i},X_{i})$，而$y_i$只能为0或1,所以有如下讨论：<br>$$h(X)=p(y=1|X_{i},θ)$$<br>显然，只有以上这个等式我们并不能用到y=0的点，所以有如下公式：<br>$$1-h(X)=p(y=0|X_{i},θ)$$</p>
+</li>
 </ul>
-<p>二者相乘后就得到了统一后的结果： <span class="math display">\[
-h(X_{i})^{y_{i}}*(1-h(X_{i})^{1-y_{i}}=p(y_{i}|X_{i},θ)
-\]</span></p>
-<p>我们的目的就是要使以上式子最大化（极大似然的原理：我们观测到的一组数据是n个相互独立的随机变量的观测值，将它们出现的概率乘起来即得到整个观测值出现的概率，而我们观测到的现象一定是出现概率最大的那个结果，所以带入数据后整个式子的值最大）。<br>
-接下来就是熟悉的极大似然估计的步骤了，由极大似然估计法要将其最大化，利用高数知识，函数取对数后求导，令导数为零可以解出θ值(而在计算机中则使用梯度上升等方法得到结果）<br>
-对其取对数可得逻辑回归的代价函数（与其他回归的代价函数类似，但此处因为是极大似然估计，是求其最大值） <span class="math display">\[
-L(θ)=-\frac{1}{m}[\sum_{i-1}^{m}y^{i}logh_{θ}(x^{i}+(1-y^{i})log(1-h_{θ}(x^{i}))]
-\]</span></p>
+<p>二者相乘后就得到了统一后的结果：<br>$$<br>h(X_{i})^{y_{i}}*(1-h(X_{i})^{1-y_{i}}=p(y_{i}|X_{i},θ)<br>$$ </p>
+<p>我们的目的就是要使以上式子最大化（极大似然的原理：我们观测到的一组数据是n个相互独立的随机变量的观测值，将它们出现的概率乘起来即得到整个观测值出现的概率，而我们观测到的现象一定是出现概率最大的那个结果，所以带入数据后整个式子的值最大）。<br>接下来就是熟悉的极大似然估计的步骤了，由极大似然估计法要将其最大化，利用高数知识，函数取对数后求导，令导数为零可以解出θ值(而在计算机中则使用梯度上升等方法得到结果）<br>对其取对数可得逻辑回归的代价函数（与其他回归的代价函数类似，但此处因为是极大似然估计，是求其最大值）<br>$$<br>L(θ)=-\frac{1}{m}[\sum_{i-1}^{m}y^{i}logh_{θ}(x^{i}+(1-y^{i})log(1-h_{θ}(x^{i}))]<br>$$</p>
 <ul>
-<li><p>接下来就是手工求导出公式并使用梯度下降等算法了，可以愉快的逻辑回归了:) 对<span class="math inline">\(θ_{i}\)</span>求偏导： <span class="math display">\[
-\frac{\partial}{\partial{θ_{i}} }L(θ)=(y-h(x))x_{i}
-\]</span></p></li>
-<li><p>梯度上升: <span class="math display">\[
-θ_{i}=θ_{i}+α(y-h(x))x_{i}
-\]</span></p></li>
+<li><p>接下来就是手工求导出公式并使用梯度下降等算法了，可以愉快的逻辑回归了:)<br>对$θ<em>{i}$求偏导：<br>$$<br>\frac{\partial}{\partial{θ</em>{i}} }L(θ)=(y-h(x))x_{i}<br>$$</p>
+</li>
+<li><p>梯度上升:<br>$$<br>θ<em>{i}=θ</em>{i}+α(y-h(x))x_{i}<br>$$</p>
+</li>
 </ul>
-<p>贴上手写的浮肿的代码（文件已传github）：</p>
+<p>贴上手写的浮肿的代码（文件已传github）：  </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> matplotlib.pylab <span class="keyword">as</span> plot</div><div class="line"></div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Logistic</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">    特征系数θ</span></div><div class="line"><span class="string">    '''</span></div><div class="line">    theta = np.zeros((<span class="number">1</span>, <span class="number">1</span>))</div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">           梯度上升循环次数</span></div><div class="line"><span class="string">           '''</span></div><div class="line">    cycleNum = <span class="number">10000</span></div><div class="line">    <span class="string">'''</span></div><div class="line"><span class="string">          特征向量X、标记向量y</span></div><div class="line"><span class="string">          '''</span></div><div class="line">    X = np.zeros((<span class="number">1</span>, <span class="number">1</span>))</div><div class="line">    Y = np.zeros((<span class="number">1</span>, <span class="number">1</span>))</div><div class="line">    alpha = <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">z</span><span class="params">(self, X)</span>:</span>  <span class="comment"># z函数，决定z函数的形式 注：这里的X是向量不是矩阵</span></div><div class="line">        <span class="keyword">return</span> X.dot(self.theta.transpose())</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">h</span><span class="params">(self, x)</span>:</span></div><div class="line">        <span class="keyword">return</span> <span class="number">1.0</span> / (<span class="number">1</span> + np.exp(-self.z(x)))</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, Y)</span>:</span></div><div class="line">        cx=np.ones((X.shape[<span class="number">0</span>],<span class="number">1</span>))</div><div class="line">        self.X = np.c_[cx,X]</div><div class="line">        self.Y = Y</div><div class="line">        self.theta = np.random.random((<span class="number">1</span>, self.X.shape[<span class="number">1</span>]))  <span class="comment"># 由于theta使用random函数导致其为二维而不是一维。</span></div><div class="line">        i = <span class="number">0</span></div><div class="line">        j = <span class="number">0</span></div><div class="line">        <span class="keyword">while</span> j &lt; self.cycleNum:</div><div class="line">            dtheta = np.zeros((<span class="number">1</span>, self.X.shape[<span class="number">1</span>]))</div><div class="line">            <span class="comment"># print(self.theta)</span></div><div class="line">            <span class="comment"># print(self.theta[0][0] / self.theta[0][1])</span></div><div class="line">            <span class="keyword">while</span> i &lt;= self.Y.shape[<span class="number">0</span>] - <span class="number">1</span>:</div><div class="line">                dtheta += (self.Y[i] - self.h(self.X[i])) * self.X[i]</div><div class="line">                i += <span class="number">1</span></div><div class="line">            i = <span class="number">0</span>  <span class="comment"># 初始化i</span></div><div class="line"></div><div class="line">            self.theta = self.theta + self.alpha * dtheta</div><div class="line">            j += <span class="number">1</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, vX)</span>:</span></div><div class="line">        output = self.h(vX)</div><div class="line">        <span class="keyword">if</span> output &lt; <span class="number">0.5</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">0</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            <span class="keyword">return</span> <span class="number">1</span></div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line"></div><div class="line">    lineSplit = []</div><div class="line">    x_train = []</div><div class="line">    y_train = []</div><div class="line">    <span class="keyword">with</span> open(<span class="string">"testSet-LR.txt"</span>, <span class="string">'r'</span>) <span class="keyword">as</span> f:</div><div class="line">        lines = f.readlines()</div><div class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> lines:</div><div class="line">            lineSplit = (line.strip().split())</div><div class="line">            x_train.append([float(lineSplit[<span class="number">0</span>]), float(lineSplit[<span class="number">1</span>])])</div><div class="line">            y_train.append([int(lineSplit[<span class="number">2</span>])])</div><div class="line">    x_train = np.array(x_train)</div><div class="line">    y_train = np.array(y_train)</div><div class="line"></div><div class="line">    logis = Logistic()</div><div class="line">    logis.alpha = <span class="number">100</span></div><div class="line">    logis.cycleNum = <span class="number">30000</span></div><div class="line"></div><div class="line">    logis.fit(x_train, y_train)</div><div class="line"></div><div class="line">    xop = []</div><div class="line">    yop = []</div><div class="line">    xpe = []</div><div class="line">    ype = []</div><div class="line">    i = <span class="number">0</span></div><div class="line">    <span class="keyword">while</span> i &lt;= x_train.shape[<span class="number">0</span>] - <span class="number">1</span>:</div><div class="line">        <span class="keyword">if</span> y_train[i] == <span class="number">1</span>:</div><div class="line">            xop.append(x_train[i][<span class="number">0</span>])</div><div class="line">            yop.append(x_train[i][<span class="number">1</span>])</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            xpe.append(x_train[i][<span class="number">0</span>])</div><div class="line">            ype.append(x_train[i][<span class="number">1</span>])</div><div class="line">        i += <span class="number">1</span></div><div class="line"></div><div class="line">    fig=plot.figure()</div><div class="line">    plot.scatter(xop, yop, color=<span class="string">"red"</span>)</div><div class="line">    plot.scatter(xpe, ype, color=<span class="string">"blue"</span>)</div><div class="line">    plot.xlim((<span class="number">-10</span>,<span class="number">20</span> ))</div><div class="line">    plot.ylim((<span class="number">-10</span>, <span class="number">20</span>))</div><div class="line"></div><div class="line">    X = np.linspace(<span class="number">-10</span>, <span class="number">10</span>, <span class="number">30</span>)</div><div class="line">    Y = -X * logis.theta[<span class="number">0</span>][<span class="number">1</span>] / logis.theta[<span class="number">0</span>][<span class="number">2</span>] - logis.theta[<span class="number">0</span>][<span class="number">0</span>] / logis.theta[<span class="number">0</span>][<span class="number">2</span>]</div><div class="line">    plot.plot(X, Y)</div><div class="line"></div><div class="line">    plot.show()</div><div class="line">    fig.savefig(<span class="string">'lr.jpg'</span>)</div></pre></td></tr></table></figure>
 <p>参考资料：<a href="https://blog.csdn.net/star_liux/article/details/39666737" target="_blank" rel="external">用最大似然估计求逻辑回归参数</a></p>
 
