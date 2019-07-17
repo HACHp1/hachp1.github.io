@@ -9,7 +9,7 @@
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2018省赛AWD web writeup">
-<meta property="og:url" content="http://hachp1.github.io/posts/Web安全/20180922-Websec2.html">
+<meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20180922-Websec2.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="2018年省赛AWD web writeup  一点寒暄 &amp;gt; 本次比赛还是有很多遗憾，AWD做的太少，再加上经验不足，导致结果不好看，下面开始填坑。 网站框架、版本分析 在ThinkPHP路径下找到ThinkPHP.php文件，在其中找到版本号3.2.3，本版本存在缓存漏洞。 找到之后，搜索出相同出处的网页：   阅读获得thinkphp缓存漏洞的提示。">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/eggs.jpg">
@@ -276,6 +276,27 @@ ThinkPHP缓存漏洞需要在二次开发时，调用框架的S()函数，如果
 
         
         </div>
+        
+        <div id="copyright-div">    
+
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：<a href="https://github.com/HACHp1">HACHp1</a> </strong>
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/posts/Web安全/20180922-Websec2.html" title="2018省赛AWD web writeup">https://hachp1.github.io/posts/Web安全/20180922-Websec2.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。非商业转载请注明作者及出处。商业转载请联系作者本人。
+      </li>
+    </ul>
+ 
+</div>
+
+
+        
         <footer class="article-footer">
             <div class="share-container">
 
@@ -345,6 +366,8 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 </nav>
 
 
+    
+    
     
 </article>
 
