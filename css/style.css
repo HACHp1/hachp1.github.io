@@ -17,17 +17,17 @@
   padding: 0.3em 0.5em;
   margin: 0 0 1em 0;
   border-bottom: none;
-  background-color: #aad2f0;
+  background-color: #fafafb;
   -moz-border-radius: 1em;
   -webkit-border-radius: 1em;
   border-radius: 1em;
   -moz-box-shadow: inset 0px 1px 0px 0px #eee;
   -webkit-box-shadow: inset 0px 1px 0px 0px #eee;
   box-shadow: inset 0px 1px 0px 0px #eee;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #aad2f0), color-stop(1, #8bc1ed));
-  background: -moz-linear-gradient(center top, #aad2f0 5%, #8bc1ed 100%);
-/* filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#aad2f0', endColorstr='#8bc1ed'); */
-  background-color: #aad2f0;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0.05, #fafafb), color-stop(1, #8bc1ed));
+  background: -moz-linear-gradient(center top, #fafafb 5%, #8bc1ed 100%);
+/* filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafb', endColorstr='#8bc1ed'); */
+  background-color: #fafafb;
   border: 1px solid #dcdcdc;
   text-shadow: 1px 1px 0px #eee;
 }
@@ -35,7 +35,7 @@
   margin-top: 2em;
   padding: 1.5em;
   border: 1px solid #d3d3d3;
-  background-color: #deebf7;
+  background-color: #fafafb;
 }
 #copyright-div p {
   line-height: 160%;
