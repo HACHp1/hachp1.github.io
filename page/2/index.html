@@ -244,9 +244,7 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h3 id="数据预处理及训练结果评估">数据预处理及训练结果评估</h3>
-<h4 id="归一化标准化">归一化(标准化)</h4>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#库名</span></div><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</div><div class="line"><span class="comment">#使用方法</span></div><div class="line">X_scaled = preprocessing.scale(X)</div></pre></td></tr></table></figure></p>
+            <p><h3 id="数据预处理及训练结果评估"><a href="#数据预处理及训练结果评估" class="headerlink" title="数据预处理及训练结果评估"></a>数据预处理及训练结果评估</h3><h4 id="归一化-标准化"><a href="#归一化-标准化" class="headerlink" title="归一化(标准化)"></a>归一化(标准化)</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#库名</span></div><div class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> preprocessing</div><div class="line"><span class="comment">#使用方法</span></div><div class="line">X_scaled = preprocessing.scale(X)</div></pre></td></tr></table></figure></p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20181009-metrics.html#more">查看更多</a>
             </p>
@@ -370,12 +368,13 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h3 id="年省赛awd-web-writeup">2018年省赛AWD web writeup</h3>
-<ul>
-<li><p>一点寒暄 &gt; 本次比赛还是有很多遗憾，AWD做的太少，再加上经验不足，导致结果不好看，下面开始填坑。</p></li>
-<li>网站框架、版本分析<br>
-在ThinkPHP路径下找到ThinkPHP.php文件，在其中找到版本号3.2.3，本版本存在缓存漏洞。<br>
-找到之后，搜索出相同出处的网页： <img src="http://120.78.185.175/img/blogimg/shenji1/1.png" alt="主页"> <img src="http://120.78.185.175/img/blogimg/shenji1/2.png" alt="搜索结果"> 阅读获得thinkphp缓存漏洞的提示。</p>
+            <p><h3 id="2018年省赛AWD-web-writeup"><a href="#2018年省赛AWD-web-writeup" class="headerlink" title="2018年省赛AWD web writeup"></a>2018年省赛AWD web writeup</h3><ul>
+<li><p>一点寒暄</p>
+<blockquote>
+<p>本次比赛还是有很多遗憾，AWD做的太少，再加上经验不足，导致结果不好看，下面开始填坑。</p>
+</blockquote>
+</li>
+<li><p>网站框架、版本分析<br>在ThinkPHP路径下找到ThinkPHP.php文件，在其中找到版本号3.2.3，本版本存在缓存漏洞。<br>找到之后，搜索出相同出处的网页：<br><img src="http://120.78.185.175/img/blogimg/shenji1/1.png" alt="主页"><br><img src="http://120.78.185.175/img/blogimg/shenji1/2.png" alt="搜索结果"><br>阅读获得thinkphp缓存漏洞的提示。</p></p>
             <p class="article-more-link">
                 <a href="/posts/Web安全/20180922-Websec2.html#more">查看更多</a>
             </p>
@@ -499,13 +498,17 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h4 id="a-simple-cms-writeup">A simple cms writeup</h4>
-<p>做此题之前刚好做了一道原题，比赛的时候是做到最后一步的，但是出了差错没有出flag，很气。</p>
+            <p><h4 id="A-simple-cms-writeup"><a href="#A-simple-cms-writeup" class="headerlink" title="A simple cms writeup"></a>A simple cms writeup</h4><p>做此题之前刚好做了一道原题，比赛的时候是做到最后一步的，但是出了差错没有出flag，很气。</p>
 <ul>
-<li>首先，打开连接，发现是onethink1.0框架。搜索该框架的漏洞，果然发现了getshell利用过程，原理如下: &gt; 该框架是对thinkphp框架的二次开发，会将注册后的用户名内容存入临时php文件中。<br>
-我们使用一句话来作为用户名注册账户，在登录后就将其存入缓存文件，最后访问缓存文件即可完成getshell。</li>
+<li>首先，打开连接，发现是onethink1.0框架。搜索该框架的漏洞，果然发现了getshell利用过程，原理如下:<blockquote>
+<p>该框架是对thinkphp框架的二次开发，会将注册后的用户名内容存入临时php文件中。<br>我们使用一句话来作为用户名注册账户，在登录后就将其存入缓存文件，最后访问缓存文件即可完成getshell。  </p>
+</blockquote>
+</li>
 </ul>
-<p>原理比较简单，但是具体利用过程有几个关键点: 1. 注册用户名由于特殊字符不能直接输入进输入框。 2. 存放一句话的临时文件名并不知道。<br></p>
+<p>原理比较简单，但是具体利用过程有几个关键点:</p>
+<ol>
+<li>注册用户名由于特殊字符不能直接输入进输入框。</li>
+<li>存放一句话的临时文件名并不知道。</p>
             <p class="article-more-link">
                 <a href="/posts/Web安全/20180723-Websec.html#more">查看更多</a>
             </p>
@@ -629,13 +632,13 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h2 id="vim使用初步">VIM使用初步</h2>
-<ul>
-<li><p>一般指令<br>
-查看帮助: help xxx</p></li>
-<li><p>修改文本指令: <figure class="highlight cmd"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function">A:到行首第一个非空字符并输入</span></div><div class="line"><span class="function"><span class="title">I</span>:到行尾最后一个非空字符并输入</span></div><div class="line"><span class="function"><span class="title">c</span>:删除光标所在（后跟其他范围指令表示删除该范围)</span></div><div class="line"><span class="function"><span class="title">d</span>:剪切一行</span></div><div class="line"><span class="function"><span class="title">x</span>:剪切一个字符</span></div><div class="line"><span class="function"><span class="title">dtx</span> :删除所有的内容，直到遇到<span class="title">x</span>号(<span class="title">delete</span> <span class="title">to</span> <span class="title">x</span>)</span></div><div class="line"><span class="function">&lt;<span class="title">ctrl</span> + <span class="title">a</span>&gt;:当前数加1</span></div><div class="line"><span class="function">&lt;<span class="title">ctrl</span> + <span class="title">x</span>&gt;:当前数减1</span></div><div class="line"><span class="function">&lt;<span class="title">ctrl</span> + <span class="title">p</span>\<span class="title">n</span>&gt;:<span class="title">p</span>:向前补全;<span class="title">n</span>:向后补全。</span></div></pre></td></tr></table></figure></p></li>
-<li>粘贴模式<br>
-set paste</p>
+            <p><h2 id="VIM使用初步"><a href="#VIM使用初步" class="headerlink" title="VIM使用初步"></a>VIM使用初步</h2><ul>
+<li><p>一般指令<br>查看帮助: help xxx</p>
+</li>
+<li><p>修改文本指令:</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function">A:到行首第一个非空字符并输入</span></div><div class="line"><span class="function"><span class="title">I</span>:到行尾最后一个非空字符并输入</span></div><div class="line"><span class="function"><span class="title">c</span>:删除光标所在（后跟其他范围指令表示删除该范围)</span></div><div class="line"><span class="function"><span class="title">d</span>:剪切一行</span></div><div class="line"><span class="function"><span class="title">x</span>:剪切一个字符</span></div><div class="line"><span class="function"><span class="title">dtx</span> :删除所有的内容，直到遇到<span class="title">x</span>号(<span class="title">delete</span> <span class="title">to</span> <span class="title">x</span>)</span></div><div class="line"><span class="function">&lt;<span class="title">ctrl</span> + <span class="title">a</span>&gt;:当前数加1</span></div><div class="line"><span class="function">&lt;<span class="title">ctrl</span> + <span class="title">x</span>&gt;:当前数减1</span></div><div class="line"><span class="function">&lt;<span class="title">ctrl</span> + <span class="title">p</span>\<span class="title">n</span>&gt;:<span class="title">p</span>:向前补全;<span class="title">n</span>:向后补全。</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>粘贴模式<br>set paste</p></p>
             <p class="article-more-link">
                 <a href="/posts/Linux日常/20180617-vim1.html#more">查看更多</a>
             </p>
@@ -759,9 +762,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h2 id="matplotlib学习">matplotlib学习</h2>
-<h4 id="使用matplotlib.pylab库画图">使用matplotlib.pylab库画图</h4>
-<ul>
+            <p><h2 id="matplotlib学习"><a href="#matplotlib学习" class="headerlink" title="matplotlib学习"></a>matplotlib学习</h2><h4 id="使用matplotlib-pylab库画图"><a href="#使用matplotlib-pylab库画图" class="headerlink" title="使用matplotlib.pylab库画图"></a>使用matplotlib.pylab库画图</h4><ul>
 <li>matplotlib可以用来作为机器学习可视化的作图工具，在这里简单记录一下常用的一些画图方法。</p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20180602-matplotlib1.html#more">查看更多</a>
@@ -886,8 +887,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h2 id="一使用joblib保存结果">一、使用joblib保存结果</h2>
-<p>代码如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.externals <span class="keyword">import</span> joblib</div><div class="line"></div><div class="line"><span class="comment">#此处假设已训练好的模型为learnClassifier</span></div><div class="line"></div><div class="line"><span class="comment">#保存训练模型</span></div><div class="line">joblib.dump(learnClassifier, <span class="string">'learnClassifier.model'</span>)</div><div class="line"></div><div class="line"><span class="comment">#载入训练模型</span></div><div class="line">learnClassifier = joblib.load(<span class="string">'learnClassifier.model'</span>)</div></pre></td></tr></table></figure></p></p>
+            <p><h2 id="一、使用joblib保存结果"><a href="#一、使用joblib保存结果" class="headerlink" title="一、使用joblib保存结果"></a>一、使用joblib保存结果</h2><p>代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.externals <span class="keyword">import</span> joblib</div><div class="line"></div><div class="line"><span class="comment">#此处假设已训练好的模型为learnClassifier</span></div><div class="line"></div><div class="line"><span class="comment">#保存训练模型</span></div><div class="line">joblib.dump(learnClassifier, <span class="string">'learnClassifier.model'</span>)</div><div class="line"></div><div class="line"><span class="comment">#载入训练模型</span></div><div class="line">learnClassifier = joblib.load(<span class="string">'learnClassifier.model'</span>)</div></pre></td></tr></table></figure></p></p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20180505-dump.html#more">查看更多</a>
             </p>
@@ -1011,16 +1011,16 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h2 id="概要">概要</h2>
-<ul>
-<li><p>逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。</p></li>
-<li><p>逻辑回归使用<span class="math inline">\(θX\)</span>作为划分数据的边界。</p></li>
-<li><p>逻辑回归使用</p></li>
+            <p><h2 id="概要"><a href="#概要" class="headerlink" title="概要"></a>概要</h2><ul>
+<li><p>逻辑回归即使用一个超平面将整个空间一分为二，并且在边界附近赋予连续（即不是非黑即白，而是可以有0-1之间的小数概率）的概率估计的二分类方法。</p>
+</li>
+<li><p>逻辑回归使用$θX$作为划分数据的边界。</p>
+</li>
+<li><p>逻辑回归使用</p>
+</li>
 </ul>
-<p><span class="math display">\[
-g( Z) =\frac{1}{1+e^{Z}}
-\]</span></p>
-<p>替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：从理论上来讲，此时的似然函数应该是最大的，可以用梯度上升法求之。</p>
+<p>$$<br>g( Z) =\frac{1}{1+e^{Z}}<br>$$</p>
+<p>替代离散的分布函数，其中，g(Z)即概率统计中的分布函数，可根据极大似然估计得到使用已有样本点估计的近似值：从理论上来讲，此时的似然函数应该是最大的，可以用梯度上升法求之。<br></p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20180411-logistic.html#more">查看更多</a>
             </p>
@@ -1144,28 +1144,21 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h2 id="numpy数组常用处理函数">numpy数组常用处理函数</h2>
-<ul>
-<li>numpy 数组是python机器学习常用的数据结构，在这里简单记下常见的使用方法和一些初学时遇到的问题<br>
-</li>
+            <p><h2 id="numpy数组常用处理函数"><a href="#numpy数组常用处理函数" class="headerlink" title="numpy数组常用处理函数"></a>numpy数组常用处理函数</h2><ul>
+<li>numpy 数组是python机器学习常用的数据结构，在这里简单记下常见的使用方法和一些初学时遇到的问题   </li>
 </ul>
-<ol style="list-style-type: decimal">
-<li>注意事项<br>
-</li>
+<ol>
+<li>注意事项   </li>
 </ol>
 <ul>
-<li>使用数组时不要犯低级错误，注意行数和列数，不要搞反了。<br>
-</li>
+<li>使用数组时不要犯低级错误，注意行数和列数，不要搞反了。   </li>
 <li><code>np.array</code><strong>转化宽度不一致的数组时会出现未知错误</strong>，使用时要谨慎。</li>
 <li>numpy使用元组作为引用，容易和多维数组按层拆分搞混，<strong>多维数组不支持元组索引</strong>（numpy也支持按层拆分）如：<code>a[1,2]</code>和<code>b[1][2]</code>。</li>
-<li>注意矩阵乘法转置。<br>
-</li>
-<li>注意numpy不是默认二维数组， 若矩阵为向量，则只有shape[0](即向量长度为shape[0]而不是它作为矩阵时的shape[1]): [1,2,3,4] 看作矩阵： shape:[1,4] 看作向量：shape:[4]</li>
+<li>注意矩阵乘法转置。    </li>
+<li>注意numpy不是默认二维数组，<br>若矩阵为向量，则只有shape[0](即向量长度为shape[0]而不是它作为矩阵时的shape[1]):<br>[1,2,3,4]<br>看作矩阵： shape:[1,4]<br>看作向量：shape:[4]</li>
 <li>在维度不匹配的时候可以加上shape先判断。</li>
-<li>矩阵第一个参数为行数，第二个为列数...申请空白2维矩阵:(0,2)</li>
-<li>添加新行：<br>
-<code>np.append(red,[vx],axis=0)</code><font style="color:red">此处的vx必须升维到与大矩阵相同，axis表示添加一行</font><br>
-或<code>yellow=np.r_[yellow,[vx]]</code>，道理同上</p>
+<li>矩阵第一个参数为行数，第二个为列数…申请空白2维矩阵:(0,2)</li>
+<li>添加新行：<br><code>np.append(red,[vx],axis=0)</code><font style="color:red">此处的vx必须升维到与大矩阵相同，axis表示添加一行</font><br>或<code>yellow=np.r_[yellow,[vx]]</code>，道理同上</p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20180409-numpy.html#more">查看更多</a>
             </p>
@@ -1289,13 +1282,10 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h2 id="fwaf">Fwaf</h2>
-<p>Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。</p>
-<h2 id="库的使用和特征化">库的使用和特征化</h2>
-<p>Fwaf使用sklearn库训练样本集。<br>
-其中，使用TfidfVectorizer对字符串进行特征化。</p>
+            <p><h2 id="Fwaf"><a href="#Fwaf" class="headerlink" title="Fwaf   "></a>Fwaf   </h2><p>Fwaf是GitHub上的一个机器学习Web恶意请求防火墙，代码比较简洁，思路也比较清晰，由于和自己的某个想法很契合，就稍作分析。  </p>
+<h2 id="库的使用和特征化"><a href="#库的使用和特征化" class="headerlink" title="库的使用和特征化"></a>库的使用和特征化</h2><p>Fwaf使用sklearn库训练样本集。<br>其中，使用TfidfVectorizer对字符串进行特征化。</p>
 <blockquote>
-<p>TfidfVectorizer TF-IDF（term frequency–inverse document frequency）是一种用于资讯检索与文本挖掘的常用加权技术。TF-IDF是一种统计方法，用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。TF-IDF加权的各种形式常被搜索引擎应用，作为文件与用户查询之间相关程度的度量或评级。除了TF-IDF以外，互联网上的搜索引擎还会使用基于连结分析的评级方法，以确定文件在搜寻结果中出现的顺序。</p>
+<p>TfidfVectorizer   TF-IDF（term frequency–inverse document frequency）是一种用于资讯检索与文本挖掘的常用加权技术。TF-IDF是一种统计方法，用以评估一字词对于一个文件集或一个语料库中的其中一份文件的重要程度。字词的重要性随着它在文件中出现的次数成正比增加，但同时会随着它在语料库中出现的频率成反比下降。TF-IDF加权的各种形式常被搜索引擎应用，作为文件与用户查询之间相关程度的度量或评级。除了TF-IDF以外，互联网上的搜索引擎还会使用基于连结分析的评级方法，以确定文件在搜寻结果中出现的顺序。<br></p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20180408-ml.html#more">查看更多</a>
             </p>
@@ -1419,16 +1409,19 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="linux下的分屏">Linux下的分屏</h1>
-<p>在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。 在这里小记一下几种简单的分屏命令。</p>
-<h2 id="terminal分屏">1、terminal分屏</h2>
-<p>使用tmux对terminal分屏，常用指令如下：</p>
+            <p><h1 id="Linux下的分屏"><a href="#Linux下的分屏" class="headerlink" title="Linux下的分屏"></a>Linux下的分屏</h1><p>在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。<br>在这里小记一下几种简单的分屏命令。</p>
+<h2 id="1、terminal分屏"><a href="#1、terminal分屏" class="headerlink" title="1、terminal分屏"></a>1、terminal分屏</h2><p>使用tmux对terminal分屏，常用指令如下：</p>
 <ul>
-<li><p>开启tmux：在terminal中输入tmux开启分屏。</p></li>
-<li><p>tmux ls： 显示已有的tmux会话</p></li>
-<li><p>tmux attach-session -t 数字： 选择tmux</p></li>
-<li><p>tmux kill-session -t session-name：关闭tmux</p></li>
-<li><p>开启鼠标移动、调节窗口大小等功能：[ctrl]+b+:后输入 set -g mouse on</p></li>
+<li><p>开启tmux：在terminal中输入tmux开启分屏。  </p>
+</li>
+<li><p>tmux ls： 显示已有的tmux会话   </p>
+</li>
+<li><p>tmux attach-session -t 数字： 选择tmux   </p>
+</li>
+<li><p>tmux kill-session -t session-name：关闭tmux    </p>
+</li>
+<li><p>开启鼠标移动、调节窗口大小等功能：[ctrl]+b+:后输入 set -g mouse on</p>
+</li>
 </ul></p>
             <p class="article-more-link">
                 <a href="/posts/Linux日常/20180406-vim&t.html#more">查看更多</a>
@@ -1640,10 +1633,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                 
                     <li>
                         <a href="https://jygzyc.github.io">jygzyc</a>
-                    </li>
-                
-                    <li>
-                        <a href="http://grootsec.org">grootsec</a>
                     </li>
                 
             </ul>

