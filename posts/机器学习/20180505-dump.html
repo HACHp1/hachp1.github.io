@@ -5,18 +5,18 @@
     
     <title>杂·sklearn 保存训练结果 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="一、使用joblib保存结果代码如下：123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnClass">
+    <meta name="description" content="一、使用joblib保存结果 代码如下： 123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnCl">
 <meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="杂·sklearn 保存训练结果">
 <meta property="og:url" content="https://hachp1.github.io/posts/机器学习/20180505-dump.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="一、使用joblib保存结果代码如下：123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnClass">
+<meta property="og:description" content="一、使用joblib保存结果 代码如下： 123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnCl">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
 <meta property="og:updated_time" content="2019-01-24T13:30:44.733Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="杂·sklearn 保存训练结果">
-<meta name="twitter:description" content="一、使用joblib保存结果代码如下：123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnClass">
+<meta name="twitter:description" content="一、使用joblib保存结果 代码如下： 123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnCl">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
     
 
@@ -267,9 +267,13 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h2 id="一、使用joblib保存结果"><a href="#一、使用joblib保存结果" class="headerlink" title="一、使用joblib保存结果"></a>一、使用joblib保存结果</h2><p>代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.externals <span class="keyword">import</span> joblib</div><div class="line"></div><div class="line"><span class="comment">#此处假设已训练好的模型为learnClassifier</span></div><div class="line"></div><div class="line"><span class="comment">#保存训练模型</span></div><div class="line">joblib.dump(learnClassifier, <span class="string">'learnClassifier.model'</span>)</div><div class="line"></div><div class="line"><span class="comment">#载入训练模型</span></div><div class="line">learnClassifier = joblib.load(<span class="string">'learnClassifier.model'</span>)</div></pre></td></tr></table></figure></p>
+			<h2 id="一使用joblib保存结果">一、使用joblib保存结果</h2>
+<p>代码如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.externals <span class="keyword">import</span> joblib</div><div class="line"></div><div class="line"><span class="comment">#此处假设已训练好的模型为learnClassifier</span></div><div class="line"></div><div class="line"><span class="comment">#保存训练模型</span></div><div class="line">joblib.dump(learnClassifier, <span class="string">'learnClassifier.model'</span>)</div><div class="line"></div><div class="line"><span class="comment">#载入训练模型</span></div><div class="line">learnClassifier = joblib.load(<span class="string">'learnClassifier.model'</span>)</div></pre></td></tr></table></figure></p>
 <a id="more"></a>
-<h2 id="二、使用pickle保存结果"><a href="#二、使用pickle保存结果" class="headerlink" title="二、使用pickle保存结果"></a>二、使用pickle保存结果</h2><p>与joblib相比，pickle实际上是序列化和反序列化的函数。<br>注：pickle函数加s表示在bytes层面（程序变量中）的操作，而不加s的则是对文件的操作。<br>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#保存训练模型</div><div class="line">dump=pickle.dumps(classifier)</div><div class="line">with open(&apos;classifier_dump.pickle&apos;,&apos;w&apos;) as f:</div><div class="line">    f.write(dump)</div><div class="line">#载入训练模型</div><div class="line">with open(&apos;classifier_dump.pickle&apos;,&apos;r&apos;) as f:</div><div class="line">    classifier=pickle.load(f.read())</div></pre></td></tr></table></figure></p>
+<h2 id="二使用pickle保存结果">二、使用pickle保存结果</h2>
+<p>与joblib相比，pickle实际上是序列化和反序列化的函数。<br>
+注：pickle函数加s表示在bytes层面（程序变量中）的操作，而不加s的则是对文件的操作。<br>
+代码如下： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#保存训练模型</div><div class="line">dump=pickle.dumps(classifier)</div><div class="line">with open(&apos;classifier_dump.pickle&apos;,&apos;w&apos;) as f:</div><div class="line">    f.write(dump)</div><div class="line">#载入训练模型</div><div class="line">with open(&apos;classifier_dump.pickle&apos;,&apos;r&apos;) as f:</div><div class="line">    classifier=pickle.load(f.read())</div></pre></td></tr></table></figure></p>
 
         
         </div>
@@ -502,7 +506,11 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     </li>
                 
                     <li>
-                        <a href="http://grootsec.org/">grootsec</a>
+                        <a href="https://jygzyc.github.io">jygzyc</a>
+                    </li>
+                
+                    <li>
+                        <a href="http://grootsec.org">grootsec</a>
                     </li>
                 
             </ul>
