@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="attention与Transformer结构浅析 前言  attention机制除了“attention”之外，另一个关键词是“相似度”，阅读attention结构时记住“相似度”这个词。 为了对attention模型提出的原因作出解释，我们首先分析RNN的一些特点。">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_yellow.jpg">
-<meta property="og:updated_time" content="2019-10-17T01:39:12.296Z">
+<meta property="og:updated_time" content="2019-11-14T14:11:59.853Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="attention与Transformer结构浅析">
 <meta name="twitter:description" content="attention与Transformer结构浅析 前言  attention机制除了“attention”之外，另一个关键词是“相似度”，阅读attention结构时记住“相似度”这个词。 为了对attention模型提出的原因作出解释，我们首先分析RNN的一些特点。">
@@ -169,7 +169,7 @@ ga('send', 'pageview');
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                30
+                31
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -350,7 +350,7 @@ MultiHead(\boldsymbol{Q},\boldsymbol{K},\boldsymbol{V}) = Concat(head_1,...,head
 <p><img src="http://120.78.185.175/img/blogimg/attention/multi_head.png" alt="Multi-Head Attention"> 可以注意到，此处的“Q、K、V”都是加入权重后的Q、K、V。在网上有的文章中，将self-attention或多头attention中的Q、K、V与基础attention搞混了，直接带入X，得到类似<span class="math inline">\(Attention(\boldsymbol{X},\boldsymbol{X},\boldsymbol{X})\)</span>的形式，这和原论文是有出入的。直接使用<span class="math inline">\(Attention(\boldsymbol{X},\boldsymbol{X},\boldsymbol{X})\)</span>得到的结果只是类似于三个X直接连乘的计算结果，从数学表达式上看只取决于输入的向量，没有经过神经网络学习的权值，而多头attention中的形式是<span class="math inline">\(Attention(\boldsymbol{X}\boldsymbol{W}_i^Q,\boldsymbol{X}\boldsymbol{W}_i^K,\boldsymbol{X}\boldsymbol{W}_i^V)\)</span>，里面还包含了神经网络“根据实际情况灵活变化权值”的含义。</p>
 <h3 id="positional-encoding">Positional Encoding</h3>
 <ul>
-<li>前面提到，attention模型本身是词袋模型，因为如果将K,V按行打乱顺序（相当于句子中的词序打乱），那么Attention的结果还是一样的（容易证明，矩阵任意两行交换顺序后自身与自身的转置相乘，得到的矩阵只是按行交换了顺序而已）；说明self-attention结构本身是一个词袋模型。所以还需要一个加入位置信息的操作，不然就会遗失重要的顺序信息。所以在paper中使用了Positional Encoding加入顺序信息。<br>
+<li>前面提到，attention模型本身是词袋模型，因为如果将K,V按行打乱顺序（相当于句子中的词序打乱），那么Attention的结果还是一样的（容易证明，矩阵任意两行交换顺序后自身与自身的转置相乘，得到的矩阵只是按行交换了顺序而已）；说明self-attention结构本身是一个词袋模型。所以还需要一个加入位置信息的操作，不然就会遗失重要的顺序信息。所以在paper中，Transformer使用了Positional Encoding加入顺序信息。<br>
 具体操作如下（这里给出的是某个位置的向量的某个维度的映射过程）：</li>
 </ul>
 <p><span class="math display">\[
@@ -362,7 +362,7 @@ MultiHead(\boldsymbol{Q},\boldsymbol{K},\boldsymbol{V}) = Concat(head_1,...,head
 <p>以下是一个长度为20个词的句子经过PE得到的位置矩阵，每个词的维度为512，每个PE值范围在[-1,1]；左侧是用sine函数生成，右侧是用cosine生成（本来应该交叉生成，由于Q、K、V矩阵的行可交换性，将左边右边分别批量计算）：</p>
 <p><img src="http://120.78.185.175/img/blogimg/attention/positional_encoding.png" alt="positional_encoding"> 图片来自：https://jalammar.github.io/illustrated-transformer/</p>
 <ul>
-<li>但是，PE这种硬编码并不能完美的表示位置信息，这也是attention模型的一个缺点。</li>
+<li>但是，PE这种硬编码并不能完美的表示位置信息，这也是Transformer模型的一个缺点。</li>
 </ul>
 <h3 id="position-wise-feed-forward-networks">Position-wise Feed-Forward Networks</h3>
 <ul>
@@ -384,9 +384,18 @@ FFN(x) = max(0,xW1+b1)W2+b2
 <li><p>Transformer是典型的encoder-decoder结构。</p></li>
 </ul>
 <p>首先是encoder：<br>
-先定义一个结构：AN层：首先加上原数据，然后经过Layer Normalization处理 1. 经过词向量嵌入之后，直接与PE相加，加入位置信息。 2. 通过多头attention后经过AN层，输入FFN，再经过AN层，这个结构重复N次。</p>
+（先定义一个结构：AN层：首先加上原数据，然后经过Layer Normalization处理）</p>
+<ol type="1">
+<li>经过词向量嵌入之后，直接与PE相加，加入位置信息。</li>
+<li>通过多头attention后经过AN层，输入FFN，再经过AN层，这个结构重复N次。</li>
+</ol>
 <p><img src="http://120.78.185.175/img/blogimg/attention/transformer_decoding_1.gif" alt="transformer_encoding"> 图片来自：https://jalammar.github.io/illustrated-transformer/</p>
-<p>然后是decoder： 1. decoder将已经翻译过的输出当作最初的词向量传入（比如已经翻译的“I am a”的词向量)，这里的实现过程是，词向量“未来”的位置会被mask操作遮挡（将它们设置为-inf），从而保证每一步输入的词向量长度一致，但又有变长的信息作为输入，类似于一般的词向量对齐操作。 2. 通过多头attention，经过AN层；再通过多头attention，不过，第二次attention从前层获取输出转成query矩阵，接收最后层编码器的key和value矩阵做key和value矩阵，再经过AN层；输入FFN层，再进入AN层。这个结构重复N次。 3. 最终通过线性全连接层和softmax输出当前翻译词语是字典中每个单词的概率。</p>
+<p>然后是decoder：</p>
+<ol type="1">
+<li>decoder将已经翻译过的输出当作最初的词向量传入（比如已经翻译的“I am a”的词向量)，这里的实现过程是，词向量“未来”的位置会被mask操作遮挡（将它们设置为-inf），从而保证每一步输入的词向量长度一致，但又有变长的信息作为输入，类似于一般的词向量对齐操作。</li>
+<li>通过多头attention，经过AN层；再通过多头attention，不过，第二次attention从前层获取输出转成query矩阵，接收最后层编码器的key和value矩阵做key和value矩阵，再经过AN层；输入FFN层，再进入AN层。这个结构重复N次。</li>
+<li>最终通过线性全连接层和softmax输出当前翻译词语是字典中每个单词的概率。</li>
+</ol>
 <p><img src="http://120.78.185.175/img/blogimg/attention/transformer_decoding_2.gif" alt="transformer_decoding"> 图片来自：https://jalammar.github.io/illustrated-transformer/</p>
 <ul>
 <li>在训练时，最基本的LOSS函数是最终的softmax与准确的词语的onehot之间的交叉熵。网上也有其他更复杂的结构，比如先输出最高概率的位置，再经过一层神经网络输出最终结果。</li>
@@ -396,6 +405,12 @@ FFN(x) = max(0,xW1+b1)W2+b2
 <li>attention结构的关键词是“相似度”和“关注度”，即根据相似度大小确定关注度。</li>
 <li>由于attention可以计算不同词之间的关系，在其输出中已经包含了“上下文”的含义，可以在一定程度上解决“一词多义”的问题（可以比较容易的证明：同一个词语在不同的句子中，经过attention操作后得到的向量是不一样的）。</li>
 <li>比较重要的问题是“词袋模型”问题和“一词多义”问题。</li>
+</ul>
+<h2 id="bojone版本attention与原论文的不一致">bojone版本attention与原论文的“不一致”</h2>
+<ul>
+<li>在bojone实现的attention中，PE编码直接将前半段使用cos处理，后半段使用sin处理；原文则使用sin和cos交叉的方式。<br>
+具体的issue有<a href="https://github.com/bojone/attention/issues/2" class="uri" target="_blank" rel="external">https://github.com/bojone/attention/issues/2</a>、<a href="https://github.com/bojone/attention/issues/5" class="uri" target="_blank" rel="external">https://github.com/bojone/attention/issues/5</a>、<a href="https://github.com/bojone/attention/issues/11" class="uri" target="_blank" rel="external">https://github.com/bojone/attention/issues/11</a>。作者给出的解释是attention的行是可以任意打乱顺序的，因为它本身就是词袋模型。</li>
+<li>在这里，我个人更偏向于按原文方式进行PE，我给出的理由是：加入PE的句子不再是词袋模型，而PE本身的计算顺序就和位置密切相关。在bojone的观点下，PE的顺序是不重要的，即把PE按行打乱顺序对结果是没有任何影响的。这可能并不正确，由图像“positional_encoding”可以看出，PE的计算过程中，每个行打乱顺序后效果并不一致，并且这些交替的顺序中本身可能就蕴含了时序关系。（都是个人感觉）所以在使用bojone版本的attention时我倾向于忠实原文的方法。</li>
 </ul>
 <h2 id="参考资料">参考资料</h2>
 <ul>
@@ -529,6 +544,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/posts/机器学习/20191128-tf2_learning.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/eggs.jpg)" alt="Tensorflow2入门" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/机器学习/">机器学习</a></p>
+                            <p class="item-title"><a href="/posts/机器学习/20191128-tf2_learning.html" class="title">Tensorflow2入门</a></p>
+                            <p class="item-date"><time datetime="2019-11-28T13:45:08.000Z" itemprop="datePublished">2019-11-28</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/posts/机器学习/20191018-CPMPP.html" class="thumbnail">
     
     
@@ -602,25 +636,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/环境搭建/20190903-php7_xdebug.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/eggs.jpg)" alt="docker中的php7代码调试" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/环境搭建/">环境搭建</a></p>
-                            <p class="item-title"><a href="/posts/环境搭建/20190903-php7_xdebug.html" class="title">docker中的php7代码调试</a></p>
-                            <p class="item-date"><time datetime="2019-09-03T13:19:54.000Z" itemprop="datePublished">2019-09-03</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -630,7 +645,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
         </div>
     </div>
 
@@ -639,7 +654,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 16.67px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 18.33px;">漏洞分析</a>
+            <a href="/tags/Linux日常/" style="font-size: 12px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 16px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 14px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 18px;">漏洞分析</a>
         </div>
     </div>
 
