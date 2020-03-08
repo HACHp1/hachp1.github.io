@@ -1072,6 +1072,27 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <div class="article-entry" itemprop="articleBody">
         
             <p><h1 id="laravel-pop链简析">Laravel POP链简析</h1>
+<!-- TOC -->
+<ul>
+<li><a href="#laravel-pop链简析">Laravel POP链简析</a>
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#基本概念">基本概念</a></li>
+<li><a href="#0x00-symfony-pop链">0x00 Symfony POP链</a>
+<ul>
+<li><a href="#复现">复现</a></li>
+<li><a href="#pop链跟踪">POP链跟踪</a></li>
+</ul></li>
+<li><a href="#0x01-laravel-58-pop链">0x01 Laravel 5.8 POP链</a>
+<ul>
+<li><a href="#复现-1">复现</a></li>
+<li><a href="#pop链分析">POP链分析</a></li>
+</ul></li>
+<li><a href="#总结">总结</a></li>
+<li><a href="#参考资料">参考资料</a></li>
+</ul></li>
+</ul>
+<!-- /TOC -->
 <h2 id="前言">前言</h2>
 <ul>
 <li>POP链与PHP反序列化漏洞利用是密不可分的概念，反序列化漏洞相关的知识在网上有很多，这里不再赘述。本文主要对laravel的POP链简析。</li>
