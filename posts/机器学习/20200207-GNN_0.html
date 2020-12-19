@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="GNN初探，The graph neural network model浅析  目录  GNN初探，The graph neural network model浅析  图神经网络的任务分类 图神经网络的计算与优化过程  设计思路 数学定义 从单个节点总体认知GNN训练的大概流程 不动点的计算过程 反向传播 伪代码 Transition与Output函数的几种实现（原论文">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/ml.jpg">
-<meta property="og:updated_time" content="2020-02-07T15:35:32.736Z">
+<meta property="og:updated_time" content="2020-12-19T02:53:01.922Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GNN初探，The graph neural network model浅析">
 <meta name="twitter:description" content="GNN初探，The graph neural network model浅析  目录  GNN初探，The graph neural network model浅析  图神经网络的任务分类 图神经网络的计算与优化过程  设计思路 数学定义 从单个节点总体认知GNN训练的大概流程 不动点的计算过程 反向传播 伪代码 Transition与Output函数的几种实现（原论文">
@@ -278,7 +278,6 @@ ga('send', 'pageview');
 </ul></li>
 </ul>
 <!-- /TOC -->
-<a id="more"></a>
 <h2 id="图神经网络的任务分类">图神经网络的任务分类</h2>
 <ul>
 <li>图神经网络的任务主要分为：graph-focused、node-focused；其中，graph-focused关心的是对整个图的分类，node-focused则更加精细，是以图中各节点为对象进行任务。</li>
@@ -313,7 +312,7 @@ ga('send', 'pageview');
 <h3 id="不动点的计算过程">不动点的计算过程</h3>
 <ul>
 <li>GNN中有两种主要函数（<strong>都包含待更新的权值</strong>，但求不动点时不更新）： <code>global transition function</code> <span class="math inline">\(f_w\)</span>与 <code>global output function</code> <span class="math inline">\(g_w\)</span>。 <code>global transition function</code> 将该点状态值、节点的邻居节点和邻接边的数据映射为该节点的状态值。 <code>global output function</code> 则根据具体任务将节点的状态值、节点的邻居节点和邻接边的数据映射为输出的结果。对于位置图（positional graph）（需要考虑节点之间的相对位置，如：在上方或下方连接）需要在<span class="math inline">\(f_w\)</span>中加入inject函数：<span class="math inline">\(\upsilon_n:ne[n]\to{1,...|N|}\)</span>以加入相对位置信息。</li>
-<li>两个函数的定义如下：</li>
+<li>两个函数的定义如下（节点<span class="math inline">\(n\)</span>的状态表示为<span class="math inline">\(x_n∈R^{s}\)</span>）：</li>
 </ul>
 <p><span class="math display">\[x_n=f_w(l_n, l_{co[n]}, x_{ne[n]}, l_{ne[n]})\]</span> <span class="math display">\[o_n=g_w(x_n, l_n)\]</span> 依据Banach不动点理论（原论文是将整个图中所有节点的<span class="math inline">\(f_w\)</span>与<span class="math inline">\(g_w\)</span>分别叠加为<span class="math inline">\(F_w\)</span>与<span class="math inline">\(G_w\)</span>，根据不动点理论得出的结果，即每次把所有节点的特征值叠在一起当输入，输出所有节点的拼接值；单看一个节点，则有以下结论），以上两式可以迭代求出不动点：</p>
 <p><span class="math display">\[x_n(t+1)=f_w(l_n, l_{co[n]}, x_{ne[n]}(t), l_{ne[n]})\]</span> <span class="math display">\[o_n(t)=g_w(x_n(T), l_n), n∈N\]</span></p>
