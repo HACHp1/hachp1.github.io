@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="attention与Transformer结构浅析 前言  attention机制除了“attention”之外，另一个关键词是“相似度”，阅读attention结构时记住“相似度”这个词。 为了对attention模型提出的原因作出解释，我们首先分析RNN的一些特点。">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_yellow.jpg">
-<meta property="og:updated_time" content="2019-11-14T14:11:59.853Z">
+<meta property="og:updated_time" content="2021-04-08T08:26:24.311Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="attention与Transformer结构浅析">
 <meta name="twitter:description" content="attention与Transformer结构浅析 前言  attention机制除了“attention”之外，另一个关键词是“相似度”，阅读attention结构时记住“相似度”这个词。 为了对attention模型提出的原因作出解释，我们首先分析RNN的一些特点。">
@@ -298,7 +298,10 @@ ga('send', 'pageview');
 <ul>
 <li>最原始的attention操作计算的即两个矩阵每行之间的相似程度。attention本身的过程中没有涉及到权重的运算。而实际操作时，attention可以在Q、K、V中涵盖可变的权重，使计算过程更灵活（如：<span class="math inline">\(&quot;Q&quot;=\boldsymbol{Q}\boldsymbol{W}_i^Q\)</span>）。下面首先介绍基本的attention结构。</li>
 </ul>
-<p><img src="http://120.78.185.175/img/blogimg/attention/attention.png" alt="attention"> attention的权重的表达式为：</p>
+<figure>
+<img src="http://120.78.185.175/img/blogimg/attention/attention.png" alt="attention"><figcaption>attention</figcaption>
+</figure>
+<p>attention的权重的表达式为：</p>
 <p><span class="math display">\[
 α_i=softmax(s(key_i,q))
 \]</span> 其中，<span class="math inline">\(α_i\)</span>称为注意力分布，<span class="math inline">\(s(key_i,q)\)</span>为注意力打分机制，常见的有：</p>
@@ -347,7 +350,10 @@ head_i = Attention(\boldsymbol{Q}\boldsymbol{W}_i^Q,\boldsymbol{K}\boldsymbol{W}
 <p><span class="math display">\[
 MultiHead(\boldsymbol{Q},\boldsymbol{K},\boldsymbol{V}) = Concat(head_1,...,head_h)\boldsymbol{W^{\boldsymbol{O}}}
 \]</span></p>
-<p><img src="http://120.78.185.175/img/blogimg/attention/multi_head.png" alt="Multi-Head Attention"> 可以注意到，此处的“Q、K、V”都是加入权重后的Q、K、V。在网上有的文章中，将self-attention或多头attention中的Q、K、V与基础attention搞混了，直接带入X，得到类似<span class="math inline">\(Attention(\boldsymbol{X},\boldsymbol{X},\boldsymbol{X})\)</span>的形式，这和原论文是有出入的。直接使用<span class="math inline">\(Attention(\boldsymbol{X},\boldsymbol{X},\boldsymbol{X})\)</span>得到的结果只是类似于三个X直接连乘的计算结果，从数学表达式上看只取决于输入的向量，没有经过神经网络学习的权值，而多头attention中的形式是<span class="math inline">\(Attention(\boldsymbol{X}\boldsymbol{W}_i^Q,\boldsymbol{X}\boldsymbol{W}_i^K,\boldsymbol{X}\boldsymbol{W}_i^V)\)</span>，里面还包含了神经网络“根据实际情况灵活变化权值”的含义。</p>
+<figure>
+<img src="http://120.78.185.175/img/blogimg/attention/multi_head.png" alt="Multi-Head Attention"><figcaption>Multi-Head Attention</figcaption>
+</figure>
+<p>可以注意到，此处的“Q、K、V”都是加入权重后的Q、K、V。在网上有的文章中，将self-attention或多头attention中的Q、K、V与基础attention搞混了，直接带入X，得到类似<span class="math inline">\(Attention(\boldsymbol{X},\boldsymbol{X},\boldsymbol{X})\)</span>的形式，这和原论文是有出入的。直接使用<span class="math inline">\(Attention(\boldsymbol{X},\boldsymbol{X},\boldsymbol{X})\)</span>得到的结果只是类似于三个X直接连乘的计算结果，从数学表达式上看只取决于输入的向量，没有经过神经网络学习的权值，而多头attention中的形式是<span class="math inline">\(Attention(\boldsymbol{X}\boldsymbol{W}_i^Q,\boldsymbol{X}\boldsymbol{W}_i^K,\boldsymbol{X}\boldsymbol{W}_i^V)\)</span>，里面还包含了神经网络“根据实际情况灵活变化权值”的含义。</p>
 <h3 id="positional-encoding">Positional Encoding</h3>
 <ul>
 <li>前面提到，attention模型本身是词袋模型，因为如果将K,V按行打乱顺序（相当于句子中的词序打乱），那么Attention的结果还是一样的（容易证明，矩阵任意两行交换顺序后自身与自身的转置相乘，得到的矩阵只是按行交换了顺序而已）；说明self-attention结构本身是一个词袋模型。所以还需要一个加入位置信息的操作，不然就会遗失重要的顺序信息。所以在paper中，Transformer使用了Positional Encoding加入顺序信息。<br>
@@ -360,7 +366,10 @@ MultiHead(\boldsymbol{Q},\boldsymbol{K},\boldsymbol{V}) = Concat(head_1,...,head
 \]</span></p>
 <p>其中，pos为位置的序列，i是当前的维度；这样，就可以把整个向量组按位置重新映射成一个大小与整个矩阵相同的位置向量组。使用这个映射的原因是，因为有关系<span class="math inline">\(\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta\)</span>和<span class="math inline">\(\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta\)</span>，所以如果两个向量存在位置相差，他们之间成线性关系，则可以更好地通过机器学习学习出这个关系（如在sin中，只用学习出sinα和cosα），这样就给学习位置信息打下基础。</p>
 <p>以下是一个长度为20个词的句子经过PE得到的位置矩阵，每个词的维度为512，每个PE值范围在[-1,1]；左侧是用sine函数生成，右侧是用cosine生成（本来应该交叉生成，由于Q、K、V矩阵的行可交换性，将左边右边分别批量计算）：</p>
-<p><img src="http://120.78.185.175/img/blogimg/attention/positional_encoding.png" alt="positional_encoding"> 图片来自：https://jalammar.github.io/illustrated-transformer/</p>
+<figure>
+<img src="http://120.78.185.175/img/blogimg/attention/positional_encoding.png" alt="positional_encoding"><figcaption>positional_encoding</figcaption>
+</figure>
+<p>图片来自：https://jalammar.github.io/illustrated-transformer/</p>
 <ul>
 <li>但是，PE这种硬编码并不能完美的表示位置信息，这也是Transformer模型的一个缺点。</li>
 </ul>
@@ -378,25 +387,31 @@ FFN(x) = max(0,xW1+b1)W2+b2
 <h3 id="transformer">Transformer</h3>
 <ul>
 <li><p>就Attention is All You Need这篇论文而言，它的核心在于提出了attention这个结构。而论文中同时也提出了Transformer模型，作为attention的第一个应用。</p></li>
-<li><p>首先放图：<br>
+<li><p>首先放图（一句话只有两个词的Transformer）：<br>
 <img src="http://120.78.185.175/img/blogimg/attention/transformer.png" alt="Transformer"> 图片来自：https://jalammar.github.io/illustrated-transformer/</p></li>
 <li>在前文对多头attention、位置嵌入（PE）、FFN结构了解的基础和对seq2seq的了解上，可以比较容易的理解Transformer的结构。</li>
 <li><p>Transformer是典型的encoder-decoder结构。</p></li>
 </ul>
 <p>首先是encoder：<br>
-（先定义一个结构：AN层：首先加上原数据，然后经过Layer Normalization处理）</p>
+先定义一个结构：AN层：首先加上原数据，然后经过Layer Normalization处理；这里的AN层是一个残差操作，其思想跟深度残差网络类似（个人理解是原始数据是最重要的信息来源，在经过深层的神经网络处理后，虽然得到了特征提取，但原始信息有部分丢失，此时直接将原始特征相加后能够直接把原始信息引入深层次网络中）。</p>
 <ol type="1">
 <li>经过词向量嵌入之后，直接与PE相加，加入位置信息。</li>
-<li>通过多头attention后经过AN层，输入FFN，再经过AN层，这个结构重复N次。</li>
+<li>通过多头self-attention后经过残差AN层，输入FFN（注意此处，每一个词都由单独的一个DNN处理），再经过AN层，这个结构重复N次。</li>
 </ol>
-<p><img src="http://120.78.185.175/img/blogimg/attention/transformer_decoding_1.gif" alt="transformer_encoding"> 图片来自：https://jalammar.github.io/illustrated-transformer/</p>
+<figure>
+<img src="http://120.78.185.175/img/blogimg/attention/transformer_decoding_1.gif" alt="transformer_encoding"><figcaption>transformer_encoding</figcaption>
+</figure>
+<p>图片来自：https://jalammar.github.io/illustrated-transformer/</p>
 <p>然后是decoder：</p>
 <ol type="1">
 <li>decoder将已经翻译过的输出当作最初的词向量传入（比如已经翻译的“I am a”的词向量)，这里的实现过程是，词向量“未来”的位置会被mask操作遮挡（将它们设置为-inf），从而保证每一步输入的词向量长度一致，但又有变长的信息作为输入，类似于一般的词向量对齐操作。</li>
-<li>通过多头attention，经过AN层；再通过多头attention，不过，第二次attention从前层获取输出转成query矩阵，接收最后层编码器的key和value矩阵做key和value矩阵，再经过AN层；输入FFN层，再进入AN层。这个结构重复N次。</li>
+<li>通过多头self-attention，经过残差AN层；再通过多头attention，不过，第二次attention从前层获取输出转成query矩阵，接收最后层编码器的key和value矩阵做key和value矩阵，再经过AN层；输入FFN层（与encoder同样的，每一个词都由单独的一个DNN处理），再进入AN层。这个结构重复N次。</li>
 <li>最终通过线性全连接层和softmax输出当前翻译词语是字典中每个单词的概率。</li>
 </ol>
-<p><img src="http://120.78.185.175/img/blogimg/attention/transformer_decoding_2.gif" alt="transformer_decoding"> 图片来自：https://jalammar.github.io/illustrated-transformer/</p>
+<figure>
+<img src="http://120.78.185.175/img/blogimg/attention/transformer_decoding_2.gif" alt="transformer_decoding"><figcaption>transformer_decoding</figcaption>
+</figure>
+<p>图片来自：https://jalammar.github.io/illustrated-transformer/</p>
 <ul>
 <li>在训练时，最基本的LOSS函数是最终的softmax与准确的词语的onehot之间的交叉熵。网上也有其他更复杂的结构，比如先输出最高概率的位置，再经过一层神经网络输出最终结果。</li>
 </ul>
