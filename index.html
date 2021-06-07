@@ -165,7 +165,7 @@ ga('send', 'pageview');
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                38
+                39
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -194,6 +194,191 @@ ga('send', 'pageview');
 
             
             <section id="main">
+    <article id="post-由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+    
+        
+            
+	
+		<a href="/posts/Web安全/20210607-open_redirect01.html" itemprop="url">
+            <img src="http://120.78.185.175/img/banner/Eur1.jpg" class="article-banner" />
+        </a>
+	
+
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/posts/Web安全/20210607-open_redirect01.html">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a>
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/Web安全/20210607-open_redirect01.html">
+            <time datetime="2021-06-07T06:57:35.000Z" itemprop="datePublished">2021-06-07</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Web安全/">Web安全</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Web安全/">Web安全</a>
+    </div>
+
+                    </div>
+                
+            </header>
+                
+            
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h1 id="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS"><a href="#由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="headerlink" title="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS"></a>由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</h1><!-- TOC -->
+<ul>
+<li><a href="#由一道ctf学习相对路径重定向引发的开放重定向津门杯2021-gooss">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a><ul>
+<li><a href="#涉及到的知识点">涉及到的知识点</a></li>
+<li><a href="#漏洞点分析">漏洞点分析</a></li>
+<li><a href="#filesystemopen的绕过"><code>fileSystem.Open</code>的绕过</a></li>
+<li><a href="#fiisdir的绕过"><code>fi.IsDir()</code>的绕过</a></li>
+<li><a href="#获取flag的payload">获取flag的payload</a></li>
+<li><a href="#重定向为相对路径下的漏洞">重定向为相对路径下的漏洞</a></li>
+<li><a href="#参考资料">参考资料</a></li>
+</ul>
+</li>
+</ul>
+<!-- /TOC -->
+<h2 id="涉及到的知识点"><a href="#涉及到的知识点" class="headerlink" title="涉及到的知识点"></a>涉及到的知识点</h2><ul>
+<li>文件路径解析过程和URL的差异</li>
+<li>相对路径重定向</li>
+<li>开放重定向</li>
+<li>题外话：对象存储服务(Object Storage Service,简称OSS)；本题的OSS只是一个幌子。</li>
+</ul>
+<h2 id="漏洞点分析"><a href="#漏洞点分析" class="headerlink" title="漏洞点分析"></a>漏洞点分析</h2><ul>
+<li>在文件中间件处，存在一处相对路径重定向的操作：<code>c.Redirect(302, c.Request.URL.String()+&quot;/&quot;)</code>，这里的开发目的很好理解：如果用户输入的为路径，但又没有加<code>/</code>，则使用相对重定向（相对重定向是关键，在后文会讲）将url定向到路径（添加一个<code>/</code>）</li>
+<li>但是利用时有3个条件：<code>fileSystem.Open(c.Request.URL.String())</code>成功，<code>fi.IsDir()</code>为true，并且路径不以<code>/</code>结尾：</li>
+</ul>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">fileMidderware</span><span class="params">(c *gin.Context)</span></span> &#123;</div><div class="line">	...</div><div class="line">	f, err := fileSystem.Open(c.Request.URL.String())</div><div class="line"></div><div class="line">	<span class="keyword">if</span> f == <span class="literal">nil</span> &#123;</div><div class="line">		c.Next()</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	...</div><div class="line"></div><div class="line">	<span class="keyword">if</span> fi.IsDir() &#123;</div><div class="line">		<span class="keyword">if</span> !strings.HasSuffix(c.Request.URL.String(), <span class="string">"/"</span>) &#123;</div><div class="line">			c.Redirect(<span class="number">302</span>, c.Request.URL.String()+<span class="string">"/"</span>)</div><div class="line">			<span class="comment">//go的302定向可以不输入协议(http:)，即 //127.0.0.1/?file=xxx</span></div></pre></td></tr></table></figure>
+<p>前两个条件在绕过时充分体现了Orange大表哥的“不同协议解析差异”问题，此处为文件路径和url解析不同的问题。</p>
+<h2 id="fileSystem-Open的绕过"><a href="#fileSystem-Open的绕过" class="headerlink" title="fileSystem.Open的绕过"></a><code>fileSystem.Open</code>的绕过</h2><p>要触发SSRF，首先要使fileSystem.Open(path)正确返回一个文件夹，fileSystem.Open支持<strong>虚拟路径</strong>，可以用<code>../</code>绕过，在讲绕过方法前，我们先看一下文件路径解析的几种情况（可以体会一下和url解析的差异）：</p>
+<ol>
+<li><code>/../</code>：返回上一层</li>
+<li><code>/flag/</code>：flag文件夹</li>
+<li><code>/flag&amp;../</code>：一个名为<code>flag&amp;..</code>的路径</li>
+<li><code>/127.0.0.1:1234/</code>：一个名为<code>127.0.0.1:1234</code>的路径</li>
+</ol>
+<p>理解了这四种解析，就可以很容易的理解这道题的绕过方法了，此题有两种绕过方法：</p>
+<ol>
+<li><code>{&quot;url&quot;:&quot;http://127.0.0.1:1234//127.0.0.1?file=../../../../../flag&amp;../..&quot;}</code></li>
+<li><code>{&quot;url&quot;:&quot;http://127.0.0.1:1234//120.78.185.175/..&quot;}</code></li>
+</ol>
+<h2 id="fi-IsDir-的绕过"><a href="#fi-IsDir-的绕过" class="headerlink" title="fi.IsDir()的绕过"></a><code>fi.IsDir()</code>的绕过</h2><p>直接在路径最后加上<code>/..</code>就会被识别为路径；此外，使用<code>/</code>也会被识别为路径，但本题由于需要结尾不出现<code>/</code>所以不能用。</p>
+<h2 id="获取flag的payload"><a href="#获取flag的payload" class="headerlink" title="获取flag的payload"></a>获取flag的payload</h2><p>以json格式发送请求：<code>Content-Type: application/json</code>，最终可以有两种利用方法拿flag（直接打127和利用恶意服务器进行重定向）：</p>
+<ul>
+<li>wp1:</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> /vul</div><div class="line">&#123;<span class="attr">"url"</span>:<span class="string">"http://127.0.0.1:1234//127.0.0.1?file=../../../../../flag&amp;../.."</span>&#125;</div><div class="line">&#123;<span class="attr">"url"</span>:<span class="string">"http://127.0.0.1:1234//127.0.0.1?file=/flag&amp;../../.."</span>&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>wp2（xx为自己的302跳转的恶意VPS）:</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> /vul</div><div class="line">&#123;<span class="attr">"url"</span>:<span class="string">"http://127.0.0.1:1234//xx.xx.xx.xx/.."</span>&#125;</div></pre></td></tr></table></figure>
+<h2 id="重定向为相对路径下的漏洞"><a href="#重定向为相对路径下的漏洞" class="headerlink" title="重定向为相对路径下的漏洞"></a>重定向为相对路径下的漏洞</h2><p>跳脱题目本身，我们来看看真实情况下的开发动机和案例。</p>
+<p>在RFC标准中，302重定向如果没有协议信息，则为相对重定向：<a href="https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.2" target="_blank" rel="external">Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</a>：</p>
+<p>例：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">Location</span>: /People.html#tim</div></pre></td></tr></table></figure>
+<p>相当于：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">Location</span>: http://www.example.org/People.html#tim</div></pre></td></tr></table></figure>
+<p>这样很容易造成开放重定向：</p>
+<p>就如本题一样，为了有更好的用户体验，很多框架都有<strong>自动处理无斜杠的路径</strong>的操作：<code>xxx.com/123</code>被重定向至<code>xxx.com/123/</code>（使用相对重定向<code>/123</code>-&gt;<code>/123/</code>）。</p>
+<p>然而如果url为<code>xxx.com//evil.com</code>，如果没有过滤，就会被重定向至<code>//evil.com/</code>，从而从相对路径逃逸到绝对路径。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://xz.aliyun.com/t/3302" target="_blank" rel="external">Django URL跳转漏洞分析（CVE-2018-14574 ）</a></li>
+<li><a href="https://github.com/go-macaron/macaron/issues/198" target="_blank" rel="external">vulnerability: open redirect in static handler</a></li>
+</ul>
+
+        
+        </div>
+        
+        
+        
+        
+        
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+    
+    
+</article>
+
+
+
     <article id="post-AntCTF2021-部分WP" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
     
@@ -257,31 +442,30 @@ ga('send', 'pageview');
         
             <p><!-- TOC -->
 <ul>
-<li><a href="#antctf2021-部分wp">AntCTF2021 部分WP</a>
-<ul>
-<li><a href="#shellgen2">shellgen2</a>
-<ul>
+<li><a href="#antctf2021-部分wp">AntCTF2021 部分WP</a><ul>
+<li><a href="#shellgen2">shellgen2</a><ul>
 <li><a href="#题目要求">题目要求</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#real_cloud_storage">real_cloud_storage</a></li>
-<li><a href="#8-bit-pub">8-bit pub</a>
-<ul>
+<li><a href="#8-bit-pub">8-bit pub</a><ul>
 <li><a href="#题目功能点">题目功能点</a></li>
 <li><a href="#参数绑定的绕过以及万能密码">参数绑定的绕过以及万能密码</a></li>
 <li><a href="#nodemailer库文档学习任意文件读取">nodemailer库文档学习，任意文件读取</a></li>
 <li><a href="#shvl原型链污染漏洞patch的绕过">shvl原型链污染漏洞patch的绕过</a></li>
 <li><a href="#原型链污染链挖掘与艰难的绕过">原型链污染链挖掘与艰难的绕过</a></li>
-<li><a href="#其他的解法">其他的解法</a>
-<ul>
+<li><a href="#其他的解法">其他的解法</a><ul>
 <li><a href="#dnslog">dnslog</a></li>
 <li><a href="#污染-shell-参数">污染 <code>shell</code> 参数</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <!-- /TOC -->
-<h1 id="antctf2021-部分wp">AntCTF2021 部分WP</h1>
-<p>AntCTF结束了，抱群里大腿，战队拿了第15名，TLS流啤。这次AntCTF的质量较高，学到了一些东西，在这里记录一下做题过程中相关的思路。</p></p>
+<h1 id="AntCTF2021-部分WP"><a href="#AntCTF2021-部分WP" class="headerlink" title="AntCTF2021 部分WP"></a>AntCTF2021 部分WP</h1><p>AntCTF结束了，抱群里大腿，战队拿了第15名，TLS流啤。这次AntCTF的质量较高，学到了一些东西，在这里记录一下做题过程中相关的思路。</p></p>
             <p class="article-more-link">
                 <a href="/posts/Web安全/20210309-ant2021.html#more">查看更多</a>
             </p>
@@ -407,9 +591,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="网鼎杯2018unfinish-二次注入和insert注入的一个误区">[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</h1>
-<h2 id="前言">前言</h2>
-<p>最近日常刷刷buu，发现<code>[网鼎杯2018]Unfinish</code>这题的wp很多都出现了理解错误，将二次注入和insert注入混为一谈，遂手动调之，并作出自己的纠正。</p></p>
+            <p><h1 id="网鼎杯2018-Unfinish-二次注入和insert注入的一个误区"><a href="#网鼎杯2018-Unfinish-二次注入和insert注入的一个误区" class="headerlink" title="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区"></a>[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近日常刷刷buu，发现<code>[网鼎杯2018]Unfinish</code>这题的wp很多都出现了理解错误，将二次注入和insert注入混为一谈，遂手动调之，并作出自己的纠正。</p></p>
             <p class="article-more-link">
                 <a href="/posts/Web安全/20201126-wdbunfinish.html#more">查看更多</a>
             </p>
@@ -535,18 +717,15 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="从一道ctf学习service-worker的利用西湖论剑2020-hardxss">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</h1>
-<!-- TOC -->
+            <p><h1 id="从一道CTF学习Service-Worker的利用：西湖论剑2020-hardxss"><a href="#从一道CTF学习Service-Worker的利用：西湖论剑2020-hardxss" class="headerlink" title="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss"></a>从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</h1><!-- TOC -->
 <ul>
-<li><a href="#从一道ctf学习service-worker的利用西湖论剑2020-hardxss">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</a>
-<ul>
-<li><a href="#题目初探">题目初探</a>
-<ul>
+<li><a href="#从一道ctf学习service-worker的利用西湖论剑2020-hardxss">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</a><ul>
+<li><a href="#题目初探">题目初探</a><ul>
 <li><a href="#jsonp">JSONP</a></li>
 <li><a href="#变量覆盖和dom-xss">变量覆盖和DOM XSS</a></li>
-</ul></li>
-<li><a href="#service-worker">Service Worker</a>
-<ul>
+</ul>
+</li>
+<li><a href="#service-worker">Service Worker</a><ul>
 <li><a href="#service-worker简介">Service Worker简介</a></li>
 <li><a href="#注册service-worker">注册Service Worker</a></li>
 <li><a href="#构造恶意register">构造恶意register</a></li>
@@ -555,9 +734,11 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 <li><a href="#利用2跨域xss">利用2：跨域XSS</a></li>
 <li><a href="#service-worker防御措施">Service Worker防御措施</a></li>
 <li><a href="#总结">总结</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC --></p>
             <p class="article-more-link">
@@ -685,27 +866,26 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="wmctf2020-两道ai相关题目wp">WMCTF2020 两道AI相关题目WP</h1>
-<!-- TOC -->
+            <p><h1 id="WMCTF2020-两道AI相关题目WP"><a href="#WMCTF2020-两道AI相关题目WP" class="headerlink" title="WMCTF2020 两道AI相关题目WP"></a>WMCTF2020 两道AI相关题目WP</h1><!-- TOC -->
 <ul>
-<li><a href="#wmctf2020-两道ai相关题目wp">wmctf2020 两道AI相关题目WP</a>
-<ul>
+<li><a href="#wmctf2020-两道ai相关题目wp">wmctf2020 两道AI相关题目WP</a><ul>
 <li><a href="#前言">前言</a></li>
-<li><a href="#performance_artist">Performance_artist</a>
-<ul>
+<li><a href="#performance_artist">Performance_artist</a><ul>
 <li><a href="#crc校验">CRC校验</a></li>
 <li><a href="#如何识别字母">如何“识别”字母</a></li>
 <li><a href="#performance_artist解题过程">Performance_artist解题过程</a></li>
 <li><a href="#总结">总结</a></li>
-</ul></li>
-<li><a href="#music_game_2">Music_game_2</a>
-<ul>
+</ul>
+</li>
+<li><a href="#music_game_2">Music_game_2</a><ul>
 <li><a href="#题目解读">题目解读</a></li>
 <li><a href="#music_game_2解题过程">Music_game_2解题过程</a></li>
 <li><a href="#总结-1">总结</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#解题脚本">解题脚本</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC --></p>
             <p class="article-more-link">
@@ -833,33 +1013,29 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="pickle反序列化初探">pickle反序列化初探</h1>
-<p>本文首发于先知社区，链接：<a href="https://xz.aliyun.com/t/7436" class="uri" target="_blank" rel="external">https://xz.aliyun.com/t/7436</a></p>
+            <p><h1 id="pickle反序列化初探"><a href="#pickle反序列化初探" class="headerlink" title="pickle反序列化初探"></a>pickle反序列化初探</h1><p>本文首发于先知社区，链接：<a href="https://xz.aliyun.com/t/7436" target="_blank" rel="external">https://xz.aliyun.com/t/7436</a></p>
 <!-- TOC -->
 <ul>
-<li><a href="#pickle反序列化初探">pickle反序列化初探</a>
-<ul>
+<li><a href="#pickle反序列化初探">pickle反序列化初探</a><ul>
 <li><a href="#前言">前言</a></li>
-<li><a href="#基本知识">基本知识</a>
-<ul>
+<li><a href="#基本知识">基本知识</a><ul>
 <li><a href="#pickle简介">pickle简介</a></li>
 <li><a href="#可序列化的对象">可序列化的对象</a></li>
 <li><a href="#object__reduce__-函数"><code>object.__reduce__()</code> 函数</a></li>
-</ul></li>
-<li><a href="#pickle过程详细解读">pickle过程详细解读</a>
-<ul>
-<li><a href="#opcode简介">opcode简介</a>
-<ul>
+</ul>
+</li>
+<li><a href="#pickle过程详细解读">pickle过程详细解读</a><ul>
+<li><a href="#opcode简介">opcode简介</a><ul>
 <li><a href="#opcode版本">opcode版本</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#pickletools">pickletools</a></li>
-</ul></li>
-<li><a href="#漏洞利用">漏洞利用</a>
-<ul>
+</ul>
+</li>
+<li><a href="#漏洞利用">漏洞利用</a><ul>
 <li><a href="#利用思路">利用思路</a></li>
 <li><a href="#初步认识pickle-exp的简单demo">初步认识：pickle EXP的简单demo</a></li>
-<li><a href="#如何手写opcode">如何手写opcode</a>
-<ul>
+<li><a href="#如何手写opcode">如何手写opcode</a><ul>
 <li><a href="#常用opcode解析">常用opcode解析</a></li>
 <li><a href="#拼接opcode">拼接opcode</a></li>
 <li><a href="#全局变量覆盖">全局变量覆盖</a></li>
@@ -867,28 +1043,28 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 <li><a href="#实例化对象">实例化对象</a></li>
 <li><a href="#pker的使用推荐">pker的使用（推荐）</a></li>
 <li><a href="#注意事项">注意事项</a></li>
-</ul></li>
-<li><a href="#ctf实战">CTF实战</a>
-<ul>
+</ul>
+</li>
+<li><a href="#ctf实战">CTF实战</a><ul>
 <li><a href="#做题之前了解pickleunpicklerfind_class">做题之前：了解<code>pickle.Unpickler.find_class()</code></a></li>
 <li><a href="#code-breakingpicklecode">Code-Breaking:picklecode</a></li>
 <li><a href="#watevrctf-2019pickle-store">watevrCTF-2019:Pickle Store</a></li>
 <li><a href="#高校战疫网络安全分享赛webtmp">高校战疫网络安全分享赛:webtmp</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#pker使用说明">pker使用说明</a>
-<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#pker使用说明">pker使用说明</a><ul>
 <li><a href="#简介">简介</a></li>
 <li><a href="#pker能做的事">pker能做的事</a></li>
-<li><a href="#使用方法与示例">使用方法与示例</a>
-<ul>
+<li><a href="#使用方法与示例">使用方法与示例</a><ul>
 <li><a href="#pker全局变量覆盖">pker：全局变量覆盖</a></li>
 <li><a href="#pker函数执行">pker：函数执行</a></li>
 <li><a href="#pker实例化对象">pker：实例化对象</a></li>
 <li><a href="#手动辅助">手动辅助</a></li>
-</ul></li>
-<li><a href="#pkerctf实战">pker：CTF实战</a>
-<ul>
+</ul>
+</li>
+<li><a href="#pkerctf实战">pker：CTF实战</a><ul>
 <li><a href="#code-breaking-picklecode">Code-Breaking: picklecode</a></li>
 <li><a href="#balsnctfpyshv1">BalsnCTF:pyshv1</a></li>
 <li><a href="#balsnctfpyshv2">BalsnCTF:pyshv2</a></li>
@@ -896,11 +1072,14 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 <li><a href="#watevrctf-2019-pickle-store">watevrCTF-2019: Pickle Store</a></li>
 <li><a href="#suctf-2019guess_game">SUCTF-2019:guess_game</a></li>
 <li><a href="#高校战疫网络安全分享赛-webtmp">高校战疫网络安全分享赛: webtmp</a></li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#后记">后记</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC --></p>
             <p class="article-more-link">
@@ -1028,27 +1207,26 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="deepfool-a-simple-and-accurate-method-to-fool-deep-neural-networks浅读">DeepFool: a simple and accurate method to fool deep neural networks浅读</h1>
-<!-- TOC -->
+            <p><h1 id="DeepFool-a-simple-and-accurate-method-to-fool-deep-neural-networks浅读"><a href="#DeepFool-a-simple-and-accurate-method-to-fool-deep-neural-networks浅读" class="headerlink" title="DeepFool: a simple and accurate method to fool deep neural networks浅读"></a>DeepFool: a simple and accurate method to fool deep neural networks浅读</h1><!-- TOC -->
 <ul>
-<li><a href="#deepfool-a-simple-and-accurate-method-to-fool-deep-neural-networks浅读">DeepFool: a simple and accurate method to fool deep neural networks浅读</a>
-<ul>
+<li><a href="#deepfool-a-simple-and-accurate-method-to-fool-deep-neural-networks浅读">DeepFool: a simple and accurate method to fool deep neural networks浅读</a><ul>
 <li><a href="#简介">简介</a></li>
-<li><a href="#二分类下的公式证明">二分类下的公式证明</a>
-<ul>
+<li><a href="#二分类下的公式证明">二分类下的公式证明</a><ul>
 <li><a href="#证明">证明</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#多类别">多类别</a></li>
 <li><a href="#其他结论">其他结论</a></li>
-<li><a href="#经过小实验得到的一些结论">经过小实验得到的一些结论</a>
-<ul>
+<li><a href="#经过小实验得到的一些结论">经过小实验得到的一些结论</a><ul>
 <li><a href="#代码">代码</a></li>
 <li><a href="#注意事项">注意事项</a></li>
 <li><a href="#改变overshoot值得到生成样本">改变overshoot值得到生成样本</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#总结">总结</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC --></p>
             <p class="article-more-link">
@@ -1176,14 +1354,14 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="gnn初探the-graph-neural-network-model浅析">GNN初探，The graph neural network model浅析</h1>
+            <p><h1 id="GNN初探，The-graph-neural-network-model浅析"><a href="#GNN初探，The-graph-neural-network-model浅析" class="headerlink" title="GNN初探，The graph neural network model浅析"></a>GNN初探，The graph neural network model浅析</h1><ul>
+<li>目录<!-- TOC -->
+</li>
+</ul>
 <ul>
-<li><p>目录 <!-- TOC --></p></li>
-<li><a href="#gnn初探the-graph-neural-network-model浅析">GNN初探，The graph neural network model浅析</a>
-<ul>
+<li><a href="#gnn初探the-graph-neural-network-model浅析">GNN初探，The graph neural network model浅析</a><ul>
 <li><a href="#图神经网络的任务分类">图神经网络的任务分类</a></li>
-<li><a href="#图神经网络的计算与优化过程">图神经网络的计算与优化过程</a>
-<ul>
+<li><a href="#图神经网络的计算与优化过程">图神经网络的计算与优化过程</a><ul>
 <li><a href="#设计思路">设计思路</a></li>
 <li><a href="#数学定义">数学定义</a></li>
 <li><a href="#从单个节点总体认知gnn训练的大概流程">从单个节点总体认知GNN训练的大概流程</a></li>
@@ -1191,10 +1369,12 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
 <li><a href="#反向传播">反向传播</a></li>
 <li><a href="#伪代码">伪代码</a></li>
 <li><a href="#transition与output函数的几种实现原论文">Transition与Output函数的几种实现（原论文）</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#后记">后记</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC --></p>
             <p class="article-more-link">
@@ -1322,9 +1502,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="tensorflow2入门">Tensorflow2入门</h1>
-<h2 id="前言">前言</h2>
-<ul>
+            <p><h1 id="Tensorflow2入门"><a href="#Tensorflow2入门" class="headerlink" title="Tensorflow2入门"></a>Tensorflow2入门</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
 <li>最近更新了TF2，发现以前的TF代码都跑不了了。改动是真的很大。并且在重写原来的代码的时候遇到了很多坑，在这里记录一下学习过程。</li>
 <li>没有安装TF2之前，我对其印象停留在TF2强行引入了keras。但是我上手的时候受到了震惊：placeholder与session都被删除了。。。</li>
 <li>官方有一个简单的代码升级脚本，但是其仅仅是把tf替换为tf.compat.v1，并没有太大的作用。</li>
@@ -1455,9 +1633,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="使用模型预测模型的准确率conformal-prediction-共型预测与mpp">使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP</h1>
-<h2 id="要解决的问题">要解决的问题</h2>
-<ul>
+            <p><h1 id="使用模型预测模型的准确率：Conformal-Prediction-共型预测-与MPP"><a href="#使用模型预测模型的准确率：Conformal-Prediction-共型预测-与MPP" class="headerlink" title="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP"></a>使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP</h1><h2 id="要解决的问题"><a href="#要解决的问题" class="headerlink" title="要解决的问题"></a>要解决的问题</h2><ul>
 <li>机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。</li>
 <li>同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新。而这一过程如果由人力来操作则是复杂甚至不现实的，因此最好是由自动化的算法实现。工业生产中的数据往往没有标注，因此传统的将预测结果和标注对比的方式并不能预测生产过程中机器学习模型的准确度。</li>
 <li>为了尝试解决以上这些问题，预测模型的准确率的方法被提出。</li>
@@ -1465,307 +1641,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
             <p class="article-more-link">
                 <a href="/posts/机器学习/20191018-CPMPP.html#more">查看更多</a>
             </p>
-        
-        </div>
-        
-        
-        
-        
-        
-        <footer class="article-footer">
-            <div class="share-container">
-
-
-    <div class="bdsharebuttonbox">
-    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
-    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
-    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
-    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
-    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
-    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
-</div>
-<script>
-window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script>
-<style>
-    .bdshare_popup_box {
-        border-radius: 4px;
-        border: #e1e1e1 solid 1px;
-    }
-    .bdshare-button-style0-16 a,
-    .bdshare-button-style0-16 .bds_more {
-        padding-left: 20px;
-        margin: 6px 10px 6px 0;
-    }
-    .bdshare_dialog_list a,
-    .bdshare_popup_list a,
-    .bdshare_popup_bottom a {
-        font-family: 'Microsoft Yahei';
-    }
-    .bdshare_popup_top {
-        display: none;
-    }
-    .bdshare_popup_bottom {
-        height: auto;
-        padding: 5px;
-    }
-</style>
-
-
-</div>
-
-            
-    
-
-        </footer>
-    </div>
-    
-    
-    
-</article>
-
-
-
-    <article id="post-attention与Transformer结构浅析" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-    
-        
-            
-	
-		<a href="/posts/机器学习/20191013-attention.html" itemprop="url">
-            <img src="http://120.78.185.175/img/banner/Eur3.jpg" class="article-banner" />
-        </a>
-	
-
-
-
-        
-        
-        
-        
-        
-        
-        
-        
-            <header class="article-header">
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/posts/机器学习/20191013-attention.html">attention与Transformer结构浅析</a>
-        </h1>
-    
-
-                
-                    <div class="article-meta">
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/posts/机器学习/20191013-attention.html">
-            <time datetime="2019-10-13T08:58:01.000Z" itemprop="datePublished">2019-10-13</time>
-        </a>
-    </div>
-
-
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/机器学习/">机器学习</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/机器学习-算法/">机器学习-算法</a>
-    </div>
-
-                    </div>
-                
-            </header>
-                
-            
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-            
-			<h1>attention与Transformer结构浅析</h1>
-<h2>前言</h2>
-<ul>
-<li>attention机制除了“attention”之外，另一个关键词是“相似度”，阅读attention结构时记住“相似度”这个词。</li>
-<li>为了对attention模型提出的原因作出解释，我们首先分析RNN的一些特点。</li>
-</ul>
-<p>&lt;!--more--&gt;</p>
-<h2>RNN</h2>
-<ul>
-<li>朴素RNN的思想很简单，即把上一步的输出与这一步的输入同时输入新CELL：</li>
-</ul>
-<p>$$
-\boldsymbol{y}<em>t = f(\boldsymbol{y}</em>{t-1},\boldsymbol{x}_t)
-$$</p>
-<p>在这个基础上，出现了RNN的各种变种：LSTM、GRU等</p>
-<h3>RNN的缺陷</h3>
-<ul>
-<li>RNN结构和其变种有明显的缺陷。在时序过长时，最初的神经元传递的信息会逐渐消失，所以RNN适合对短时序的数据进行学习。</li>
-</ul>
-<h2>attention与Transformer</h2>
-<ul>
-<li>attention结构本身不是时序模型而是词袋模型，没有直接使用先后顺序来理解数据，而是从着重点入手，对不同区域的数据给予不同的注意力。由于本身没有在时序上的迭代，在长时序时，attention也可以捕捉到最初神经元的信息。</li>
-</ul>
-<h3>矩阵乘法的意义</h3>
-<ul>
-<li>在说明attention的计算过程之前，我们首先要理解矩阵乘法的意义。这里以线性组合和矩阵内积两个方面相结合来理解attention机制中的矩阵乘法。</li>
-</ul>
-<h4>线性组合</h4>
-<ul>
-<li>矩阵乘法的过程，就是把左边的矩阵的列向量按右边矩阵的列向量进行<strong>线性组合</strong>。同理，如果看作行向量，则是右边的行向量按左边的行向量的线性组合。</li>
-<li>在attention的计算过程中，连续用到两个矩阵乘法，则直接理解为行向量的线性组合。而线性组合的操作即是“应该”放置“多大”的注意力（按照线性组合的系数放置注意力）</li>
-</ul>
-<h4>矩阵内积</h4>
-<ul>
-<li>由向量的内积可以推广到矩阵内积，而向量内积有定义：$|α||β|cosθ$，可以用来衡量两向量的相似性。同理，矩阵内积的大小可以衡量两个矩阵之间行向量与列向量之间的相似性（左行右列）。此处的左行右列也证明了第二个矩阵需要进行转置操作才能衡量行与行之间的相似性。</li>
-<li>在attention操作的过程中，两矩阵相乘（第二个矩阵经过转置）得到的矩阵即任意两行之间相似度关系的大小。</li>
-</ul>
-<h3>attention计算过程</h3>
-<ul>
-<li>最原始的attention操作计算的即两个矩阵每行之间的相似程度。attention本身的过程中没有涉及到权重的运算。而实际操作时，attention可以在Q、K、V中涵盖可变的权重，使计算过程更灵活（如：$&quot;Q&quot;=\boldsymbol{Q}\boldsymbol{W}_i^Q$）。下面首先介绍基本的attention结构。</li>
-</ul>
-<p><img src="http://120.78.185.175/img/blogimg/attention/attention.png" alt="attention"></p>
-<p>attention的权重的表达式为：</p>
-<p>$$
-α_i=softmax(s(key_i,q))
-$$
-其中，$α_i$称为注意力分布，$s(key_i,q)$为注意力打分机制，常见的有：</p>
-<p>$$
-加性模型：s(x_i,q)=v^Ttanh(Wx_i+Uq)
-$$</p>
-<p>$$
-点积模型：s(x_i,q)=x_i^Tq
-$$</p>
-<p>$$
-缩放点积模型：s(x_i,q)=\frac{x_i^Tq}{\sqrt{d_k}}
-$$</p>
-<p>$$
-双线性模型：s(x_i,q)=x^T_iWq
-$$</p>
-<p>论文中采用的计算式为：</p>
-<p>$$
-Attention(\boldsymbol{Q},\boldsymbol{K},\boldsymbol{V}) = softmax\left(\frac{\boldsymbol{Q}\boldsymbol{K}^{\top}}{\sqrt{d_k}}\right)\boldsymbol{V}
-$$</p>
-<p>将Q、K、V每一行向量拆开看，可以很容易看出三个向量之间连续使用了两个点积计算，前面说过，点积计算的是两个向量之间的相似程度：</p>
-<p>$$
-Attention(\boldsymbol{q}<em>t,\boldsymbol{K},\boldsymbol{V}) = \sum</em>{s=1}^m \frac{1}{Z}\exp\left(\frac{\langle\boldsymbol{q}_t, \boldsymbol{k}_s\rangle}{\sqrt{d_k}}\right)\boldsymbol{v}_s
-$$</p>
-<ul>
-<li>在原论文中说明，在高维度点乘的过程中，输出的数据会很大，再经过softmax映射后，就呈现出接近0和1的趋势（而没有类似于0.5的过度），失去了softmax的概率映射的意义，所以除以$\sqrt{d_k}$。</li>
-<li>忽略掉$\sqrt{d_k}$，可以很容易体会到attention的过程，Q、K、V分别代表query, keys, values。首先，函数通过一个矩阵乘法操作$\boldsymbol{K}$矩阵得到$\boldsymbol{Q}\boldsymbol{K}^{\top}$，之后通过softmax获得一个根据相似度，该词应该放置多大的“attention”，输出的矩阵描述了query和key之间任意两个元素的关联强度（attention只负责计算空间相似度，实际的关联关系由之前使用的word embedding算法本身获得的向量的性质决定，比如使用word2vec可以将意义相近的词映射到向量空间相近的地方，则attention从词意上计算其相似度）。</li>
-<li>之后将关联强度与V作矩阵乘法，就得到了神经网络“集中注意”后的输出值。由上文对矩阵乘法的理解，此处可以给出注意力权重与V相乘的过程在实际情况的理解：左边的矩阵的第i行第j列代表了一个句子中第i个词与第j个词的之间的关系大小；右边的矩阵则是整个句子的向量化矩阵，其中第i行表示第i个词。由矩阵与线性组合的理解，就可以看作一个词向量对应的输出结果是以该词与其他词的相似性作为系数的对应词向量的线性组合。可以看出，一个词与另一个词的含义如果越相似，那经过attention后另一个词对这个词的向量的影响就越大。</li>
-<li>整个过程连起来解释就是：根据Q和K的相似度大小来决定V前的系数，从而输出V的一个线性组合。拿一个实际例子来看：我们现在有一个句子“我们是学生，我们热爱学习”，经过向量化后，在计算attention时（此处使用self-attention），我们发现“学生”和“学习”的相似度很高，于是重点关注了这句话的“学生”和“学习”两个词，达到了attention的目的。</li>
-</ul>
-<h3>self-attention</h3>
-<p>在attention的基础下很容易得出self-attention的运算过程。顾名思义，self-attention就是对自身的attention：</p>
-<p>$$
-Attention(\boldsymbol{X}\boldsymbol{W}_i^Q,\boldsymbol{X}\boldsymbol{W}_i^K,\boldsymbol{X}\boldsymbol{W}_i^V)
-$$</p>
-<ul>
-<li>仅有自身的矩阵乘法不够灵活，所以在attention的基础下，对attention的每个输入前都加上了weight。</li>
-<li>个人对self-attention的理解是：举例来说，比如在一个文本分类任务中，有一句话为：“读书能够使人学习到很多有价值的东西”。那么这句话的重点应该放在“读书”、“学习到”上。在我们尝试确定关注度时，我们是对这个句子本身进行分析后得出的结果，所以self-attention也是用这种方法来得出关注度的。按照苏剑林大师傅的话就是“在序列内部做Attention，寻找序列内部的联系”。</li>
-</ul>
-<h3>多头attention</h3>
-<ul>
-<li>类似于CNN的多核卷积捕捉不同信息，多头attention将多个attention拼接起来：</li>
-</ul>
-<p>$$
-head_i = Attention(\boldsymbol{Q}\boldsymbol{W}_i^Q,\boldsymbol{K}\boldsymbol{W}_i^K,\boldsymbol{V}\boldsymbol{W}_i^V)
-$$</p>
-<p>$$
-MultiHead(\boldsymbol{Q},\boldsymbol{K},\boldsymbol{V}) = Concat(head_1,...,head_h)\boldsymbol{W^{\boldsymbol{O}}}
-$$</p>
-<p><img src="http://120.78.185.175/img/blogimg/attention/multi_head.png" alt="Multi-Head Attention"></p>
-<p>可以注意到，此处的“Q、K、V”都是加入权重后的Q、K、V。在网上有的文章中，将self-attention或多头attention中的Q、K、V与基础attention搞混了，直接带入X，得到类似$Attention(\boldsymbol{X},\boldsymbol{X},\boldsymbol{X})$的形式，这和原论文是有出入的。直接使用$Attention(\boldsymbol{X},\boldsymbol{X},\boldsymbol{X})$得到的结果只是类似于三个X直接连乘的计算结果，从数学表达式上看只取决于输入的向量，没有经过神经网络学习的权值，而多头attention中的形式是$Attention(\boldsymbol{X}\boldsymbol{W}_i^Q,\boldsymbol{X}\boldsymbol{W}_i^K,\boldsymbol{X}\boldsymbol{W}_i^V)$，里面还包含了神经网络“根据实际情况灵活变化权值”的含义。</p>
-<h3>Positional Encoding</h3>
-<ul>
-<li>前面提到，attention模型本身是词袋模型，因为如果将K,V按行打乱顺序（相当于句子中的词序打乱），那么Attention的结果还是一样的（容易证明，矩阵任意两行交换顺序后自身与自身的转置相乘，得到的矩阵只是按行交换了顺序而已）；说明self-attention结构本身是一个词袋模型。所以还需要一个加入位置信息的操作，不然就会遗失重要的顺序信息。所以在paper中，Transformer使用了Positional Encoding加入顺序信息。<br>
-具体操作如下（这里给出的是某个位置的向量的某个维度的映射过程）：</li>
-</ul>
-<p>$$
-\left{\begin{aligned}&amp;PE_{2i}(pos,2i)=\sin\Big(pos/10000^{2i/{d_{model}}}\Big)\
-&amp;PE_{2i+1}(pos,2i+1)=\cos\Big(pos/10000^{2i/{d_{model}}}\Big)
-\end{aligned}\right.
-$$</p>
-<p>其中，pos为位置的序列，i是当前的维度；这样，就可以把整个向量组按位置重新映射成一个大小与整个矩阵相同的位置向量组。使用这个映射的原因是，因为有关系$\sin(\alpha+\beta)=\sin\alpha\cos\beta+\cos\alpha\sin\beta$和$\cos(\alpha+\beta)=\cos\alpha\cos\beta-\sin\alpha\sin\beta$，所以如果两个向量存在位置相差，他们之间成线性关系，则可以更好地通过机器学习学习出这个关系（如在sin中，只用学习出sinα和cosα），这样就给学习位置信息打下基础。</p>
-<p>以下是一个长度为20个词的句子经过PE得到的位置矩阵，每个词的维度为512，每个PE值范围在[-1,1]；左侧是用sine函数生成，右侧是用cosine生成（本来应该交叉生成，由于Q、K、V矩阵的行可交换性，将左边右边分别批量计算）：</p>
-<p><img src="http://120.78.185.175/img/blogimg/attention/positional_encoding.png" alt="positional_encoding"></p>
-<p>图片来自：https://jalammar.github.io/illustrated-transformer/</p>
-<ul>
-<li>但是，PE这种硬编码并不能完美的表示位置信息，这也是Transformer模型的一个缺点。</li>
-</ul>
-<h3>Position-wise Feed-Forward Networks</h3>
-<ul>
-<li>在Transformer结构中还用到了FFN全连接网络（一个两层的全连接网络），计算过程如下（一个ReLu激活的全连接嵌套了一个线性激活的全连接）：</li>
-</ul>
-<p>$$
-FFN(x) = max(0,xW1+b1)W2+b2
-$$</p>
-<h3>attention效率分析</h3>
-<ul>
-<li>通过矩阵乘法，我们可以看出，attention在计算过程中与数据维度相关的复杂度为$O(d^2)$。而这个矩阵乘法本身则完成了一个句子中任意两个词之间关系的计算。可以预见，当数据的维度过高（句子很长）时，计算量会偏大。</li>
-</ul>
-<h3>Transformer</h3>
-<ul>
-<li>
-<p>就Attention is All You Need这篇论文而言，它的核心在于提出了attention这个结构。而论文中同时也提出了Transformer模型，作为attention的第一个应用。</p>
-</li>
-<li>
-<p>首先放图（一句话只有<strong>两个词</strong>的Transformer）：<br>
-<img src="http://120.78.185.175/img/blogimg/attention/transformer.png" alt="Transformer">
-图片来自：https://jalammar.github.io/illustrated-transformer/</p>
-</li>
-<li>
-<p>在前文对多头attention、位置嵌入（PE）、FFN结构了解的基础和对seq2seq的了解上，可以比较容易的理解Transformer的结构。</p>
-</li>
-<li>
-<p>Transformer是典型的encoder-decoder结构。</p>
-</li>
-</ul>
-<p>首先是encoder：<br>
-先定义一个结构：AN层：首先加上原数据，然后经过Layer Normalization处理；这里的AN层是一个残差操作，其思想跟深度残差网络类似（个人理解是原始数据是最重要的信息来源，在经过深层的神经网络处理后，虽然得到了特征提取，但原始信息有部分丢失，此时直接将原始特征相加后能够直接把原始信息引入深层次网络中）。</p>
-<ol>
-<li>经过词向量嵌入之后，直接与PE相加，加入位置信息。</li>
-<li>通过多头self-attention（此处多头加入权重对原始向量作出映射）后经过残差AN层，输入FFN（注意此处，每一个词都由单独的一个DNN处理，但实际上可以由一个拼接的DNN来处理，所以图中的两个Feed Forward可以由一个拼接的大DNN代替，<a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="external">参考</a>），再经过AN层，这个结构重复N次。</li>
-</ol>
-<p><img src="http://120.78.185.175/img/blogimg/attention/transformer_decoding_1.gif" alt="transformer_encoding"></p>
-<p>图片来自：https://jalammar.github.io/illustrated-transformer/</p>
-<p>然后是decoder：</p>
-<ol>
-<li>decoder将已经翻译过的输出当作最初的词向量传入（比如已经翻译的&quot;I am a&quot;的词向量)，这里的实现过程是，词向量“未来”的位置会被mask操作遮挡（将它们设置为-inf），从而保证每一步输入的词向量长度一致，但又有变长的信息作为输入，类似于一般的词向量对齐操作。</li>
-<li>通过多头self-attention（此处多头加入权重对原始向量作出映射），经过残差AN层；再通过多头attention（此处多头加入权重对原始向量作出映射），不过，第二次attention从前层获取输出转成query矩阵，接收最后层编码器的key和value矩阵做key和value矩阵，再经过AN层；输入FFN层（与encoder同样的，每一个词都由单独的一个DNN处理，但实际上也可以直接由一个拼接的长DNN处理），再进入AN层。这个结构重复N次。</li>
-<li>最终通过线性全连接层和softmax输出当前翻译词语是字典中每个单词的概率。</li>
-</ol>
-<p><img src="http://120.78.185.175/img/blogimg/attention/transformer_decoding_2.gif" alt="transformer_decoding"></p>
-<p>图片来自：https://jalammar.github.io/illustrated-transformer/</p>
-<ul>
-<li>在训练时，最基本的LOSS函数是最终的softmax与准确的词语的onehot之间的交叉熵。网上也有其他更复杂的结构，比如先输出最高概率的位置，再经过一层神经网络输出最终结果。</li>
-</ul>
-<h2>一些个人想法</h2>
-<ul>
-<li>attention结构的关键词是“相似度”和“关注度”，即根据相似度大小确定关注度。</li>
-<li>由于attention可以计算不同词之间的关系，在其输出中已经包含了“上下文”的含义，可以在一定程度上解决“一词多义”的问题（可以比较容易的证明：同一个词语在不同的句子中，经过attention操作后得到的向量是不一样的）。</li>
-<li>比较重要的问题是“词袋模型”问题和“一词多义”问题。</li>
-</ul>
-<h2>bojone版本attention与原论文的“不一致”</h2>
-<ul>
-<li>在bojone实现的attention中，PE编码直接将前半段使用cos处理，后半段使用sin处理；原文则使用sin和cos交叉的方式。<br>
-具体的issue有<a href="https://github.com/bojone/attention/issues/2" target="_blank" rel="external">https://github.com/bojone/attention/issues/2</a>、<a href="https://github.com/bojone/attention/issues/5" target="_blank" rel="external">https://github.com/bojone/attention/issues/5</a>、<a href="https://github.com/bojone/attention/issues/11" target="_blank" rel="external">https://github.com/bojone/attention/issues/11</a>。作者给出的解释是attention的行是可以任意打乱顺序的，因为它本身就是词袋模型。</li>
-<li>在这里，我个人更偏向于按原文方式进行PE，我给出的理由是：加入PE的句子不再是词袋模型，而PE本身的计算顺序就和位置密切相关。在bojone的观点下，PE的顺序是不重要的，即把PE按行打乱顺序对结果是没有任何影响的。这可能并不正确，由图像&quot;positional_encoding&quot;可以看出，PE的计算过程中，每个行打乱顺序后效果并不一致，并且这些交替的顺序中本身可能就蕴含了时序关系。（都是个人感觉）所以在使用bojone版本的attention时我倾向于忠实原文的方法。</li>
-</ul>
-<h2>参考资料</h2>
-<ul>
-<li><a href="https://arxiv.org/pdf/1706.03762.pdf" target="_blank" rel="external">Attention is All You Need</a></li>
-<li><a href="https://spaces.ac.cn/archives/4765" target="_blank" rel="external">《Attention is All You Need》浅读（简介+代码）</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/53682800" target="_blank" rel="external">nlp中的Attention注意力机制+Transformer详解</a></li>
-<li><a href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="external">The Illustrated Transformer</a></li>
-</ul>
-
         
         </div>
         
@@ -1844,6 +1719,25 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210607-open_redirect01.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://120.78.185.175/img/thumbnails/eggs.jpg)" alt="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210607-open_redirect01.html" class="title">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a></p>
+                            <p class="item-date"><time datetime="2021-06-07T06:57:35.000Z" itemprop="datePublished">2021-06-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/posts/Web安全/20210309-ant2021.html" class="thumbnail">
     
     
@@ -1917,25 +1811,6 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20200328-pickle.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="pickle反序列化初探" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20200328-pickle.html" class="title">pickle反序列化初探</a></p>
-                            <p class="item-date"><time datetime="2020-03-28T04:25:21.000Z" itemprop="datePublished">2020-03-28</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -1945,7 +1820,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">12</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">13</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
         </div>
     </div>
 
