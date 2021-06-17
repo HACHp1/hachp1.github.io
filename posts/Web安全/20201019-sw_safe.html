@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss   从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss  题目初探  JSONP 变量覆盖和DOM XSS  Service Worker  Service Worker简介 注册Service Worker 构造恶意register Service">
 <meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
-<meta property="og:updated_time" content="2020-10-19T13:59:20.897Z">
+<meta property="og:updated_time" content="2021-06-17T03:29:50.033Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss">
 <meta name="twitter:description" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss   从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss  题目初探  JSONP 变量覆盖和DOM XSS  Service Worker  Service Worker简介 注册Service Worker 构造恶意register Service">
@@ -373,7 +373,7 @@ ga('send', 'pageview');
 <img src="http://120.78.185.175/img/blogimg/xihulunjian_hardxss/networking.png" alt="networking"></p>
 <ul>
 <li>注意到跨域页面上只有一个光秃秃的跨域操作，并没有其他操作，但作为媒介用以设置其子域-登录验证api上的SW脚本（设置脚本时访问的是跨域页面而没有访问劫持页面）</li>
-<li>利用条件：<code>1.baidu.com</code>上发现了XSS，<code>2.baidu.com</code>上存在跨域操作：<code>document.domain = 'baidu.me'</code>并且子域下存在JSONP（路径需要跟盗取的信息页面在同一子域）或能够上传js的地方，就可以完成JSONP子域下的持久化XSS劫持。</li>
+<li>利用条件：<code>1.baidu.com</code>上发现了XSS，<code>2.baidu.com</code>上存在跨域操作：<code>document.domain = 'baidu.com'</code>并且子域下存在JSONP（路径需要跟盗取的信息页面在同一子域）或能够上传js的地方，就可以完成JSONP子域下的持久化XSS劫持。</li>
 </ul>
 <p>最后几点：</p>
 <ol type="1">
