@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP | Math &amp; Sec ，HACHp1的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP 要解决的问题  机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。 同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新">
+<meta name="keywords" content="机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP">
+<meta property="og:url" content="https://hachp1.github.io/posts/机器学习/20191018-CPMPP.html">
+<meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
+<meta property="og:description" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP 要解决的问题  机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。 同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新">
+<meta property="og:image" content="http://159.75.52.53/img/thumbnails/ml.jpg">
+<meta property="og:updated_time" content="2021-10-29T11:39:32.037Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP">
+<meta name="twitter:description" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP 要解决的问题  机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。 同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新">
+<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/ml.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Math &amp; Sec ，HACHp1的个人博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">目录</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">目录</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">HACHp1</h2>
+            <h3 id="title">生活少有按照行动而改变，那就抓住那几个少有的。</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>China</span>
+            <a id="follow" target="_blank" href="https://github.com/hachp1">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                40
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                8
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/HACHp1" target="_blank" title="GitHub" class=tooltip>
+                            <i class="fa fa-GitHub"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-使用模型预测模型的准确率：Conformal-Prediction-共型预测-与MPP" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+    
+        
+            
+	
+		<img src="http://159.75.52.53/img/banner/ML.jpg" class="article-banner" />
+	
+
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/机器学习/20191018-CPMPP.html">
+            <time datetime="2019-10-18T03:29:55.000Z" itemprop="datePublished">2019-10-18</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/机器学习/">机器学习</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/机器学习/">机器学习</a>
+    </div>
+
+                    </div>
+                
+            </header>
+                
+            
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h1 id="使用模型预测模型的准确率conformal-prediction-共型预测与mpp">使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP</h1>
+<h2 id="要解决的问题">要解决的问题</h2>
+<ul>
+<li>机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。</li>
+<li>同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新。而这一过程如果由人力来操作则是复杂甚至不现实的，因此最好是由自动化的算法实现。工业生产中的数据往往没有标注，因此传统的将预测结果和标注对比的方式并不能预测生产过程中机器学习模型的准确度。</li>
+<li>为了尝试解决以上这些问题，预测模型的准确率的方法被提出。</li>
+</ul>
+<a id="more"></a>
+<h2 id="基本思想">基本思想</h2>
+<ul>
+<li>在原模型的基础上，使用另一个模型预测原模型在数据集上的准确率。</li>
+</ul>
+<h2 id="实现过程">实现过程</h2>
+<h3 id="共型预测-conformal-predictioncp的过程">共型预测 Conformal Prediction（CP）的过程</h3>
+<ul>
+<li>CP是一种使用模型预测准确率的方法，大致过程如下：</li>
+</ul>
+<ol type="1">
+<li>使用训练集训练出一个模型，此处简称原模型</li>
+<li>使用训练集的数据以及原模型对训练集作出的预测相结合作为训练集，训练出一个新的模型（此处称为CP模型）</li>
+<li>CP模型的输入特征可以与原模型的输入不同（两个模型的特征相关但不一定要完全一致）<br>
+CP模型的输出是1个置信度和1个不一致程度。CP模型直接使用新模型去拟合原模型输出是否与真实y值不一致的程度（如直接拟合差值的绝对值等，原论文中未出现明确的方法） 然后会通过公式将该值映射到0~1之间的值：</li>
+</ol>
+<p><span class="math display">\[
+p^y=\frac{|\{i=1,...,n|α_i^y\geα_n^y\}|}{n}，其中，||代表数量值
+\]</span> 可以看到，该映射将α按样本的数量等距映射到0~1之间，并且α的值越大，映射出的p值越小；因为α是不一致性，那么p值就用来衡量一致性的大小。</p>
+<ol start="4" type="1">
+<li>经过以上步骤，我们得到了一个可以判断原模型是否准确的CP模型。</li>
+</ol>
+<ul>
+<li>CP模型输出了原模型是否可信的p值。</li>
+</ul>
+<h3 id="model-performance-predictionmpp的过程">Model Performance Prediction（MPP）的过程</h3>
+<ul>
+<li>MPP是另一种使用模型预测准确率的方法，大致过程如下：</li>
+</ul>
+<ol type="1">
+<li>使用训练集训练出一个模型，此处简称原模型</li>
+<li>使用训练集的数据以及原模型对训练集作出的预测相结合作为训练集，训练出一个新的模型（此处称为MPP模型）<br>
+MPP模型的输入特征可以与原模型的输入不同（两个模型的特征相关但不一定要完全一致）<br>
+MPP模型的输出是0（预测错误）或1（预测正确），在这里有两种情况：分类与拟合，在分类时，原模型预测正确则向MPP模型输入<code>y=1</code>，反之输入<code>y=0</code>；在拟合时，人为规定一个阈值ε，如果原模型预测的结果与真实值相差小于阈值则判断为预测正确，向MPP模型输入<code>y=1</code>，反之输入<code>y=0</code></li>
+<li>在拟合问题中，阈值ε的取值使用了空模型理论（the null model concept）与<a href="https://hachp1.github.io/posts/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/20191005-ROC_REC_PR.html">REC(Regression Error Characteristic)肘部法则</a>来确定。</li>
+<li>经过以上步骤，我们得到了一个可以判断原模型是否准确的MPP模型。</li>
+</ol>
+<ul>
+<li>可以看出MPP模型是一个<strong>二分类</strong>模型，其输出了原模型是否会预测正确的判断。</li>
+</ul>
+<h2 id="思考">思考</h2>
+<ul>
+<li>整体来看，使用新模型判断原模型是否正确或者预测原模型的准确率的做法与提升模型（boosting）有类似的地方。提升模型是使用新的模型预测原模型结果与真实结果的差值，并且可以迭代多次，典型的模型有GBDT、XGBoost、LGBM等。提升模型更像是直接使用新模型来整合到整个模型中为最后的结果做出贡献。而结果预测模型则是输出一个供人作参考的值，用来对原模型作出评判。</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://arxiv.org/pdf/1902.08638.pdf" target="_blank" rel="external">MPP：Model Performance Prediction</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/66403673" target="_blank" rel="external">OpML 2019提前看：模型表现预测与分布式机器学习</a></li>
+<li><a href="https://pdfs.semanticscholar.org/2acd/f559300dd37f235642c0dbdbfe1d7118b250.pdf" target="_blank" rel="external">Regression Error Characteristic Curves</a></li>
+</ul>
+
+        
+        </div>
+        
+        
+        
+        
+<div id="copyright-div">    
+
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：<a href="https://github.com/HACHp1">HACHp1</a> </strong>
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/posts/机器学习/20191018-CPMPP.html" title="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP">https://hachp1.github.io/posts/机器学习/20191018-CPMPP.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。非商业转载请注明作者及出处。商业转载请联系作者本人。
+      </li>
+    </ul>
+ 
+</div>
+
+
+        
+        
+        
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/posts/机器学习/20191128-tf2_learning.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Tensorflow2入门
+                
+            </div>
+        </a>
+    
+    
+        <a href="/posts/机器学习/20191013-attention.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">attention与Transformer结构浅析</div>
+        </a>
+    
+</nav>
+
+
+    
+    
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210615-qwb2021.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="强网杯2021 easyxss wp" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210615-qwb2021.html" class="title">强网杯2021 easyxss wp</a></p>
+                            <p class="item-date"><time datetime="2021-06-15T06:09:42.000Z" itemprop="datePublished">2021-06-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210607-open_redirect01.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210607-open_redirect01.html" class="title">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a></p>
+                            <p class="item-date"><time datetime="2021-06-07T06:57:35.000Z" itemprop="datePublished">2021-06-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210309-ant2021.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="AntCTF2021 部分WP" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210309-ant2021.html" class="title">AntCTF2021 部分WP</a></p>
+                            <p class="item-date"><time datetime="2021-03-09T11:04:04.000Z" itemprop="datePublished">2021-03-09</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20201126-wdbunfinish.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201126-wdbunfinish.html" class="title">[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</a></p>
+                            <p class="item-date"><time datetime="2020-11-26T08:47:27.000Z" itemprop="datePublished">2020-11-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20201019-sw_safe.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201019-sw_safe.html" class="title">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</a></p>
+                            <p class="item-date"><time datetime="2020-10-19T13:54:52.000Z" itemprop="datePublished">2020-10-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="https://redogwu.github.io">redogWu</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://hpasserby.me">Hpasserby的pwn</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://jygzyc.github.io">jygzyc</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 HACHp1<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:true,
+            verify:true,
+            app_id: 'GpqOpUBld8udMg3PSOCDbYr7-gzGzoHsz',
+            app_key: 'k6nxcdbcy4MrjOq2DssFFljB',
+            placeholder: '少侠，留下几句话，我们喝一壶啊 ヾﾉ≧∀≦)o （支持markdown语句，可插入图片）'
+        });
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

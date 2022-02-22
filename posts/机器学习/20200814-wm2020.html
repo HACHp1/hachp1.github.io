@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>WMCTF2020 两道AI相关题目WP | Math &amp; Sec ，HACHp1的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="WMCTF2020 两道AI相关题目WP   wmctf2020 两道AI相关题目WP  前言 Performance_artist  CRC校验 如何“识别”字母 Performance_artist解题过程 总结  Music_game_2  题目解读 Music_game_2解题过程 总结  解题脚本">
+<meta name="keywords" content="机器学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WMCTF2020 两道AI相关题目WP">
+<meta property="og:url" content="https://hachp1.github.io/posts/机器学习/20200814-wm2020.html">
+<meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
+<meta property="og:description" content="WMCTF2020 两道AI相关题目WP   wmctf2020 两道AI相关题目WP  前言 Performance_artist  CRC校验 如何“识别”字母 Performance_artist解题过程 总结  Music_game_2  题目解读 Music_game_2解题过程 总结  解题脚本">
+<meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_yellow.jpg">
+<meta property="og:updated_time" content="2021-10-29T11:39:31.909Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WMCTF2020 两道AI相关题目WP">
+<meta name="twitter:description" content="WMCTF2020 两道AI相关题目WP   wmctf2020 两道AI相关题目WP  前言 Performance_artist  CRC校验 如何“识别”字母 Performance_artist解题过程 总结  Music_game_2  题目解读 Music_game_2解题过程 总结  解题脚本">
+<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_yellow.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Math &amp; Sec ，HACHp1的个人博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">目录</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">目录</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">HACHp1</h2>
+            <h3 id="title">生活少有按照行动而改变，那就抓住那几个少有的。</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>China</span>
+            <a id="follow" target="_blank" href="https://github.com/hachp1">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                40
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                8
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/HACHp1" target="_blank" title="GitHub" class=tooltip>
+                            <i class="fa fa-GitHub"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-WMCTF2020-AI题WP" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+    
+        
+            
+	
+		<img src="http://159.75.52.53/img/math/dfjk/CTF.png" class="article-banner" />
+	
+
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            WMCTF2020 两道AI相关题目WP
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/机器学习/20200814-wm2020.html">
+            <time datetime="2020-08-14T14:17:50.000Z" itemprop="datePublished">2020-08-14</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/机器学习/">机器学习</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/机器学习/">机器学习</a>
+    </div>
+
+                    </div>
+                
+            </header>
+                
+            
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h1 id="wmctf2020-两道ai相关题目wp">WMCTF2020 两道AI相关题目WP</h1>
+<!-- TOC -->
+<ul>
+<li><a href="#wmctf2020-两道ai相关题目wp">wmctf2020 两道AI相关题目WP</a>
+<ul>
+<li><a href="#前言">前言</a></li>
+<li><a href="#performance_artist">Performance_artist</a>
+<ul>
+<li><a href="#crc校验">CRC校验</a></li>
+<li><a href="#如何识别字母">如何“识别”字母</a></li>
+<li><a href="#performance_artist解题过程">Performance_artist解题过程</a></li>
+<li><a href="#总结">总结</a></li>
+</ul></li>
+<li><a href="#music_game_2">Music_game_2</a>
+<ul>
+<li><a href="#题目解读">题目解读</a></li>
+<li><a href="#music_game_2解题过程">Music_game_2解题过程</a></li>
+<li><a href="#总结-1">总结</a></li>
+</ul></li>
+<li><a href="#解题脚本">解题脚本</a></li>
+</ul></li>
+</ul>
+<!-- /TOC -->
+<a id="more"></a>
+<h2 id="前言">前言</h2>
+<p>最近忙着搞论文的事情，已经有一段时间没有更新博客了；但是今年的wmctf2020中出现了两道AI相关的题目，吸引了我的目光。本来我是没有准备打这次比赛的，看到群里有大哥在说比赛有机器学习题目，这一下子引起了我的兴趣，不说了，干它就完事。<br>
+其实说的两道AI题目，实际用到AI技术的只有第二题。</p>
+<h2 id="performance_artist">Performance_artist</h2>
+<p>题目给出了一张拼接图片，并提示将flag以十六进制的手写形式储存在图片里，所以需要将图片“识别”为对应的数字或字母。</p>
+<h3 id="crc校验">CRC校验</h3>
+<p>首先，图片显示不全，需要根据crc校验还原其高度，经过还原后的图片：</p>
+<figure>
+<img src="http://159.75.52.53/img/blogimg/wm2020/1.png" alt="attachment.png"><figcaption>attachment.png</figcaption>
+</figure>
+<h3 id="如何识别字母">如何“识别”字母</h3>
+<ul>
+<li>接触过机器学习的师傅对mnist数据集一定十分熟悉，这张图一眼就能看出mnist的痕迹，但是mnist是没有字母的。在网上搜了一下，发现是emnist数据集中的字母（mnist数据集的拓展数据集）<br>
+</li>
+<li>看到这个图，很多人第一时间想到的是训练一个神经网络来识别，但是神经网络识别跟肉眼识别差不多甚至效果更差，群里已经有师傅肉眼识别过了，发现不太行。这一点也卡了我一些时间。</li>
+<li>后来一想：这图既然是使用emnist和mnist数据集中的图片拼接成的，那么直接去数据集中寻找标准答案不就可以了吗。</li>
+</ul>
+<h3 id="performance_artist解题过程">Performance_artist解题过程</h3>
+<ul>
+<li>接下来就好办了，参考mnist和emnist数据集官网的教程，直接下载原数据进行解析。能够读取数据集之后，我将题目中的图片按照像素的16进制储存为字符串，然后同样的，将原数据集中所有图片都存为16进制-label的key-value键值对。然后尝试解析了一下，能出结果了，解析出一个zip。这里有个坑：emnist数据集解析时横纵坐标颠倒了，需要再倒过来才行（这个点有点坑，我被坑了不少时间）；解题完整的脚本在本文文末，两个图像字符串化的关键代码为：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">np2str</span><span class="params">(np_image)</span>:</span></div><div class="line">    tmp = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> np_image:</div><div class="line">        tmp += hex(int(i))[<span class="number">2</span>:]</div><div class="line">    <span class="keyword">return</span> tmp</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">img2str</span><span class="params">(image)</span>:</span></div><div class="line">    tmp = <span class="string">''</span></div><div class="line">    np_img = np.array(image).reshape(<span class="number">-1</span>)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> np_img:</div><div class="line">        tmp += hex(int(i))[<span class="number">2</span>:]</div><div class="line">    <span class="keyword">return</span> tmp</div></pre></td></tr></table></figure>
+<ul>
+<li>直接解压zip，报错说有密码，套娃了，直接伪加密解压成功：</li>
+</ul>
+<figure>
+<img src="http://159.75.52.53/img/blogimg/wm2020/2.png" alt="zip"><figcaption>zip</figcaption>
+</figure>
+<p>提示brainfxxk编码，解码后得到flag：</p>
+<figure>
+<img src="http://159.75.52.53/img/blogimg/wm2020/3.png" alt="flag"><figcaption>flag</figcaption>
+</figure>
+<h3 id="总结">总结</h3>
+<p>此题主要考做题者对机器学习数据集的熟练度，如果对mnist数据集比较熟悉，还是能够想到直接去原数据集找图片的。另外，此题还套娃了几层。</p>
+<h2 id="music_game_2">Music_game_2</h2>
+<p>这道题很有意思，坦克大战移动坦克。我没做 <code>Music_game_1</code> ，是听群里有师傅说是AI题我才看的。看群里师傅说 <code>Music_game_1</code> 要标准的英式发音来移动坦克走迷宫，感觉挺有意思的。</p>
+<h3 id="题目解读">题目解读</h3>
+<p>题目给出了一个网页，一个机器学习检测的源码、训练好的机器学习模型和一个left.wav的声音源。机器学习检测源码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> librosa, librosa.display</div><div class="line"></div><div class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_wav_mfcc</span><span class="params">(wav_path)</span>:</span></div><div class="line">    y, sr = librosa.load(wav_path,sr=<span class="keyword">None</span>)</div><div class="line">    data=librosa.feature.mfcc(y,sr=sr)</div><div class="line">    data=np.array(data)</div><div class="line"></div><div class="line">    <span class="string">'''to unified format'''</span></div><div class="line">    <span class="keyword">while</span> len(data[<span class="number">0</span>])&gt;<span class="number">30</span>:</div><div class="line">        data=np.delete(data,<span class="number">-1</span>,axis=<span class="number">1</span>)</div><div class="line">        data=np.delete(data,<span class="number">0</span>,axis=<span class="number">1</span>)</div><div class="line">    <span class="keyword">while</span> len(data[<span class="number">0</span>])&lt;<span class="number">30</span>:</div><div class="line">        data=np.insert(data,<span class="number">-1</span>,values=data.T[<span class="number">-1</span>],axis=<span class="number">1</span>)</div><div class="line">    <span class="keyword">return</span> data.T</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">checkdifferent</span><span class="params">(path)</span>:</span></div><div class="line">    mfcc1=get_wav_mfcc(<span class="string">'example.wav'</span>)</div><div class="line">    mfcc2=get_wav_mfcc(path)</div><div class="line">    <span class="keyword">if</span> np.mean(np.abs(mfcc1-mfcc2))&lt;<span class="number">4</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"></div><div class="line">model = keras.models.load_model(<span class="string">'model.h5'</span>)</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">detect</span><span class="params">(path)</span>:</span></div><div class="line">    ret=model.predict(get_wav_mfcc(path).reshape(<span class="number">1</span>,<span class="number">30</span>,<span class="number">20</span>))</div><div class="line">    <span class="keyword">return</span> (ret.max(),ret.argmax())</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    path=<span class="string">'yours.wav'</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> checkdifferent(path):</div><div class="line">                print(<span class="string">'sorry,it is too different with example.wav'</span>)</div><div class="line">                exit()</div><div class="line">        (num,lable)=detect(path)</div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        print(<span class="string">'ERROR'</span>)</div><div class="line">        exit()</div><div class="line">    <span class="keyword">if</span> num&lt;<span class="number">0.9</span>:</div><div class="line">            print(<span class="string">"I can't detect with certainty"</span>)</div><div class="line">            exit()</div><div class="line">    <span class="keyword">if</span> lable==<span class="number">0</span>:</div><div class="line">        print(<span class="string">'up'</span>)</div><div class="line">    <span class="keyword">elif</span> lable==<span class="number">1</span>:</div><div class="line">        print(<span class="string">'left'</span>)</div><div class="line">    <span class="keyword">elif</span> lable==<span class="number">2</span>:</div><div class="line">        print(<span class="string">'down'</span>)</div><div class="line">    <span class="keyword">elif</span> lable==<span class="number">3</span>:</div><div class="line">        print(<span class="string">'right'</span>)</div><div class="line">    print(num)</div></pre></td></tr></table></figure>
+<p>给出的机器学习检测源码是一个将音频分类为上下左右四类的分类器，输出四个类别的概率。并且要求音源与给出的left.wav满足范式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">np.mean(np.abs(mfcc1-mfcc2))&lt;<span class="number">4</span></div></pre></td></tr></table></figure>
+<p>还要输出的概率大于90%：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> num&lt;<span class="number">0.9</span>:</div><div class="line">            print(<span class="string">"I can't detect with certainty"</span>)</div><div class="line">            exit()</div></pre></td></tr></table></figure>
+<p>我们需要通过向网页发送音频文件来移动坦克，使之走迷宫并到达目的地，而后台使用这个机器学习分类器来识别我们给出的音频。意图很明显，我们需要找到left.wav的其他三个方向（上、下、右）的对抗样本，从而移动坦克，属于有目标逃逸攻击。</p>
+<h3 id="music_game_2解题过程">Music_game_2解题过程</h3>
+<ul>
+<li>由于我之前接触过对抗样本，拿现成的代码来跑是很快的，但是我没做过音频的，此处生成的对抗样本是直接输入机器学习模型的向量。卡在了将对抗样本（mfcc特征）逆向转化为wav文件这步。卡了很久，查了很多资料才发现，最新的librosa库支持mfcc特征逆向转化为wav（就很难受）。接下来尝试fgm有目标攻击，直接调了三个方向的目标，得到了三个对抗样本。经测试，三个对抗样本都满足范式的要求，并且置信度大于90%。</li>
+<li>接下来到了最兴奋的环境，移动坦克！写个脚本传给网页，移动坦克走迷宫。坦克成功移动了：</li>
+</ul>
+<figure>
+<img src="http://159.75.52.53/img/blogimg/wm2020/4.png" alt="坦克移动了"><figcaption>坦克移动了</figcaption>
+</figure>
+<p>刚开始我还认真数了一张地图的移动次数和方向，但后来发现坦克的地图每个session都不一样，很难受。最后发现目的地总是在地图的右下角，我就先一通绕，最后几步无脑下下下右右右，终于拿到了flag：</p>
+<figure>
+<img src="http://159.75.52.53/img/blogimg/wm2020/5.png" alt="拿到了flag"><figcaption>拿到了flag</figcaption>
+</figure>
+<p>拿到flag的时候比赛已经快结束了，拿了个三血，挺激动的，整个题目的解题脚本在文末给出了地址。</p>
+<h3 id="总结-1">总结</h3>
+<p>这道题是一道很有意思的题目，结合了坦克大战游戏、Web脚本编写和对抗样本三个元素，游戏的背景让这题很有趣，并且较创新地考察了对抗样本技术。</p>
+<h2 id="解题脚本">解题脚本</h2>
+<ul>
+<li>最后，附上这两道AI相关的题目的解题脚本地址：<a href="https://github.com/HACHp1/WMCTF2020_MISC_AI_WP" class="uri" target="_blank" rel="external">https://github.com/HACHp1/WMCTF2020_MISC_AI_WP</a></li>
+</ul>
+
+        
+        </div>
+        
+        
+        
+        
+<div id="copyright-div">    
+
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：<a href="https://github.com/HACHp1">HACHp1</a> </strong>
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/posts/机器学习/20200814-wm2020.html" title="WMCTF2020 两道AI相关题目WP">https://hachp1.github.io/posts/机器学习/20200814-wm2020.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。非商业转载请注明作者及出处。商业转载请联系作者本人。
+      </li>
+    </ul>
+ 
+</div>
+
+
+        
+        
+        
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/posts/Web安全/20201019-sw_safe.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss
+                
+            </div>
+        </a>
+    
+    
+        <a href="/posts/Web安全/20200328-pickle.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">pickle反序列化初探</div>
+        </a>
+    
+</nav>
+
+
+    
+    
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210615-qwb2021.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="强网杯2021 easyxss wp" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210615-qwb2021.html" class="title">强网杯2021 easyxss wp</a></p>
+                            <p class="item-date"><time datetime="2021-06-15T06:09:42.000Z" itemprop="datePublished">2021-06-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210607-open_redirect01.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210607-open_redirect01.html" class="title">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a></p>
+                            <p class="item-date"><time datetime="2021-06-07T06:57:35.000Z" itemprop="datePublished">2021-06-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210309-ant2021.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="AntCTF2021 部分WP" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210309-ant2021.html" class="title">AntCTF2021 部分WP</a></p>
+                            <p class="item-date"><time datetime="2021-03-09T11:04:04.000Z" itemprop="datePublished">2021-03-09</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20201126-wdbunfinish.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201126-wdbunfinish.html" class="title">[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</a></p>
+                            <p class="item-date"><time datetime="2020-11-26T08:47:27.000Z" itemprop="datePublished">2020-11-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20201019-sw_safe.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201019-sw_safe.html" class="title">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</a></p>
+                            <p class="item-date"><time datetime="2020-10-19T13:54:52.000Z" itemprop="datePublished">2020-10-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="https://redogwu.github.io">redogWu</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://hpasserby.me">Hpasserby的pwn</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://jygzyc.github.io">jygzyc</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 HACHp1<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:true,
+            verify:true,
+            app_id: 'GpqOpUBld8udMg3PSOCDbYr7-gzGzoHsz',
+            app_key: 'k6nxcdbcy4MrjOq2DssFFljB',
+            placeholder: '少侠，留下几句话，我们喝一壶啊 ヾﾉ≧∀≦)o （支持markdown语句，可插入图片）'
+        });
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

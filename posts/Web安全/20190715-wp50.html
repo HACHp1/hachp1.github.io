@@ -6,18 +6,18 @@
     <title>WordPress 5.0.0 RCE 漏洞分析 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta name="description" content="WordPress 5.0.0 RCE 漏洞分析 环境搭建 操作系统：win10 PHP 5.6.28 WP 4.9.4 注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加define(&apos;AUTOMATIC_UPDATER_DISABLED&apos;,true);">
-<meta name="keywords" content="Web安全">
+<meta name="keywords" content="漏洞分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WordPress 5.0.0 RCE 漏洞分析">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20190715-wp50.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="WordPress 5.0.0 RCE 漏洞分析 环境搭建 操作系统：win10 PHP 5.6.28 WP 4.9.4 注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加define(&apos;AUTOMATIC_UPDATER_DISABLED&apos;,true);">
-<meta property="og:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
-<meta property="og:updated_time" content="2019-07-15T09:49:21.415Z">
+<meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
+<meta property="og:updated_time" content="2021-10-29T11:39:31.930Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WordPress 5.0.0 RCE 漏洞分析">
 <meta name="twitter:description" content="WordPress 5.0.0 RCE 漏洞分析 环境搭建 操作系统：win10 PHP 5.6.28 WP 4.9.4 注意：WP有自动更新会自动修补漏洞，需要在wp-config.php中添加define(&apos;AUTOMATIC_UPDATER_DISABLED&apos;,true);">
-<meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/planet_red.png">
+<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
     
 
     
@@ -158,11 +158,11 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                23
+                40
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                6
+                8
                 <span>标签</span>
             </div>
         </div>
@@ -192,7 +192,7 @@
         
             
 	
-		<img src="http://120.78.185.175/img/banner/jack.jpg" class="article-banner" />
+		<img src="http://159.75.52.53/img/banner/jack.jpg" class="article-banner" />
 	
 
 
@@ -233,7 +233,7 @@
                         
     <div class="article-tag">
         <i class="fa fa-tag"></i>
-        <a class="tag-link" href="/tags/Web安全/">Web安全</a>
+        <a class="tag-link" href="/tags/漏洞分析/">漏洞分析</a>
     </div>
 
                     </div>
@@ -255,76 +255,43 @@ WP 4.9.4</p>
 <a id="more"></a>
 <h2 id="漏洞利用过程中的一种代码执行流程最后会有不同系统的利用过程">漏洞利用过程中的一种代码执行流程（最后会有不同系统的利用过程）</h2>
 <p>由于这个漏洞的特殊性，不同的系统的利用链和细节不一样，但是漏洞本身的原理是一致的。一种利用流程为：</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>进入管理后台，媒体文件页面，上传图片马，在更新图片信息处使用burp增加post参数<code>_wp_attached_file</code>并写入目录穿越的路径到数据库</li>
 <li>编辑图片马，在编辑图片处任意编辑后，调用save函数时会读取上一步构造的路径，写入图片到目录穿越的任意文件夹（此处的关键函数为mkdir，有很多细节在后文中会提到）</li>
 </ol>
-<p>---前面两步做到了将图片马上传至任意目录---</p>
-<ol start="3" style="list-style-type: decimal">
+<p>—前面两步做到了将图片马上传至任意目录—</p>
+<ol start="3" type="1">
 <li>上传一个任意格式的辅助文件（txt等都行），在更新文件信息处增加post参数<code>_wp_page_template</code>并写入模板信息到数据库（将模板信息写为图片马的地址）</li>
 <li>访问辅助文件的对应链接，则执行了图片马（模板会被加载，无视图片马后缀）</li>
 </ol>
 <h2 id="复现">复现</h2>
 <p>首先，上传图片：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/uploadimg.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/uploadimg.png"></p>
 <p>在编辑图片信息处点击更新：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/update.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/update.png"></p>
 <p>使用burp截包，加入payload： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;meta_input[_wp_attached_file]=2019/07/1.jpg#/../../../../themes/twentyseventeen/1.jpg</div></pre></td></tr></table></figure></p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/update_c.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/update_c.png"></p>
 <ul>
 <li>注意：主题的目录要根据现在使用的主题来定，主题的根目录即为该目录，如我在复现时根目录为：twentyseventeen</li>
 </ul>
 <p>可以看到数据库成功写入将要目录穿越的路径：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/db1.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/db1.png"></p>
 <p>然后对刚刚的图片任意编辑并点击保存：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/imgedit.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/imgedit.png"></p>
 <p>可以看到，图片马成功转移到主题目录下：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/mvfile.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/mvfile.png"></p>
 <p>由于此处的图片经过gd或imagick库处理，在真实利用时需要制作出能抵抗处理的图片马，我在此处复现时跳过这步，直接硬写入phpinfo：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/oneline.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/oneline.png"></p>
 <p>到此时，已经将图片马成功移动到主题目录，就等着被包含了。</p>
-<p>---分割线---</p>
+<p>—分割线—</p>
 <p>模板包含时，首先上传一个辅助文件：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/aid.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/aid.png"></p>
 <p>点击更新：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/update2.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/update2.png"></p>
 <p>使用burp截包修改payload： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&amp;meta_input[_wp_page_template]=1-e1562921273409.jpg</div></pre></td></tr></table></figure></p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/update_c2.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/update_c2.png"></p>
 <p>访问test文件所对应的网页，成功执行代码：</p>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/phpinfo.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/phpinfo.png"></p>
 <h2 id="漏洞原理以及修复手段分析">漏洞原理以及修复手段分析</h2>
 <h3 id="路径变量覆盖漏洞">路径变量覆盖漏洞</h3>
 <p>在编辑并更新图片的时候会调用edit_post()函数，wp-admin/includes/post.php：</p>
@@ -338,7 +305,7 @@ WP 4.9.4</p>
 <h4 id="构造或的意义wp的图片获取机制">构造<code>?</code>或<code>#</code>的意义，WP的图片获取机制</h4>
 <p>在编辑页面等地方获取图片时，如果此时使用普通的路径<code>./themes/twentyseventeen/1.jpg</code>，WP会不能获取到图片从而不能进行图片编辑和保存的操作。<br>
 在获取图片时，WP首先从数据库中获取路径信息， 由于有的插件根据访问的URL动态生成图片，WP中的图片获取逻辑为：</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>在本地文件夹中查找。</li>
 <li>本地未找到（判断为动态图片），使用http协议获取。</li>
 </ol>
@@ -355,8 +322,8 @@ WP 4.9.4</p>
 <p>打断点访问一下上传的辅助文件对应的网页，查看一下调用栈，可以看到程序首先通过index主页路由至test，然后经过一系列模板调用操作，最终加载到了数据库中保存的模板文件： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">post-template.php:<span class="number">1683</span>, get_page_template_slug()</div><div class="line">template.php:<span class="number">487</span>, get_single_template()</div><div class="line">template-loader.php:<span class="number">55</span>, <span class="keyword">require_once</span>()</div><div class="line">wp-blog-header.php:<span class="number">19</span>, <span class="keyword">require</span>()</div><div class="line">index.php:<span class="number">17</span>, &#123;main&#125;()</div></pre></td></tr></table></figure></p>
 <p>最后包含了模板文件： <figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">apply_filters( <span class="string">'template_include'</span>, $template )</div></pre></td></tr></table></figure></p>
 <h3 id="官方补丁">官方补丁</h3>
-<ol style="list-style-type: decimal">
-<li>首先，补丁限制了参数，不允许传入'meta_input', 'file', 'guid'；这样一来，攻击者就没有办法覆盖Post Meta变量了，从而在更改路径和更改模板上都不能利用了。</li>
+<ol type="1">
+<li>首先，补丁限制了参数，不允许传入’meta_input’, ‘file’, ‘guid’；这样一来，攻击者就没有办法覆盖Post Meta变量了，从而在更改路径和更改模板上都不能利用了。</li>
 <li>然后，post_ID也不直接从POST请求获取，而是读取变量获得：<code>$post_data['post_ID']        = $post_ID;</code>，这样，攻击者就不能控制post_id了。</li>
 </ol>
 <h2 id="利用思路比较">利用思路比较</h2>
@@ -368,19 +335,16 @@ WP 4.9.4</p>
 </ul>
 <p>经过总结，大概有以下几种：</p>
 <p>Windows下：</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>直接调用crop-image（此时输出的图片为<code>cropped_xxx.jpg</code>）</li>
 <li>windows下直接利用后台管理页面上提供的image-editor的任意一项修改（裁剪、旋转、对称均可），可以无视不存在的目录直接创建在目标目录下（我使用win10、PHP 5.6.28、wp4.9.4环境下成功利用）（此时输出<code>xxx-e1562915044612.jpg</code>）</li>
 </ol>
 <p>Linux下：</p>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>直接调用crop-image</li>
 <li>首先利用image-editor创建文件夹（一次只能创建一层文件夹），再次调用image-editor创建图片马；创建文件夹时的payload:<code>&amp;meta_input[_wp_attached_file]=2019/07/1.jpg#/test.jpg</code>，此时在<code>07</code>创建了<code>1.jpg#</code>文件夹（在Windows下也能成功）：</li>
 </ol>
-<div class="figure">
-<img src="http://120.78.185.175/img/blogimg/wp50/dir_ct.png">
-
-</div>
+<p><img src="http://159.75.52.53/img/blogimg/wp50/dir_ct.png"></p>
 <p>使用crop-img的payload为：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">action=image-editor&amp;_ajax_nonce=d6b0263153&amp;postid=4&amp;history=%5B%7B%22c%22%3A%7B%22x%22%3A86%2C%22y%22%3A61%2C%22w%22%3A227%2C%22h%22%3A110%7D%7D%5D&amp;target=all&amp;context=edit-attachment&amp;do=save</div><div class="line"></div><div class="line">-&gt;</div><div class="line"></div><div class="line">action=crop-image&amp;_ajax_nonce=d6b0263153&amp;id=4&amp;cropDetails[x1]=10&amp;cropDetails[y1]=10&amp;cropDetails[width]=10&amp;cropDetails[height]=10&amp;cropDetails[dst_width]=100&amp;cropDetails[dst_height]=100</div></pre></td></tr></table></figure>
 <h2 id="遇到的坑">遇到的坑</h2>
@@ -492,6 +456,15 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         
 <nav id="article-nav">
     
+        <a href="/posts/漏洞分析/20190809-kde45ce.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    CVE-2019-14744 KDE4/5命令执行漏洞简析
+                
+            </div>
+        </a>
+    
     
         <a href="/posts/Web安全/20190710-lucirce.html" id="article-nav-older" class="article-nav-link-wrap">
             <strong class="article-nav-caption">下一篇</strong>
@@ -528,10 +501,10 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20190715-wp50.html" class="thumbnail">
+                            <a href="/posts/Web安全/20210615-qwb2021.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="WordPress 5.0.0 RCE 漏洞分析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="强网杯2021 easyxss wp" class="thumbnail-image"></span>
     
 </a>
 
@@ -539,18 +512,18 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20190715-wp50.html" class="title">WordPress 5.0.0 RCE 漏洞分析</a></p>
-                            <p class="item-date"><time datetime="2019-07-15T09:17:33.000Z" itemprop="datePublished">2019-07-15</time></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210615-qwb2021.html" class="title">强网杯2021 easyxss wp</a></p>
+                            <p class="item-date"><time datetime="2021-06-15T06:09:42.000Z" itemprop="datePublished">2021-06-15</time></p>
                         </div>
                     </li>
                 
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20190710-lucirce.html" class="thumbnail">
+                            <a href="/posts/Web安全/20210607-open_redirect01.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="CVE-2019-12272 OpenWrt图形化管理界面LuCI命令注入分析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="thumbnail-image"></span>
     
 </a>
 
@@ -558,18 +531,18 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20190710-lucirce.html" class="title">CVE-2019-12272 OpenWrt图形化管理界面LuCI命令注入分析</a></p>
-                            <p class="item-date"><time datetime="2019-07-10T04:06:49.000Z" itemprop="datePublished">2019-07-10</time></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210607-open_redirect01.html" class="title">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a></p>
+                            <p class="item-date"><time datetime="2021-06-07T06:57:35.000Z" itemprop="datePublished">2021-06-07</time></p>
                         </div>
                     </li>
                 
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20190710-wp511.html" class="thumbnail">
+                            <a href="/posts/Web安全/20210309-ant2021.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="WordPress 5.1.1 ，CSRF-&gt;XSS-&gt;RCE漏洞分析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="AntCTF2021 部分WP" class="thumbnail-image"></span>
     
 </a>
 
@@ -577,18 +550,18 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20190710-wp511.html" class="title">WordPress 5.1.1 ，CSRF-&gt;XSS-&gt;RCE漏洞分析</a></p>
-                            <p class="item-date"><time datetime="2019-07-10T02:27:51.000Z" itemprop="datePublished">2019-07-10</time></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210309-ant2021.html" class="title">AntCTF2021 部分WP</a></p>
+                            <p class="item-date"><time datetime="2021-03-09T11:04:04.000Z" itemprop="datePublished">2021-03-09</time></p>
                         </div>
                     </li>
                 
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20190708-MiniCMS.html" class="thumbnail">
+                            <a href="/posts/Web安全/20201126-wdbunfinish.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/eggs.jpg)" alt="代码审计 MiniCMS从头开始" class="thumbnail-image"></span>
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区" class="thumbnail-image"></span>
     
 </a>
 
@@ -596,18 +569,18 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20190708-MiniCMS.html" class="title">代码审计 MiniCMS从头开始</a></p>
-                            <p class="item-date"><time datetime="2019-07-08T07:15:18.000Z" itemprop="datePublished">2019-07-08</time></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201126-wdbunfinish.html" class="title">[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</a></p>
+                            <p class="item-date"><time datetime="2020-11-26T08:47:27.000Z" itemprop="datePublished">2020-11-26</time></p>
                         </div>
                     </li>
                 
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20190616-prce.html" class="thumbnail">
+                            <a href="/posts/Web安全/20201019-sw_safe.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_yellow.jpg)" alt="PRCE 正则最大回溯次数" class="thumbnail-image"></span>
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss" class="thumbnail-image"></span>
     
 </a>
 
@@ -615,8 +588,8 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20190616-prce.html" class="title">PRCE 正则最大回溯次数</a></p>
-                            <p class="item-date"><time datetime="2019-06-16T04:45:13.000Z" itemprop="datePublished">2019-06-16</time></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201019-sw_safe.html" class="title">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</a></p>
+                            <p class="item-date"><time datetime="2020-10-19T13:54:52.000Z" itemprop="datePublished">2020-10-19</time></p>
                         </div>
                     </li>
                 
@@ -629,7 +602,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
         </div>
     </div>
 
@@ -638,7 +611,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 12.5px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 17.5px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 12.5px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 15px;">机器学习初步</a>
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a>
         </div>
     </div>
 
@@ -675,7 +648,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2019 HACHp1<br>
+            &copy; 2022 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

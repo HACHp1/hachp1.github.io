@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>CVE-2019-14744 KDE4/5命令执行漏洞简析 | Math &amp; Sec ，HACHp1的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="CVE-2019-14744 KDE4/5命令执行漏洞简析 漏洞简介  KDE Frameworks是一套由KDE社群所编写的库及软件框架，是KDE Plasma 5及KDE Applications 5的基础，并使用GNU通用公共许可证进行发布。其中所包含的多个独立框架提供了各种常用的功能，包括了硬件集成、文件格式支持、控件、绘图功能、拼写检查等。KDE框架目前被几个Linux发行版所采用">
+<meta name="keywords" content="漏洞分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CVE-2019-14744 KDE4&#x2F;5命令执行漏洞简析">
+<meta property="og:url" content="https://hachp1.github.io/posts/漏洞分析/20190809-kde45ce.html">
+<meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
+<meta property="og:description" content="CVE-2019-14744 KDE4/5命令执行漏洞简析 漏洞简介  KDE Frameworks是一套由KDE社群所编写的库及软件框架，是KDE Plasma 5及KDE Applications 5的基础，并使用GNU通用公共许可证进行发布。其中所包含的多个独立框架提供了各种常用的功能，包括了硬件集成、文件格式支持、控件、绘图功能、拼写检查等。KDE框架目前被几个Linux发行版所采用">
+<meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_yellow.jpg">
+<meta property="og:updated_time" content="2021-10-29T11:39:31.244Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CVE-2019-14744 KDE4&#x2F;5命令执行漏洞简析">
+<meta name="twitter:description" content="CVE-2019-14744 KDE4/5命令执行漏洞简析 漏洞简介  KDE Frameworks是一套由KDE社群所编写的库及软件框架，是KDE Plasma 5及KDE Applications 5的基础，并使用GNU通用公共许可证进行发布。其中所包含的多个独立框架提供了各种常用的功能，包括了硬件集成、文件格式支持、控件、绘图功能、拼写检查等。KDE框架目前被几个Linux发行版所采用">
+<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_yellow.jpg">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Math &amp; Sec ，HACHp1的个人博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">目录</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">目录</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">HACHp1</h2>
+            <h3 id="title">生活少有按照行动而改变，那就抓住那几个少有的。</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>China</span>
+            <a id="follow" target="_blank" href="https://github.com/hachp1">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                40
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                8
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/HACHp1" target="_blank" title="GitHub" class=tooltip>
+                            <i class="fa fa-GitHub"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-CVE-2019-14744-KDE4-5命令执行漏洞简析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+    
+        
+            
+	
+		<img src="http://159.75.52.53/img/banner/Eur3.jpg" class="article-banner" />
+	
+
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            CVE-2019-14744 KDE4/5命令执行漏洞简析
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/漏洞分析/20190809-kde45ce.html">
+            <time datetime="2019-08-09T02:53:37.000Z" itemprop="datePublished">2019-08-09</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/漏洞分析/">漏洞分析</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/漏洞分析/">漏洞分析</a>
+    </div>
+
+                    </div>
+                
+            </header>
+                
+            
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h1 id="cve-2019-14744-kde45命令执行漏洞简析">CVE-2019-14744 KDE4/5命令执行漏洞简析</h1>
+<h2 id="漏洞简介">漏洞简介</h2>
+<ul>
+<li>KDE Frameworks是一套由KDE社群所编写的库及软件框架，是KDE Plasma 5及KDE Applications 5的基础，并使用GNU通用公共许可证进行发布。其中所包含的多个独立框架提供了各种常用的功能，包括了硬件集成、文件格式支持、控件、绘图功能、拼写检查等。KDE框架目前被几个Linux发行版所采用，包括了Kubuntu、OpenMandriva、openSUSE和OpenMandriva。</li>
+<li>2019年7月28日Dominik Penner（<span class="citation" data-cites="zer0pwn">@zer0pwn</span>）发现了KDE framework版本&lt;=5.60.0时存在命令执行漏洞。</li>
+<li>2019年8月5日Dominik Penner在Twitter上披露了该漏洞，而此时该漏洞还是0day漏洞。此漏洞由KDesktopFile类处理.desktop或.directory文件的方式引起。如果受害者下载了恶意构造的.desktop或.directory文件，恶意文件中注入的bash代码就会被执行。</li>
+</ul>
+<a id="more"></a>
+<ul>
+<li>2019年8月8日，KDE社区终于在发布的更新中修复了该漏洞；在此之前的三天内，此漏洞是没有官方补丁的。</li>
+</ul>
+<h3 id="一些八卦">一些八卦</h3>
+<ul>
+<li>在Dominik Penner公开此漏洞时，并没有告诉KDE社区此漏洞，直接将该0day的攻击详情披露在了Twitter上。公布之后，KDE社区的人员与Penner之间发生了很多有意思的事情，在这里不做描述。</li>
+</ul>
+<h2 id="影响版本">影响版本</h2>
+<ul>
+<li>内置或后期安装有KDE Frameworks版本&lt;=5.60.0的操作系统，如Kubuntu。</li>
+</ul>
+<h2 id="漏洞复现">漏洞复现</h2>
+<h3 id="环境搭建">环境搭建</h3>
+<ul>
+<li>虚拟机镜像：kubuntu-16.04.6-desktop-amd64.iso</li>
+<li>KDE Framework 5.18.0</li>
+<li>搭建时，注意虚拟机关闭网络，否则语言包下载十分消耗时间；此外，安装完成后进入系统要关掉iso影响，否则无法进入系统。</li>
+</ul>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/1.png"></p>
+<h3 id="复现过程及结果">复现过程及结果</h3>
+<p>PoC有多种形式，此处使用三种方式进行复现，第1、2种为验证性复现，第3种为接近真实情况下攻击者可能使用的攻击方式。</p>
+<ol type="1">
+<li>PoC1： 创建一个文件名为”payload.desktop”的文件：</li>
+</ol>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/2.png"></p>
+<p>在文件中写入payload：</p>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/3.png"></p>
+<p>保存后打开文件管理器，写入的payload被执行：</p>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/4.png"></p>
+<p>文件内容如下：</p>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/5.png"></p>
+<ol start="2" type="1">
+<li>PoC2：</li>
+</ol>
+<p>创建一个文件名为” .directory”的文件：</p>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/6.png"></p>
+<p>使用vi写入内容（此处有坑，KDE的vi输入backspace键会出现奇怪的反应，很不好用）：</p>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/7.png"></p>
+<p>写入payload：</p>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/8.png"></p>
+<p>保存后打开文件管理器，payload被成功执行：</p>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/9.png"></p>
+<ol start="3" type="1">
+<li>PoC3： 攻击者在本机启动NC监听：</li>
+</ol>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/10.png"></p>
+<p>攻击者将payload文件打包挂载至Web服务器中，诱导受害者下载：</p>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/11.png"></p>
+<p>受害者解压文件：</p>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/12.png"></p>
+<p>解压后，payload会被执行，攻击者接收到反连的Shell：</p>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/13.png"></p>
+<ul>
+<li>漏洞影响：虽然直接下载文件很容易引起受害者注意，但攻击者可以将恶意文件打包为压缩文件并使用社会工程学诱导受害者解开压缩包。不管受害者有没有打开解压后的文件，恶意代码都已经执行了，因为文件解压后KDE系统会调用桌面解析函数。此时受害者就容易中招。</li>
+</ul>
+<h2 id="漏洞原理简析">漏洞原理简析</h2>
+<ul>
+<li>在Dominik Penner公布的细节中，对该漏洞已经有着比较详细的解释。在着手分析漏洞前，我们先学习一下Linux的desktop entry相关的知识。</li>
+</ul>
+<h3 id="desktop-entry">desktop entry</h3>
+<ul>
+<li>XDG 桌面配置项规范为应用程序和桌面环境的菜单整合提供了一个标准方法。只要桌面环境遵守菜单规范，应用程序图标就可以显示在系统菜单中。</li>
+<li>每个桌面项必须包含 Type 和 Name，还可以选择定义自己在程序菜单中的显示方式。</li>
+<li>也就是说，这是一种解析桌面项的图标、名称、类型等信息的规范。</li>
+<li>使用这种规范的开发项目应该通过目录下的<code>.directory</code>或<code>.desktop</code>文件记录该目录下的解析配置。</li>
+</ul>
+<p>详见：https://wiki.archlinux.org/index.php/Desktop_entries_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)</p>
+<h3 id="漏洞的产生">漏洞的产生</h3>
+<p>KDE的桌面配置解析参考了XDG的方式，但是包含了KDE自己实现的功能；并且其实现与XDG官方定义的功能也有出入，正是此出入导致了漏洞。</p>
+<p>在KDE文档中有如下的话（https://userbase.kde.org/KDE_System_Administration/Configuration_Files#Shell_Expansion）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Shell Expansion</div><div class="line"></div><div class="line">So called Shell Expansion can be used to provide more dynamic default values. With shell expansion the value of a configuration key can be constructed from the value of an environment variable.</div><div class="line"></div><div class="line">To enable shell expansion for a configuration entry, the key must be followed by [$e]. Normally the expanded form is written into the users configuration file after first use. To prevent that, it is recommend to lock the configuration entry down by using [$ie].</div><div class="line">Example: Dynamic Entries</div><div class="line"></div><div class="line">The value for the &quot;Email&quot; entry is determined by filling in the values of the $USER and $HOST environment variables. When joe is logged in on joes_host this will result in a value equal to &quot;joe@joes_host&quot;. The setting is not locked down.</div><div class="line"></div><div class="line">[Mail Settings]</div><div class="line">Email[$e]=$&#123;USER&#125;@$&#123;HOST&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>为了提供更加灵活的设置解析，KDE实现并支持了动态配置，而此处的<code>${USER}</code>尤其令人注意，该项取自环境变量，可以推测，此处与命令执行肯定有联系。</p></li>
+<li><p>每当KDE桌面系统要读取图标等桌面配置时，就会调用一次<code>readEntry</code>函数；从Dominik Penner给出的漏洞细节中，可以看到追踪代码的过程。整个漏洞的执行过程如下：<br>
+首先，创建恶意文件： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">payload.desktop</div><div class="line"></div><div class="line">[Desktop Entry]</div><div class="line">Icon[$e]=$(echo hello&gt;~/POC.txt)</div></pre></td></tr></table></figure></p></li>
+</ul>
+<p>进入文件管理器，此时系统会对<code>.desktop</code>文件进行解析；进入解析Icon的流程，根据文档中的说明，参数中带有<code>[$e]</code>时会调用shell动态解析命令：</p>
+<p>kdesktopfile.cpp: <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">QString KDesktopFile::readIcon() <span class="keyword">const</span></div><div class="line">&#123;</div><div class="line">    Q_D(<span class="keyword">const</span> KDesktopFile);</div><div class="line">    <span class="keyword">return</span> d-&gt;desktopGroup.readEntry(<span class="string">"Icon"</span>, QString()); </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>跟进，发现调用了<code>KConfigPrivate::expandString(aValue)</code>：<br>
+kconfiggroup.cpp:<br>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">QString KConfigGroup::readEntry(<span class="keyword">const</span> <span class="keyword">char</span> *key, <span class="keyword">const</span> QString &amp;aDefault) <span class="keyword">const</span></div><div class="line">&#123;</div><div class="line">    Q_ASSERT_X(isValid(), <span class="string">"KConfigGroup::readEntry"</span>, <span class="string">"accessing an invalid group"</span>);</div><div class="line"></div><div class="line">    <span class="keyword">bool</span> expand = <span class="literal">false</span>;</div><div class="line"></div><div class="line">    <span class="comment">// read value from the entry map</span></div><div class="line">    QString aValue = config()-&gt;d_func()-&gt;lookupData(d-&gt;fullName(), key, KEntryMap::SearchLocalized,</div><div class="line">                     &amp;expand);</div><div class="line">    <span class="keyword">if</span> (aValue.isNull()) &#123;</div><div class="line">        aValue = aDefault;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (expand) &#123;</div><div class="line">        <span class="keyword">return</span> KConfigPrivate::expandString(aValue);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> aValue;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>再跟进，结合之前对KDE官方文档的解读，此处是对动态命令的解析过程，程序会把字符串中第一个出现的<code>$(</code>与第一个出现的<code>)</code>之间的部分截取出来，作为命令，然后调用<code>popen</code>执行：<br>
+kconfig.cpp <figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">QString KConfigPrivate::expandString(<span class="keyword">const</span> QString &amp;value)</div><div class="line">&#123;</div><div class="line">    QString aValue = value;</div><div class="line"></div><div class="line">    <span class="comment">// check for environment variables and make necessary translations</span></div><div class="line">    <span class="keyword">int</span> nDollarPos = aValue.indexOf(QLatin1Char(<span class="string">'$'</span>));</div><div class="line">    <span class="keyword">while</span> (nDollarPos != <span class="number">-1</span> &amp;&amp; nDollarPos + <span class="number">1</span> &lt; aValue.length()) &#123;</div><div class="line">        <span class="comment">// there is at least one $</span></div><div class="line">        <span class="keyword">if</span> (aValue[nDollarPos + <span class="number">1</span>] == QLatin1Char(<span class="string">'('</span>)) &#123;</div><div class="line">            <span class="keyword">int</span> nEndPos = nDollarPos + <span class="number">1</span>;</div><div class="line">            <span class="comment">// the next character is not $</span></div><div class="line">            <span class="keyword">while</span> ((nEndPos &lt;= aValue.length()) &amp;&amp; (aValue[nEndPos] != QLatin1Char(<span class="string">')'</span>))) &#123;</div><div class="line">                nEndPos++;</div><div class="line">            &#125;</div><div class="line">            nEndPos++;</div><div class="line">            QString cmd = aValue.mid(nDollarPos + <span class="number">2</span>, nEndPos - nDollarPos - <span class="number">3</span>);</div><div class="line"></div><div class="line">            QString result;</div><div class="line"></div><div class="line"><span class="comment">// <span class="doctag">FIXME:</span> wince does not have pipes</span></div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _WIN32_WCE</span></div><div class="line">            FILE *fs = popen(QFile::encodeName(cmd).data(), <span class="string">"r"</span>);</div><div class="line">            <span class="keyword">if</span> (fs) &#123;</div><div class="line">                <span class="function">QTextStream <span class="title">ts</span><span class="params">(fs, QIODevice::ReadOnly)</span></span>;</div><div class="line">                result = ts.readAll().trimmed();</div><div class="line">                pclose(fs);</div><div class="line">            &#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure></p>
+<p>自此，漏洞利用过程中的代码执行流程分析完毕；可以看到KDE在解析桌面设置时，以直接使用执行系统命令获取返回值的方式动态获得操作系统的一些参数值；为了获得诸如<code>${USER}</code>这样的系统变量直接调用系统命令，这个做法是不太妥当的。</p>
+<h2 id="官方修补方案分析">官方修补方案分析</h2>
+<ul>
+<li>官方在最新版本中给出了简单粗暴的修复手段，直接删除了popen函数和其执行过程，从而除去了调用popen动态解析<code>[e]</code>属性的功能：</li>
+</ul>
+<p><img src="http://159.75.52.53/img/blogimg/kde45/14.png"></p>
+<ul>
+<li>此外，官方还不忘吐槽了一波： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Summary:</div><div class="line">It is very unclear at this point what a valid use case for this feature</div><div class="line">would possibly be. The old documentation only mentions $(hostname) as</div><div class="line">an example, which can be done with $HOSTNAME instead.</div></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="总结">总结</h2>
+<ul>
+<li>个人认为这个漏洞在成因以外的地方有着更大的意义。首先，不太清楚当初编写KDE框架的开发人员的用意，也许是想让框架更灵活；但是在文档的使用用例中，只是为了获取<code>${USER}</code>变量的值而已。在命令执行上有些许杀鸡用牛刀的感觉。</li>
+<li>从这个漏洞可以看出灵活性与安全性在有的时候是互相冲突的，灵活性高，也意味着更有可能出现纰漏，这给开发人员更多的警示。</li>
+<li>漏洞发现者在没有通知官方的情况下直接公布了漏洞细节，这个做法比较有争议。在发现漏洞时，首先将0day交给谁也是个问题，个人认为可以将漏洞提交给厂商，待其修复后再商议是否要公布。可能国际上的hacker思维与国内有着比较大的差异，在Dominik Penner的Twitter下竟然有不少的人支持他提前公布0day，他自己也解释是想要在defcon开始之前提交自己的0day，这个做法以及众人的反应值得去品味。</li>
+</ul>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://gist.github.com/zeropwn/630832df151029cb8f22d5b6b9efaefb" target="_blank" rel="external">漏洞细节</a><br>
+</li>
+<li><a href="https://twitter.com/zer0pwn/status/1158167374799020039" target="_blank" rel="external">发现者推特</a><br>
+</li>
+<li><a href="https://www.youtube.com/watch?v=l4z7EOQQs84" target="_blank" rel="external">演示视频</a></li>
+<li><a href="https://mail.kde.org/pipermail/kde-announce/2019-August/000047.html" target="_blank" rel="external">官方修复细节</a></li>
+<li><a href="https://cgit.kde.org/kconfig.git/commit/?id=5d3e71b1d2ecd2cb2f910036e614ffdfc895aa22" target="_blank" rel="external">修复补丁</a></li>
+</ul>
+
+        
+        </div>
+        
+        
+        
+        
+<div id="copyright-div">    
+
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：<a href="https://github.com/HACHp1">HACHp1</a> </strong>
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/posts/漏洞分析/20190809-kde45ce.html" title="CVE-2019-14744 KDE4/5命令执行漏洞简析">https://hachp1.github.io/posts/漏洞分析/20190809-kde45ce.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。非商业转载请注明作者及出处。商业转载请联系作者本人。
+      </li>
+    </ul>
+ 
+</div>
+
+
+        
+        
+        
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+    <div class="bdsharebuttonbox">
+    <a href="#" class="bds_more" data-cmd="more">分享到：</a>
+    <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间">QQ空间</a>
+    <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博">新浪微博</a>
+    <a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博">腾讯微博</a>
+    <a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网">人人网</a>
+    <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信">微信</a>
+</div>
+<script>
+window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{"bdSize":16}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+<style>
+    .bdshare_popup_box {
+        border-radius: 4px;
+        border: #e1e1e1 solid 1px;
+    }
+    .bdshare-button-style0-16 a,
+    .bdshare-button-style0-16 .bds_more {
+        padding-left: 20px;
+        margin: 6px 10px 6px 0;
+    }
+    .bdshare_dialog_list a,
+    .bdshare_popup_list a,
+    .bdshare_popup_bottom a {
+        font-family: 'Microsoft Yahei';
+    }
+    .bdshare_popup_top {
+        display: none;
+    }
+    .bdshare_popup_bottom {
+        height: auto;
+        padding: 5px;
+    }
+</style>
+
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+        <a href="/posts/Web安全/20190824-webmin.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">上一篇</strong>
+            <div class="article-nav-title">
+                
+                    Webmin RCE(CVE-2019-15107)简析
+                
+            </div>
+        </a>
+    
+    
+        <a href="/posts/Web安全/20190715-wp50.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">WordPress 5.0.0 RCE 漏洞分析</div>
+        </a>
+    
+</nav>
+
+
+    
+    
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210615-qwb2021.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="强网杯2021 easyxss wp" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210615-qwb2021.html" class="title">强网杯2021 easyxss wp</a></p>
+                            <p class="item-date"><time datetime="2021-06-15T06:09:42.000Z" itemprop="datePublished">2021-06-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210607-open_redirect01.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210607-open_redirect01.html" class="title">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a></p>
+                            <p class="item-date"><time datetime="2021-06-07T06:57:35.000Z" itemprop="datePublished">2021-06-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210309-ant2021.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="AntCTF2021 部分WP" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210309-ant2021.html" class="title">AntCTF2021 部分WP</a></p>
+                            <p class="item-date"><time datetime="2021-03-09T11:04:04.000Z" itemprop="datePublished">2021-03-09</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20201126-wdbunfinish.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201126-wdbunfinish.html" class="title">[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</a></p>
+                            <p class="item-date"><time datetime="2020-11-26T08:47:27.000Z" itemprop="datePublished">2020-11-26</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20201019-sw_safe.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201019-sw_safe.html" class="title">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</a></p>
+                            <p class="item-date"><time datetime="2020-10-19T13:54:52.000Z" itemprop="datePublished">2020-10-19</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="https://redogwu.github.io">redogWu</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://hpasserby.me">Hpasserby的pwn</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://jygzyc.github.io">jygzyc</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 HACHp1<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/gh/xcss/valine@v1.1.6/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:true,
+            verify:true,
+            app_id: 'GpqOpUBld8udMg3PSOCDbYr7-gzGzoHsz',
+            app_key: 'k6nxcdbcy4MrjOq2DssFFljB',
+            placeholder: '少侠，留下几句话，我们喝一壶啊 ヾﾉ≧∀≦)o （支持markdown语句，可插入图片）'
+        });
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>

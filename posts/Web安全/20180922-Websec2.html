@@ -12,12 +12,12 @@
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20180922-Websec2.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="2018年省赛AWD web writeup  一点寒暄 &amp;gt; 本次比赛还是有很多遗憾，AWD做的太少，再加上经验不足，导致结果不好看，下面开始填坑。 网站框架、版本分析 在ThinkPHP路径下找到ThinkPHP.php文件，在其中找到版本号3.2.3，本版本存在缓存漏洞。 找到之后，搜索出相同出处的网页：   阅读获得thinkphp缓存漏洞的提示。">
-<meta property="og:image" content="http://120.78.185.175/img/thumbnails/eggs.jpg">
-<meta property="og:updated_time" content="2019-01-24T13:26:57.066Z">
+<meta property="og:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
+<meta property="og:updated_time" content="2021-10-29T11:39:30.995Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2018省赛AWD web writeup">
 <meta name="twitter:description" content="2018年省赛AWD web writeup  一点寒暄 &amp;gt; 本次比赛还是有很多遗憾，AWD做的太少，再加上经验不足，导致结果不好看，下面开始填坑。 网站框架、版本分析 在ThinkPHP路径下找到ThinkPHP.php文件，在其中找到版本号3.2.3，本版本存在缓存漏洞。 找到之后，搜索出相同出处的网页：   阅读获得thinkphp缓存漏洞的提示。">
-<meta name="twitter:image" content="http://120.78.185.175/img/thumbnails/eggs.jpg">
+<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
     
 
     
@@ -158,11 +158,11 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                23
+                40
                 <span>文章</span>
             </div>
             <div class="article-info-block">
-                6
+                8
                 <span>标签</span>
             </div>
         </div>
@@ -192,7 +192,7 @@
         
             
 	
-		<img src="http://120.78.185.175/img/math/dfjk/CTF.png" class="article-banner" />
+		<img src="http://159.75.52.53/img/math/dfjk/CTF.png" class="article-banner" />
 	
 
 
@@ -251,29 +251,29 @@
 <li><p>一点寒暄 &gt; 本次比赛还是有很多遗憾，AWD做的太少，再加上经验不足，导致结果不好看，下面开始填坑。</p></li>
 <li>网站框架、版本分析<br>
 在ThinkPHP路径下找到ThinkPHP.php文件，在其中找到版本号3.2.3，本版本存在缓存漏洞。<br>
-找到之后，搜索出相同出处的网页： <img src="http://120.78.185.175/img/blogimg/shenji1/1.png" alt="主页"> <img src="http://120.78.185.175/img/blogimg/shenji1/2.png" alt="搜索结果"> 阅读获得thinkphp缓存漏洞的提示。 <a id="more"></a></li>
+找到之后，搜索出相同出处的网页： <img src="http://159.75.52.53/img/blogimg/shenji1/1.png" alt="主页"> <img src="http://159.75.52.53/img/blogimg/shenji1/2.png" alt="搜索结果"> 阅读获得thinkphp缓存漏洞的提示。 <a id="more"></a></li>
 <li><p>缓存漏洞分析<br>
 ThinkPHP缓存漏洞需要在二次开发时，调用框架的S()函数，如果传入S()函数的变量可控，并且能找到缓存的储存地址（主要是文件名），则可以直接写入并连接webshell。</p></li>
 <li>代码调试跟进<br>
 本题直接搜索并不能找出漏洞的触发点，因为S()函数并没有直接的被调用，也没有直接被调用的函数调用S()，但是既然是缓存漏洞，先找到缓存的路径，然后随意浏览网页，终于触发了漏洞点。<br>
-能够引起缓存函数执行的地方在主页的搜索框里，当进行一次搜索后，发现缓存文件夹下有文件生成了： <img src="http://120.78.185.175/img/blogimg/shenji1/3.png" alt="缓存文件位置"> 然后开始跟进。<br>
+能够引起缓存函数执行的地方在主页的搜索框里，当进行一次搜索后，发现缓存文件夹下有文件生成了： <img src="http://159.75.52.53/img/blogimg/shenji1/3.png" alt="缓存文件位置"> 然后开始跟进。<br>
 </li>
 </ul>
-<ol style="list-style-type: decimal">
-<li>首先，清空缓存文件，在主页代码中打断点： <img src="http://120.78.185.175/img/blogimg/shenji1/4.png" alt="缓存文件夹和断点"></li>
-<li>进一步跟进，在一个执行处打下断点（因为执行之后就产生了缓存文件） <img src="http://120.78.185.175/img/blogimg/shenji1/5.png" alt="断点"></li>
-<li>继续跟进下一层网页应用执行处 <img src="http://120.78.185.175/img/blogimg/shenji1/6.png" alt="网页应用的运行"></li>
-<li>继续调试，发现了使用变量调用函数的地方，并且此处调用了search函数，search函数之中调用了S()函数，终于找到了关键位置 <img src="http://120.78.185.175/img/blogimg/shenji1/8.png" alt="invokeAction函数调用了漏洞函数"> <img src="http://120.78.185.175/img/blogimg/shenji1/9.png" alt="invokeAction函数中的search调用"></li>
-<li>进一步跟进，发现了文件名的处理： <img src="http://120.78.185.175/img/blogimg/shenji1/10.png" alt="名字变量的传入"> <img src="http://120.78.185.175/img/blogimg/shenji1/11.png" alt="文件名的变化以及文件内容"> <img src="http://120.78.185.175/img/blogimg/shenji1/12.png" alt="文件名详细处理"></li>
+<ol type="1">
+<li>首先，清空缓存文件，在主页代码中打断点： <img src="http://159.75.52.53/img/blogimg/shenji1/4.png" alt="缓存文件夹和断点"></li>
+<li>进一步跟进，在一个执行处打下断点（因为执行之后就产生了缓存文件） <img src="http://159.75.52.53/img/blogimg/shenji1/5.png" alt="断点"></li>
+<li>继续跟进下一层网页应用执行处 <img src="http://159.75.52.53/img/blogimg/shenji1/6.png" alt="网页应用的运行"></li>
+<li>继续调试，发现了使用变量调用函数的地方，并且此处调用了search函数，search函数之中调用了S()函数，终于找到了关键位置 <img src="http://159.75.52.53/img/blogimg/shenji1/8.png" alt="invokeAction函数调用了漏洞函数"> <img src="http://159.75.52.53/img/blogimg/shenji1/9.png" alt="invokeAction函数中的search调用"></li>
+<li>进一步跟进，发现了文件名的处理： <img src="http://159.75.52.53/img/blogimg/shenji1/10.png" alt="名字变量的传入"> <img src="http://159.75.52.53/img/blogimg/shenji1/11.png" alt="文件名的变化以及文件内容"> <img src="http://159.75.52.53/img/blogimg/shenji1/12.png" alt="文件名详细处理"></li>
 <li>在文件名处理之中，存在一个C()函数，这个函数就是缓存文件名的关键所在，在函数中，<code>$_config[$name]</code>被当做了一个“随机变量”，用于与搜索的关键词组合生成md5。<br>
-查看内存中的相应变量的值： <img src="http://120.78.185.175/img/blogimg/shenji1/13.png" alt="$name的值"> <img src="http://120.78.185.175/img/blogimg/shenji1/14.png" alt="被传出的文件名"><br>
-在该变量中储存的随机变量如下，是'sdfdf'的md5码（其实并没有经过md5运算） <img src="http://120.78.185.175/img/blogimg/shenji1/15.png"></li>
-<li>最后，全局搜索该md5，发现在config.php文件中就已经赋值好了，算是一个password，可见，本漏洞是已经经过修复的漏洞，只要把密码改掉，想直接得到文件名的概率是极小的： <img src="http://120.78.185.175/img/blogimg/shenji1/16.png" alt="最终来源"></li>
+查看内存中的相应变量的值： <img src="http://159.75.52.53/img/blogimg/shenji1/13.png" alt="$name的值"> <img src="http://159.75.52.53/img/blogimg/shenji1/14.png" alt="被传出的文件名"><br>
+在该变量中储存的随机变量如下，是’sdfdf’的md5码（其实并没有经过md5运算） <img src="http://159.75.52.53/img/blogimg/shenji1/15.png"></li>
+<li>最后，全局搜索该md5，发现在config.php文件中就已经赋值好了，算是一个password，可见，本漏洞是已经经过修复的漏洞，只要把密码改掉，想直接得到文件名的概率是极小的： <img src="http://159.75.52.53/img/blogimg/shenji1/16.png" alt="最终来源"></li>
 </ol>
 <ul>
 <li>总结：</li>
 </ul>
-<ol style="list-style-type: decimal">
+<ol type="1">
 <li>查到之前的版本下，缓存漏洞的文件名是直接对传入的文件名进行md5摘要的，而本题的版本已经把它修复了，感觉并不算个漏洞，或者说是已经修复的漏洞。</li>
 <li>整个触发流程是：<br>
 搜索框搜索-&gt;调用invokeAction函数-&gt;调用搜索函数-&gt;搜索函数内部调用缓存函数-&gt;缓存函数读取缓存密码并拼接md5-&gt;产生文件</li>
@@ -407,10 +407,10 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20190715-wp50.html" class="thumbnail">
+                            <a href="/posts/Web安全/20210615-qwb2021.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="WordPress 5.0.0 RCE 漏洞分析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="强网杯2021 easyxss wp" class="thumbnail-image"></span>
     
 </a>
 
@@ -418,18 +418,18 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20190715-wp50.html" class="title">WordPress 5.0.0 RCE 漏洞分析</a></p>
-                            <p class="item-date"><time datetime="2019-07-15T09:17:33.000Z" itemprop="datePublished">2019-07-15</time></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210615-qwb2021.html" class="title">强网杯2021 easyxss wp</a></p>
+                            <p class="item-date"><time datetime="2021-06-15T06:09:42.000Z" itemprop="datePublished">2021-06-15</time></p>
                         </div>
                     </li>
                 
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20190710-lucirce.html" class="thumbnail">
+                            <a href="/posts/Web安全/20210607-open_redirect01.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="CVE-2019-12272 OpenWrt图形化管理界面LuCI命令注入分析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="thumbnail-image"></span>
     
 </a>
 
@@ -437,18 +437,18 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20190710-lucirce.html" class="title">CVE-2019-12272 OpenWrt图形化管理界面LuCI命令注入分析</a></p>
-                            <p class="item-date"><time datetime="2019-07-10T04:06:49.000Z" itemprop="datePublished">2019-07-10</time></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210607-open_redirect01.html" class="title">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a></p>
+                            <p class="item-date"><time datetime="2021-06-07T06:57:35.000Z" itemprop="datePublished">2021-06-07</time></p>
                         </div>
                     </li>
                 
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20190710-wp511.html" class="thumbnail">
+                            <a href="/posts/Web安全/20210309-ant2021.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_red.png)" alt="WordPress 5.1.1 ，CSRF-&gt;XSS-&gt;RCE漏洞分析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="AntCTF2021 部分WP" class="thumbnail-image"></span>
     
 </a>
 
@@ -456,18 +456,18 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20190710-wp511.html" class="title">WordPress 5.1.1 ，CSRF-&gt;XSS-&gt;RCE漏洞分析</a></p>
-                            <p class="item-date"><time datetime="2019-07-10T02:27:51.000Z" itemprop="datePublished">2019-07-10</time></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210309-ant2021.html" class="title">AntCTF2021 部分WP</a></p>
+                            <p class="item-date"><time datetime="2021-03-09T11:04:04.000Z" itemprop="datePublished">2021-03-09</time></p>
                         </div>
                     </li>
                 
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20190708-MiniCMS.html" class="thumbnail">
+                            <a href="/posts/Web安全/20201126-wdbunfinish.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/eggs.jpg)" alt="代码审计 MiniCMS从头开始" class="thumbnail-image"></span>
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区" class="thumbnail-image"></span>
     
 </a>
 
@@ -475,18 +475,18 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20190708-MiniCMS.html" class="title">代码审计 MiniCMS从头开始</a></p>
-                            <p class="item-date"><time datetime="2019-07-08T07:15:18.000Z" itemprop="datePublished">2019-07-08</time></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201126-wdbunfinish.html" class="title">[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</a></p>
+                            <p class="item-date"><time datetime="2020-11-26T08:47:27.000Z" itemprop="datePublished">2020-11-26</time></p>
                         </div>
                     </li>
                 
                     <li>
                         
                         <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20190616-prce.html" class="thumbnail">
+                            <a href="/posts/Web安全/20201019-sw_safe.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://120.78.185.175/img/thumbnails/planet_yellow.jpg)" alt="PRCE 正则最大回溯次数" class="thumbnail-image"></span>
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss" class="thumbnail-image"></span>
     
 </a>
 
@@ -494,8 +494,8 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
                         
                         <div class="item-inner">
                             <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20190616-prce.html" class="title">PRCE 正则最大回溯次数</a></p>
-                            <p class="item-date"><time datetime="2019-06-16T04:45:13.000Z" itemprop="datePublished">2019-06-16</time></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201019-sw_safe.html" class="title">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</a></p>
+                            <p class="item-date"><time datetime="2020-10-19T13:54:52.000Z" itemprop="datePublished">2020-10-19</time></p>
                         </div>
                     </li>
                 
@@ -508,7 +508,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
         </div>
     </div>
 
@@ -517,7 +517,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 12.5px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 17.5px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 12.5px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 15px;">机器学习初步</a>
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a>
         </div>
     </div>
 
@@ -554,7 +554,7 @@ window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMin
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2019 HACHp1<br>
+            &copy; 2022 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>
