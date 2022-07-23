@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
 <meta property="og:description" content="基于图数据库的静态分析技术初探（一）   基于图数据库的静态分析技术初探（一）  基本概念 代码属性图 Datalog 实例  BytecodeDL Tabby CodeQL  基于代码属性图/Datalog的静态分析技术的特点 缺陷    近年来，基于图数据库的静态分析技术大火，例如被Github收购的CodeQL已占据安全静态分析的半壁江山。本文浅析相关技">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
-<meta property="og:updated_time" content="2022-07-23T15:11:08.574Z">
+<meta property="og:updated_time" content="2022-07-23T15:41:29.704Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="基于图数据库的静态分析技术初探（一）">
 <meta name="twitter:description" content="基于图数据库的静态分析技术初探（一）   基于图数据库的静态分析技术初探（一）  基本概念 代码属性图 Datalog 实例  BytecodeDL Tabby CodeQL  基于代码属性图/Datalog的静态分析技术的特点 缺陷    近年来，基于图数据库的静态分析技术大火，例如被Github收购的CodeQL已占据安全静态分析的半壁江山。本文浅析相关技">
@@ -271,17 +271,15 @@
 <p>图数据库就是一种使用图结构进行存储和查询的数据库，其中节点和边用于对数据进行表示和存储。</p>
 <p>与一般的数据库一致，图数据库的整个概念也重在表达“关系” 借用知乎上的简单例子（见：图数据库是什么？ - 星环科技的回答 - 知乎 https://www.zhihu.com/question/310467190/answer/2494375788）： 来看一个经典三角恋：从前，有个男人叫小帅，他有个弟弟叫小强，他们有个漂亮的邻居叫小美，他们三个在同一所学校读书。小帅喜欢小美，小强也喜欢小美，但小美不喜欢小强，小美喜欢的人是小帅。</p>
 <p>光看这段话，感觉有一堆略复杂的关系，用<strong>属性图</strong>来表示为：</p>
-<figure>
-<img src="https://cdn.nlark.com/yuque/0/2022/png/1598931/1657119049881-b322b7bb-b796-4144-b079-cba2c63bcc0d.png#clientId=u02564f4e-7885-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=439&amp;id=u2ff4a858&amp;margin=%5Bobject%20Object%5D&amp;name=v2-33301199e69057d4122ec175608e4453_720w.png&amp;originHeight=659&amp;originWidth=952&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=45880&amp;status=done&amp;style=none&amp;taskId=uf0f2c402-f8d2-43e7-8d27-40c1ec543a5&amp;title=&amp;width=634.6666666666666" alt="v2-33301199e69057d4122ec175608e4453_720w.png"><figcaption>v2-33301199e69057d4122ec175608e4453_720w.png</figcaption>
-</figure>
+<p><img src="http://159.75.52.53/img/blogimg/graph_sa/1.png"></p>
 <p><strong>图数据库通常有两大类</strong>，一种是属性图，另一种是RDF图；在代码分析上一般都使用属性图。 属性图由顶点（圆圈）、边（箭头）、属性（key:value）组成，在以上的例子中，Student为label，name:xx为property的key和value。 与传统的关系型数据库相比，关系型数据库的一组数据是线性的，而图数据库由结点和边构成，能够表示<strong>更为复杂的关系</strong>：</p>
 <p>以下是3张表：学生、学生选课情况和课程，现在想要查到小美选的所有课程，在线性的关系数据库中查询起来非常麻烦：</p>
 <figure>
-<img src="https://cdn.nlark.com/yuque/0/2022/jpeg/1598931/1657119541959-b727fbbf-cb7e-434e-a51d-580f9ea030bd.jpeg#clientId=u02564f4e-7885-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=264&amp;id=u8b680496&amp;margin=%5Bobject%20Object%5D&amp;name=v2-8bf361a18ae54dd4446dd1402105ef2a_720w.jpg&amp;originHeight=396&amp;originWidth=720&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=38240&amp;status=done&amp;style=none&amp;taskId=u51ae2d66-44cf-4d07-8c16-ff864174b51&amp;title=&amp;width=480" alt="v2-8bf361a18ae54dd4446dd1402105ef2a_720w.jpg"><figcaption>v2-8bf361a18ae54dd4446dd1402105ef2a_720w.jpg</figcaption>
+<img src="http://159.75.52.53/img/blogimg/graph_sa/2.jpg" alt="v2-8bf361a18ae54dd4446dd1402105ef2a_720w.jpg"><figcaption>v2-8bf361a18ae54dd4446dd1402105ef2a_720w.jpg</figcaption>
 </figure>
 <p>而在图数据库中查询起来十分方便，只需通过”选课“边查询小美结点的连接情况即可：</p>
 <figure>
-<img src="https://cdn.nlark.com/yuque/0/2022/jpeg/1598931/1657119562217-3255d8e1-cbdc-4b16-a0ae-581cf10a6f17.jpeg#clientId=u02564f4e-7885-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=207&amp;id=u12621552&amp;margin=%5Bobject%20Object%5D&amp;name=v2-85bb3aff036451da641a3905ce99e42a_720w.jpg&amp;originHeight=310&amp;originWidth=720&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=24377&amp;status=done&amp;style=none&amp;taskId=u4c32c8d0-3299-4ace-b2ad-42fa9113325&amp;title=&amp;width=480" alt="v2-85bb3aff036451da641a3905ce99e42a_720w.jpg"><figcaption>v2-85bb3aff036451da641a3905ce99e42a_720w.jpg</figcaption>
+<img src="http://159.75.52.53/img/blogimg/graph_sa/3.jpg" alt="v2-85bb3aff036451da641a3905ce99e42a_720w.jpg"><figcaption>v2-85bb3aff036451da641a3905ce99e42a_720w.jpg</figcaption>
 </figure>
 <p>与传统关系型数据库相比，图数据库有以下优势：</p>
 <ol type="1">
@@ -291,7 +289,7 @@
 </ol>
 <p>由于有以上优点，最近基于图数据库的静态分析技术大火。</p>
 <h2 id="代码属性图">代码属性图</h2>
-<p>代码属性图，先拆分一下：代码-属性图。代码属性图其实就是用属性图来表示代码。常见的代码属性图有：AST、CFG、DFG、PDG等。 以devign论文中的图为例： <img src="https://cdn.nlark.com/yuque/0/2022/png/1598931/1657121676750-8f2091b6-5017-4f99-8b09-a2d9dc774b5c.png#clientId=u02564f4e-7885-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=300&amp;id=u4eae66d0&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=450&amp;originWidth=1351&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=136640&amp;status=done&amp;style=none&amp;taskId=uc8340da2-2369-49db-8f5a-172d1f27fab&amp;title=&amp;width=900.6666666666666" alt="image.png"> 任何一种以某IR（这里的IR是广义的IR，不是必须要三地址码）的属性图来表示代码本身的形式，都可以称为代码属性图。</p>
+<p>代码属性图，先拆分一下：代码-属性图。代码属性图其实就是用属性图来表示代码。常见的代码属性图有：AST、CFG、DFG、PDG等。 以devign论文中的图为例： <img src="http://159.75.52.53/img/blogimg/graph_sa/4.png" alt="image.png"> 任何一种以某IR（这里的IR是广义的IR，不是必须要三地址码）的属性图来表示代码本身的形式，都可以称为代码属性图。</p>
 <p>基于代码属性图的静态分析，关键在于如何构建代码属性图（包括结点的定义、边的定义）以及如何定义推理/查询过程。代码属性图的定义对应了传统静态分析中的IR的定义，推理过程的定义则对应传统分析中的污点流分析过程。</p>
 <p>通常来讲，对于不同特性的语言、不同的需求和场景，需要给出合适的代码属性图定义。</p>
 <p>特别的，在Java利用链的挖掘问题下，不仅需要在污点分析阶段（类方法summary）用到基本的代码属性图（CFG），在污点分析结束后，可以将分析结果（一般为类方法的调用关系图）进一步输入到图数据库中，然后由安全人员编写查询语句，以辅助其挖掘调用链。比如BytecodeDL、Tabby。</p>
@@ -313,7 +311,7 @@
 <li>Store(x : V, f : F, y : V) &lt;- x.f = y</li>
 <li>Load(y : V, x : V, f : F) &lt;- y = x.f</li>
 </ul>
-<p><embed src="https://cdn.nlark.com/yuque/0/2022/webp/1598931/1657197640105-da16947a-a370-452c-a2ef-ccbb212364cb.webp#clientId=u15472e1c-1f01-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;id=u51cfdca6&amp;margin=%5Bobject%20Object%5D&amp;originHeight=646&amp;originWidth=1200&amp;originalType=url&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;status=done&amp;style=none&amp;taskId=ub35aabc8-7b11-4d45-bcee-4c26c821678&amp;title="></p>
+<p><embed src="http://159.75.52.53/img/blogimg/graph_sa/5.webp"></p>
 <p>将这4个推导关系输入datalog引擎，引擎会在数据库中自行推导（进行有收敛地迭代），达到不动点时，即完全指针分析。</p>
 <h2 id="实例">实例</h2>
 <ul>
@@ -336,7 +334,7 @@
 <li>归纳奠基：facts</li>
 <li>归纳推理：以上的推理过程</li>
 </ul>
-<p><code>.output reachable</code>则表示要输出的内容，最后的执行结果： <img src="https://cdn.nlark.com/yuque/0/2022/png/1598931/1657200851238-5718ec9e-1a44-402b-91cd-9d1650d0e892.png#clientId=u15472e1c-1f01-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=246&amp;id=u9aa3a9b1&amp;margin=%5Bobject%20Object%5D&amp;name=%E5%9B%BE%E7%89%87.png&amp;originHeight=308&amp;originWidth=228&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=5762&amp;status=done&amp;style=none&amp;taskId=u8c2c6a5b-16d4-4825-b25c-d331a1a91d7&amp;title=&amp;width=182.4" alt="图片.png"></p>
+<p><code>.output reachable</code>则表示要输出的内容，最后的执行结果： <img src="http://159.75.52.53/img/blogimg/graph_sa/6.png" alt="图片.png"></p>
 <p>BytecodeDL的进一步学习在下一篇文章中进行。</p>
 <h3 id="tabby">Tabby</h3>
 <p>主要针对Java各种链（反序列化链、JNDI链等，通常是Java对象可控的情况下挖掘对应的链子）的半自动挖掘。设计了面向Java语言的代码属性图构建方案，包括类关系图、函数别名图、精确的函数调用图。函数别名图将所有的函数实现关系进行了聚合。</p>
