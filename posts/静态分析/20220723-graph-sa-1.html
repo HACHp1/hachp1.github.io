@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    
+    <title>基于图数据库的静态分析技术初探（一） | Math &amp; Sec ，HACHp1的个人博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="基于图数据库的静态分析技术初探（一）   基于图数据库的静态分析技术初探（一）  基本概念 代码属性图 Datalog 实例  BytecodeDL Tabby CodeQL  基于代码属性图/Datalog的静态分析技术的特点 缺陷    近年来，基于图数据库的静态分析技术大火，例如被Github收购的CodeQL已占据安全静态分析的半壁江山。本文浅析相关技">
+<meta name="keywords" content="静态分析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于图数据库的静态分析技术初探（一）">
+<meta property="og:url" content="https://hachp1.github.io/posts/静态分析/20220723-graph-sa-1.html">
+<meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
+<meta property="og:description" content="基于图数据库的静态分析技术初探（一）   基于图数据库的静态分析技术初探（一）  基本概念 代码属性图 Datalog 实例  BytecodeDL Tabby CodeQL  基于代码属性图/Datalog的静态分析技术的特点 缺陷    近年来，基于图数据库的静态分析技术大火，例如被Github收购的CodeQL已占据安全静态分析的半壁江山。本文浅析相关技">
+<meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
+<meta property="og:updated_time" content="2022-07-23T15:11:08.574Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于图数据库的静态分析技术初探（一）">
+<meta name="twitter:description" content="基于图数据库的静态分析技术初探（一）   基于图数据库的静态分析技术初探（一）  基本概念 代码属性图 Datalog 实例  BytecodeDL Tabby CodeQL  基于代码属性图/Datalog的静态分析技术的特点 缺陷    近年来，基于图数据库的静态分析技术大火，例如被Github收购的CodeQL已占据安全静态分析的半壁江山。本文浅析相关技">
+<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
+    
+
+    
+
+    
+        <link rel="icon" href="/css/images/favicon.png" />
+    
+
+    <link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/libs/open-sans/styles.css">
+    <link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+    
+    
+        <link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+    
+    
+    
+    
+    
+
+
+</head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Math &amp; Sec ，HACHp1的个人博客</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/.">主页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">目录</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+                
+                <nav id="sub-nav">
+                    <div class="profile" id="profile-nav">
+                        <a id="profile-anchor" href="javascript:;">
+                            <img class="avatar" src="/css/images/avatar.png" />
+                            <i class="fa fa-caret-down"></i>
+                        </a>
+                    </div>
+                </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="想要查找什么..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/.">主页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">目录</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="搜索" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+                
+
+<aside id="profile">
+    <div class="inner profile-inner">
+        <div class="base-info profile-block">
+            <img id="avatar" src="/css/images/avatar.png" />
+            <h2 id="name">HACHp1</h2>
+            <h3 id="title">生活少有按照行动而改变，那就抓住那几个少有的。</h3>
+            <span id="location"><i class="fa fa-map-marker"></i>China</span>
+            <a id="follow" target="_blank" href="https://github.com/hachp1">关注我</a>
+        </div>
+        <div class="article-info profile-block">
+            <div class="article-info-block">
+                45
+                <span>文章</span>
+            </div>
+            <div class="article-info-block">
+                9
+                <span>标签</span>
+            </div>
+        </div>
+        
+        <div class="profile-block social-links">
+            <table>
+                <tr>
+                    
+                    
+                    <td>
+                        <a href="https://github.com/HACHp1" target="_blank" title="GitHub" class=tooltip>
+                            <i class="fa fa-GitHub"></i>
+                        </a>
+                    </td>
+                    
+                </tr>
+            </table>
+        </div>
+        
+    </div>
+</aside>
+
+            
+            <section id="main"><article id="post-基于图数据库的静态分析技术初探（一）" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+    
+        
+            
+	
+		<img src="http://159.75.52.53/img/banner/Eur2.jpg" class="article-banner" />
+	
+
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+            <header class="article-header">
+                
+    
+        <h1 class="article-title" itemprop="name">
+            基于图数据库的静态分析技术初探（一）
+        </h1>
+    
+
+                
+                    <div class="article-meta">
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/posts/静态分析/20220723-graph-sa-1.html">
+            <time datetime="2022-07-23T15:07:01.000Z" itemprop="datePublished">2022-07-23</time>
+        </a>
+    </div>
+
+
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/静态分析/">静态分析</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link" href="/tags/静态分析/">静态分析</a>
+    </div>
+
+                    </div>
+                
+            </header>
+                
+            
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+            
+			<h1 id="基于图数据库的静态分析技术初探一">基于图数据库的静态分析技术初探（一）</h1>
+<!-- TOC -->
+<ul>
+<li><a href="#基于图数据库的静态分析技术初探一">基于图数据库的静态分析技术初探（一）</a>
+<ul>
+<li><a href="#基本概念">基本概念</a></li>
+<li><a href="#代码属性图">代码属性图</a></li>
+<li><a href="#datalog">Datalog</a></li>
+<li><a href="#实例">实例</a>
+<ul>
+<li><a href="#bytecodedl">BytecodeDL</a></li>
+<li><a href="#tabby">Tabby</a></li>
+<li><a href="#codeql">CodeQL</a></li>
+</ul></li>
+<li><a href="#基于代码属性图datalog的静态分析技术的特点">基于代码属性图/Datalog的静态分析技术的特点</a></li>
+<li><a href="#缺陷">缺陷</a></li>
+</ul></li>
+</ul>
+<!-- /TOC -->
+<p>近年来，基于图数据库的静态分析技术大火，例如被Github收购的CodeQL已占据安全静态分析的半壁江山。本文浅析相关技术，抛砖引玉。</p>
+<a id="more"></a>
+<h2 id="基本概念">基本概念</h2>
+<p>图数据库就是一种使用图结构进行存储和查询的数据库，其中节点和边用于对数据进行表示和存储。</p>
+<p>与一般的数据库一致，图数据库的整个概念也重在表达“关系” 借用知乎上的简单例子（见：图数据库是什么？ - 星环科技的回答 - 知乎 https://www.zhihu.com/question/310467190/answer/2494375788）： 来看一个经典三角恋：从前，有个男人叫小帅，他有个弟弟叫小强，他们有个漂亮的邻居叫小美，他们三个在同一所学校读书。小帅喜欢小美，小强也喜欢小美，但小美不喜欢小强，小美喜欢的人是小帅。</p>
+<p>光看这段话，感觉有一堆略复杂的关系，用<strong>属性图</strong>来表示为：</p>
+<figure>
+<img src="https://cdn.nlark.com/yuque/0/2022/png/1598931/1657119049881-b322b7bb-b796-4144-b079-cba2c63bcc0d.png#clientId=u02564f4e-7885-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=439&amp;id=u2ff4a858&amp;margin=%5Bobject%20Object%5D&amp;name=v2-33301199e69057d4122ec175608e4453_720w.png&amp;originHeight=659&amp;originWidth=952&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=45880&amp;status=done&amp;style=none&amp;taskId=uf0f2c402-f8d2-43e7-8d27-40c1ec543a5&amp;title=&amp;width=634.6666666666666" alt="v2-33301199e69057d4122ec175608e4453_720w.png"><figcaption>v2-33301199e69057d4122ec175608e4453_720w.png</figcaption>
+</figure>
+<p><strong>图数据库通常有两大类</strong>，一种是属性图，另一种是RDF图；在代码分析上一般都使用属性图。 属性图由顶点（圆圈）、边（箭头）、属性（key:value）组成，在以上的例子中，Student为label，name:xx为property的key和value。 与传统的关系型数据库相比，关系型数据库的一组数据是线性的，而图数据库由结点和边构成，能够表示<strong>更为复杂的关系</strong>：</p>
+<p>以下是3张表：学生、学生选课情况和课程，现在想要查到小美选的所有课程，在线性的关系数据库中查询起来非常麻烦：</p>
+<figure>
+<img src="https://cdn.nlark.com/yuque/0/2022/jpeg/1598931/1657119541959-b727fbbf-cb7e-434e-a51d-580f9ea030bd.jpeg#clientId=u02564f4e-7885-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=264&amp;id=u8b680496&amp;margin=%5Bobject%20Object%5D&amp;name=v2-8bf361a18ae54dd4446dd1402105ef2a_720w.jpg&amp;originHeight=396&amp;originWidth=720&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=38240&amp;status=done&amp;style=none&amp;taskId=u51ae2d66-44cf-4d07-8c16-ff864174b51&amp;title=&amp;width=480" alt="v2-8bf361a18ae54dd4446dd1402105ef2a_720w.jpg"><figcaption>v2-8bf361a18ae54dd4446dd1402105ef2a_720w.jpg</figcaption>
+</figure>
+<p>而在图数据库中查询起来十分方便，只需通过”选课“边查询小美结点的连接情况即可：</p>
+<figure>
+<img src="https://cdn.nlark.com/yuque/0/2022/jpeg/1598931/1657119562217-3255d8e1-cbdc-4b16-a0ae-581cf10a6f17.jpeg#clientId=u02564f4e-7885-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=207&amp;id=u12621552&amp;margin=%5Bobject%20Object%5D&amp;name=v2-85bb3aff036451da641a3905ce99e42a_720w.jpg&amp;originHeight=310&amp;originWidth=720&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=24377&amp;status=done&amp;style=none&amp;taskId=u4c32c8d0-3299-4ace-b2ad-42fa9113325&amp;title=&amp;width=480" alt="v2-85bb3aff036451da641a3905ce99e42a_720w.jpg"><figcaption>v2-85bb3aff036451da641a3905ce99e42a_720w.jpg</figcaption>
+</figure>
+<p>与传统关系型数据库相比，图数据库有以下优势：</p>
+<ol type="1">
+<li><strong>更好的解释性</strong>：用户可以很自然的表达现实世界中的实体及其关联关系（对应图的顶点及边）。</li>
+<li><strong>更高的检索性能</strong>：传统关系型数据库多个表之间连接操作、外键约束，导致较大的额外开销。而图模型固有的数据索引结构，使得它的数据查询与分析速度更快。</li>
+<li><strong>更灵活</strong>：图数据可以表示更复杂的关系结构，图数据灵活的数据模型可以适应不断变化的业务需求，任意添加或删除顶点、边，扩充或者缩小图模型这些都可以轻松实现。</li>
+</ol>
+<p>由于有以上优点，最近基于图数据库的静态分析技术大火。</p>
+<h2 id="代码属性图">代码属性图</h2>
+<p>代码属性图，先拆分一下：代码-属性图。代码属性图其实就是用属性图来表示代码。常见的代码属性图有：AST、CFG、DFG、PDG等。 以devign论文中的图为例： <img src="https://cdn.nlark.com/yuque/0/2022/png/1598931/1657121676750-8f2091b6-5017-4f99-8b09-a2d9dc774b5c.png#clientId=u02564f4e-7885-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=300&amp;id=u4eae66d0&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=450&amp;originWidth=1351&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=136640&amp;status=done&amp;style=none&amp;taskId=uc8340da2-2369-49db-8f5a-172d1f27fab&amp;title=&amp;width=900.6666666666666" alt="image.png"> 任何一种以某IR（这里的IR是广义的IR，不是必须要三地址码）的属性图来表示代码本身的形式，都可以称为代码属性图。</p>
+<p>基于代码属性图的静态分析，关键在于如何构建代码属性图（包括结点的定义、边的定义）以及如何定义推理/查询过程。代码属性图的定义对应了传统静态分析中的IR的定义，推理过程的定义则对应传统分析中的污点流分析过程。</p>
+<p>通常来讲，对于不同特性的语言、不同的需求和场景，需要给出合适的代码属性图定义。</p>
+<p>特别的，在Java利用链的挖掘问题下，不仅需要在污点分析阶段（类方法summary）用到基本的代码属性图（CFG），在污点分析结束后，可以将分析结果（一般为类方法的调用关系图）进一步输入到图数据库中，然后由安全人员编写查询语句，以辅助其挖掘调用链。比如BytecodeDL、Tabby。</p>
+<h2 id="datalog">Datalog</h2>
+<p>在看代码属性图之前，通过《南京大学软件分析》课程中的内容，先看一下Datalog（作为BytecodeDL的前置知识） 简介：</p>
+<ul>
+<li>Datalog：是声明式编程语言，是Prolog的子集，最初用于数据库，现在广泛应用于程序分析、网络定义、大数据、云计算等。</li>
+<li>Datalog=Data+Logic；Datalog没有副作用（没有赋值）、没有控制流、没有函数、非图灵完备。</li>
+</ul>
+<p>相关概念：</p>
+<ul>
+<li>谓词Predicate：看作一系列陈述的集合，陈述某事情的事实（真假）。如Age，表示一些人的年龄。在真实使用场景下，一般为一个前置条件或一个由条件得到的结论。</li>
+<li>事实Fact：表示一个组合是否属于一种关系，比如(“Xiaoming”, 18)可以表示“Xiaoming的年龄是18岁”，但注意这个陈述不一定值为True。</li>
+</ul>
+<p>以指针分析为例： 首先，我们根据过程内指针分析的4条基本规则，得到以下四种推导关系：</p>
+<ul>
+<li>New(x: V,o: O) &lt;- i: x = new T()</li>
+<li>Assign(x : V, y : V) &lt;- x=y</li>
+<li>Store(x : V, f : F, y : V) &lt;- x.f = y</li>
+<li>Load(y : V, x : V, f : F) &lt;- y = x.f</li>
+</ul>
+<p><embed src="https://cdn.nlark.com/yuque/0/2022/webp/1598931/1657197640105-da16947a-a370-452c-a2ef-ccbb212364cb.webp#clientId=u15472e1c-1f01-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;id=u51cfdca6&amp;margin=%5Bobject%20Object%5D&amp;originHeight=646&amp;originWidth=1200&amp;originalType=url&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;status=done&amp;style=none&amp;taskId=ub35aabc8-7b11-4d45-bcee-4c26c821678&amp;title="></p>
+<p>将这4个推导关系输入datalog引擎，引擎会在数据库中自行推导（进行有收敛地迭代），达到不动点时，即完全指针分析。</p>
+<h2 id="实例">实例</h2>
+<ul>
+<li>Tabby：字节码-&gt;soot-&gt;cfg-&gt;neo4j-&gt;neo4j查询</li>
+<li>BytecodeDL：Soufflé（字节码-&gt;soot-&gt;cfg）-&gt;基于Soufflé(datalog)推理的污点分析-&gt;（反序列化链挖掘场景下）neo4j查询</li>
+<li>CodeQL：自己实现的一套将源码转属性图的算法（未开源）-&gt;自己实现的一套查询语法（类似于sql）</li>
+</ul>
+<h3 id="bytecodedl">BytecodeDL</h3>
+<p>BytecodeDL基于Doop，Doop基于souffle，实际上是在Souffle推理引擎下，使用自己实现的datalog来进行污点分析、类方法调用分析等个性化推理。对于java链子的查找问题，BytecodeDL将类方法的调用关系储存到neo4j中，然后在neo4j中进一步对结果进行筛选、查询。</p>
+<p>先来看看souffle（以下例子可在：如何快速上手指针分析工具doop？ - 澪同学的回答 - 知乎 https://www.zhihu.com/question/499028330/answer/2473710030 中找到）： 可以在<a href="http://plang1.it.usyd.edu.au:8000/" class="uri" target="_blank" rel="external">http://plang1.it.usyd.edu.au:8000/</a>中执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">.decl edge(n: symbol, m: symbol)</div><div class="line">edge(&quot;a&quot;, &quot;b&quot;).</div><div class="line">edge(&quot;b&quot;, &quot;c&quot;).</div><div class="line">edge(&quot;c&quot;, &quot;d&quot;).</div><div class="line">.decl reachable (n: symbol, m: symbol)</div><div class="line">.output reachable</div><div class="line">reachable(x, y):- edge(x, y).</div><div class="line">reachable(x, z):- edge(x, y), reachable(y, z).</div></pre></td></tr></table></figure>
+<p>解释： <code>souffle以.decl edge(n: symbol, m: symbol)</code>的形式来定义关系，symbol为属性的类型（symbol为字符串，此外还有 number）；在上面的例子中，定义了两个关系（edge和reachable）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">.decl edge(n: symbol, m: symbol)</div><div class="line">.decl reachable (n: symbol, m: symbol)</div></pre></td></tr></table></figure>
+<p>然后，上例中给出了几个基本条件（facts）用于推理：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">edge(&quot;a&quot;, &quot;b&quot;).</div><div class="line">edge(&quot;b&quot;, &quot;c&quot;).</div><div class="line">edge(&quot;c&quot;, &quot;d&quot;).</div></pre></td></tr></table></figure>
+<p>之后，定义了两种推理过程：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">reachable(x, y):- edge(x, y).</div><div class="line">reachable(x, z):- reachable(x, y), reachable(y, z).</div></pre></td></tr></table></figure>
+<p>以上表达式，说明由冒号右边可以推理出冒号左边（是不是很想数学的箭头证明），上面的第一句表示，如果x和y由边连接，那么可以推理出x与y可达；第二句表示，如果x和y由边连接，且y和z可达，那么x和z可达。 这个过程其实与数学归纳法一致：</p>
+<ul>
+<li>归纳奠基：facts</li>
+<li>归纳推理：以上的推理过程</li>
+</ul>
+<p><code>.output reachable</code>则表示要输出的内容，最后的执行结果： <img src="https://cdn.nlark.com/yuque/0/2022/png/1598931/1657200851238-5718ec9e-1a44-402b-91cd-9d1650d0e892.png#clientId=u15472e1c-1f01-4&amp;crop=0&amp;crop=0&amp;crop=1&amp;crop=1&amp;from=paste&amp;height=246&amp;id=u9aa3a9b1&amp;margin=%5Bobject%20Object%5D&amp;name=%E5%9B%BE%E7%89%87.png&amp;originHeight=308&amp;originWidth=228&amp;originalType=binary&amp;ratio=1&amp;rotation=0&amp;showTitle=false&amp;size=5762&amp;status=done&amp;style=none&amp;taskId=u8c2c6a5b-16d4-4825-b25c-d331a1a91d7&amp;title=&amp;width=182.4" alt="图片.png"></p>
+<p>BytecodeDL的进一步学习在下一篇文章中进行。</p>
+<h3 id="tabby">Tabby</h3>
+<p>主要针对Java各种链（反序列化链、JNDI链等，通常是Java对象可控的情况下挖掘对应的链子）的半自动挖掘。设计了面向Java语言的代码属性图构建方案，包括类关系图、函数别名图、精确的函数调用图。函数别名图将所有的函数实现关系进行了聚合。</p>
+<h3 id="codeql">CodeQL</h3>
+<p>自己实现的一套将源码转属性图的算法（未开源）-&gt;自己实现的一套查询语法（类似于sql）。</p>
+<h2 id="基于代码属性图datalog的静态分析技术的特点">基于代码属性图/Datalog的静态分析技术的特点</h2>
+<p><strong>优点</strong></p>
+<ol type="1">
+<li>编写门槛低，易于理解；这也是图静态分析大火的主要原因，只需要编写查询语句/简单的推导语句即可完成污点分析，对于推广来说十分方便。并且基于这个优点，安全人员针对具体场景进行定制化也比较容易。</li>
+</ol>
+<p>这一点可以展开说，传统的静态分析工具（基于AST等的）一般是把污点分析过程写死了，只提供给安全人员污点函数和污点本身的自定义化的接口或规则编写接口，灵活度不够。而基于图的分析工具，则把污点传播的过程的定义也交给安全人员，安全人员通过查询语句/Datalog对这个过程进行定制化的编写，这样看来灵活度更大。 实际上，传统基于AST/CFG的静态分析能做到的事情更多（上限更高），但开发门槛太高，不便直接把污点传播过程的定制化交由安全人员处理。但基于Datalog或查询的图静态分析正因为编写门槛低，其定制化过程也不够灵活，外加其固有缺陷，很多过程都无法处理，即使能够处理，查询语句往往也很复杂，脱离了其简洁化的初衷。 方便编写和处理细致程度实际上是一对矛盾，针对不同场景选择合适的方法才是根本。</p>
+<ol start="2" type="1">
+<li>推导速度快（与图数据库一致）</li>
+</ol>
+<p><strong>Datalog与图查询对比</strong></p>
+<ul>
+<li>Datalog与图查询相比，Datalog更偏重于类似数学归纳的过程，关注一个子句并将其循环作用在程序上，而图查询更倾向于使用者通过一系列查询语句来描述从源到污点的整个污点流的过程。</li>
+<li>Datalog一般用于做基本的污点分析，可以把分析结果转存为图数据库，然后进行进一步查询和分析，所以Datalog和图查询不是相互替代的 ## 缺陷 基于代码属性图/Datalog的静态分析有以下缺点：</li>
+</ul>
+<ol type="1">
+<li>表达能力受限，<strong>非图灵完备</strong>，有的情况处理不了</li>
+</ol>
+<p>比如有的时候需要中途去掉一些sinks，Datalog就无法实现，因为推理过程不考虑程序的顺序 再比如表达单个存在很容易，但表达同时满足多个存在比较困难，通常需要双重否定（以下例子中，if中的两个条件要同时满足才能到达污点，而datalog在单次推理时只会输入<code>$a=1</code>或<code>$b=2</code>，要表达“同时”，则需要双重否定：<code>$a!=2</code>或<code>$b!=2</code>的<strong>否定</strong>）：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">  </div><div class="line">$a = <span class="number">1</span>;</div><div class="line">$b = <span class="number">2</span>;</div><div class="line"></div><div class="line"><span class="keyword">if</span> ($a == <span class="number">2</span> <span class="keyword">and</span> $b == <span class="number">2</span>)&#123;</div><div class="line">  <span class="keyword">eval</span>($_GET[<span class="number">1</span>]);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ol start="2" type="1">
+<li>不能完全控制性能（底层已经实现了，无法再进行优化）</li>
+</ol>
+
+        
+        </div>
+        
+        
+        
+        
+<div id="copyright-div">    
+
+    <ul class="post-copyright">
+      <li class="post-copyright-author">
+          <strong>本文作者：<a href="https://github.com/HACHp1">HACHp1</a> </strong>
+      </li>
+      <li class="post-copyright-link">
+        <strong>本文链接：</strong>
+        <a href="/posts/静态分析/20220723-graph-sa-1.html" title="基于图数据库的静态分析技术初探（一）">https://hachp1.github.io/posts/静态分析/20220723-graph-sa-1.html</a>
+      </li>
+      <li class="post-copyright-license">
+        <strong>版权声明： </strong>
+        本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0 CN</a> 许可协议。非商业转载请注明作者及出处。商业转载请联系作者本人。
+      </li>
+    </ul>
+ 
+</div>
+
+
+        
+        
+        
+        <footer class="article-footer">
+            <div class="share-container">
+
+
+
+    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+<a class="a2a_button_wechat"></a>
+<a class="a2a_button_qzone"></a>
+<a class="a2a_button_sina_weibo"></a>
+<a class="a2a_button_twitter"></a>
+<a class="a2a_button_facebook"></a>
+<a class="a2a_button_telegram"></a>
+</div>
+<script async src="https://static.addtoany.com/menu/page.js"></script>
+
+<script type="text/javascript" src="//static.addtoany.com/menu/page.js"></script>
+<style>
+    .a2a_menu {
+        border-radius: 4px;
+    }
+    .a2a_menu a {
+        margin: 2px 0;
+        font-size: 14px;
+        line-height: 16px;
+        border-radius: 4px;
+        color: inherit !important;
+        font-family: 'Microsoft Yahei';
+    }
+    #a2apage_dropdown {
+        margin: 10px 0;
+    }
+    .a2a_mini_services {
+        padding: 10px;
+    }
+    a.a2a_i,
+    i.a2a_i {
+        width: 122px;
+        line-height: 16px;
+    }
+    a.a2a_i .a2a_svg,
+    a.a2a_more .a2a_svg {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        vertical-align: top;
+        background-size: 16px;
+    }
+    a.a2a_i {
+        border: none !important;
+    }
+    a.a2a_menu_show_more_less {
+        margin: 0;
+        padding: 10px 0;
+        line-height: 16px;
+    }
+    .a2a_mini_services:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+    .a2a_mini_services{*+height:1%;}
+</style>
+
+</div>
+
+
+            
+    
+
+        </footer>
+    </div>
+    
+        
+<nav id="article-nav">
+    
+    
+        <a href="/posts/Web安全/20220414-spring4shell.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">下一篇</strong>
+            <div class="article-nav-title">Spring4Shell简析（CVE-2022-22965）</div>
+        </a>
+    
+</nav>
+
+
+    
+    
+    
+</article>
+
+
+    
+    
+        <section id="comments">
+    <div id="valine-thread"></div>
+</section>
+    
+
+</section>
+            
+                
+<aside id="sidebar">
+   
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">最新文章</h3>
+        <div class="widget">
+            <ul id="recent-post" class="">
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/静态分析/20220723-graph-sa-1.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="基于图数据库的静态分析技术初探（一）" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/静态分析/">静态分析</a></p>
+                            <p class="item-title"><a href="/posts/静态分析/20220723-graph-sa-1.html" class="title">基于图数据库的静态分析技术初探（一）</a></p>
+                            <p class="item-date"><time datetime="2022-07-23T15:07:01.000Z" itemprop="datePublished">2022-07-23</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20220414-spring4shell.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Spring4Shell简析（CVE-2022-22965）" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20220414-spring4shell.html" class="title">Spring4Shell简析（CVE-2022-22965）</a></p>
+                            <p class="item-date"><time datetime="2022-04-14T13:44:06.000Z" itemprop="datePublished">2022-04-14</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20220407-cc_analysis.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Commons Collections链分析" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20220407-cc_analysis.html" class="title">Commons Collections链分析</a></p>
+                            <p class="item-date"><time datetime="2022-04-07T01:23:09.000Z" itemprop="datePublished">2022-04-07</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20220325-fastjson.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Fastjson 1.2.24反序列化漏洞浅析" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20220325-fastjson.html" class="title">Fastjson 1.2.24反序列化漏洞浅析</a></p>
+                            <p class="item-date"><time datetime="2022-03-25T09:09:42.000Z" itemprop="datePublished">2022-03-25</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
+                            <a href="/posts/Web安全/20220307-log4shell.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Log4shell（CVE-2021-44228）调试分析" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
+                            <p class="item-title"><a href="/posts/Web安全/20220307-log4shell.html" class="title">Log4shell（CVE-2021-44228）调试分析</a></p>
+                            <p class="item-date"><time datetime="2022-03-07T09:33:49.000Z" itemprop="datePublished">2022-03-07</time></p>
+                        </div>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签</h3>
+        <div class="widget">
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a><span class="tag-list-count">1</span></li></ul>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap">
+        <h3 class="widget-title">标签云</h3>
+        <div class="widget tagcloud">
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a> <a href="/tags/静态分析/" style="font-size: 10px;">静态分析</a>
+        </div>
+    </div>
+
+    
+        
+    <div class="widget-wrap widget-list">
+        <h3 class="widget-title">链接</h3>
+        <div class="widget">
+            <ul>
+                
+                    <li>
+                        <a href="https://redogwu.github.io">redogWu</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://hpasserby.top/">Hpasserby</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://xi4or0uji.github.io/">Xi4or0uji</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://jygzyc.github.io">jygzyc</a>
+                    </li>
+                
+                    <li>
+                        <a href="https://mzgao.blog.csdn.net/">mzgao</a>
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+
+            
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            &copy; 2022 HACHp1<br>
+            Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
+        </div>
+    </div>
+</footer>
+        
+    
+    <script src="//unpkg.com/leancloud-storage@3.15.0/dist/av-min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/valine@1.4.16/dist/Valine.min.js"></script>
+    <script>
+        new Valine({
+            el: '#valine-thread' ,
+            notify:true,
+            verify:true,
+            app_id: 'GpqOpUBld8udMg3PSOCDbYr7-gzGzoHsz',
+            app_key: 'k6nxcdbcy4MrjOq2DssFFljB',
+            placeholder: '少侠，留下几句话，我们喝一壶啊 ヾﾉ≧∀≦)o （支持markdown语句，可插入图片）'
+        });
+    </script>
+
+
+
+
+    
+        <script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-share.min.js"></script>
+        <script src="/libs/lightgallery/js/lg-video.min.js"></script>
+    
+    
+    
+        <script type="text/x-mathjax-config">
+            MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+<script src="/js/main.js"></script>
+
+    </div>
+</body>
+</html>
