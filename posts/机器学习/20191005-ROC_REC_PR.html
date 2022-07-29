@@ -246,54 +246,43 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="rocpr和rec曲线aucaoc与肘部方法浅析">ROC、PR和REC曲线、AUC、AOC与肘部方法浅析</h1>
-<a id="more"></a>
-<h2 id="roc与auc">ROC与AUC</h2>
-<h3 id="roc与auc的基本概念">ROC与AUC的基本概念</h3>
-<ul>
+			<h1 id="ROC、PR和REC曲线、AUC、AOC与肘部方法浅析"><a href="#ROC、PR和REC曲线、AUC、AOC与肘部方法浅析" class="headerlink" title="ROC、PR和REC曲线、AUC、AOC与肘部方法浅析"></a>ROC、PR和REC曲线、AUC、AOC与肘部方法浅析</h1><a id="more"></a>
+<h2 id="ROC与AUC"><a href="#ROC与AUC" class="headerlink" title="ROC与AUC"></a>ROC与AUC</h2><h3 id="ROC与AUC的基本概念"><a href="#ROC与AUC的基本概念" class="headerlink" title="ROC与AUC的基本概念"></a>ROC与AUC的基本概念</h3><ul>
 <li>在仅输出概率值的模型中，不能使用准确率、召回率等数值来衡量模型的好坏（除非人为设定了阈值）；这个时候需要一种衡量模型本身好坏而不是衡量阈值好坏，并且能够找到科学的阈值的方法。ROC（receiver operating characteristic）曲线正是这种方法。</li>
 <li>ROC曲线是用来衡量输出<strong>概率值</strong>的<strong>二分类</strong>模型的好坏的一种方法。</li>
 <li>AUC是ROC曲线与x轴围成的面积大小。</li>
 </ul>
-<h3 id="roc曲线画法">ROC曲线画法</h3>
-<ol type="1">
+<h3 id="ROC曲线画法"><a href="#ROC曲线画法" class="headerlink" title="ROC曲线画法"></a>ROC曲线画法</h3><ol>
 <li>条件：模型的输出是概率值而不是0和1</li>
 <li>人为设置不同阈值，以FPR（FP/N=FP/(FP+TN)，即误分为1的样例占所有0样例的比例）为横坐标，TPR或召回率（TP/P=TP/(TP+FN)，即正确分类为1的样例占所有1样例的比例）为纵坐标可以绘制出曲线</li>
 </ol>
-<h3 id="roc曲线特点">ROC曲线特点：</h3>
-<p><img src="http://159.75.52.53/img/blogimg/ROC/ROC_C.jpg"> 1. ROC曲线可以用来判定一个输出概率的模型（需要设定阈值）的好坏 2. ROC曲线越接近左上角，则模型越好 3. ROC曲线的面积（AUC）越接近1，则模型越好 4. ROC曲线的折线段数与样本的数量一致，所以样本越多，ROC曲线越光滑 <img src="http://159.75.52.53/img/blogimg/ROC/ROC.jpg" alt="ROC计算示意"> 5. 如上图所示，TPR用到的TP和FN同属P列，FPR用到的FP和TN同属N列，所以即使P或N的整体数量发生了改变，也不会影响到另一列。也就是说，即使正例与负例的比例发生了很大变化（样本不平衡），ROC曲线也不会产生大的变化。 6. 综上，ROC适合衡量一个模型本身，与PR相反。</p>
-<h3 id="肘部方法">肘部方法</h3>
-<ul>
+<h3 id="ROC曲线特点："><a href="#ROC曲线特点：" class="headerlink" title="ROC曲线特点："></a>ROC曲线特点：</h3><p><img src="http://159.75.52.53/img/blogimg/ROC/ROC_C.jpg" alt=""></p>
+<ol>
+<li>ROC曲线可以用来判定一个输出概率的模型（需要设定阈值）的好坏</li>
+<li>ROC曲线越接近左上角，则模型越好</li>
+<li>ROC曲线的面积（AUC）越接近1，则模型越好</li>
+<li>ROC曲线的折线段数与样本的数量一致，所以样本越多，ROC曲线越光滑<br><img src="http://159.75.52.53/img/blogimg/ROC/ROC.jpg" alt="ROC计算示意"></li>
+<li>如上图所示，TPR用到的TP和FN同属P列，FPR用到的FP和TN同属N列，所以即使P或N的整体数量发生了改变，也不会影响到另一列。也就是说，即使正例与负例的比例发生了很大变化（样本不平衡），ROC曲线也不会产生大的变化。</li>
+<li>综上，ROC适合衡量一个模型本身，与PR相反。</li>
+</ol>
+<h3 id="肘部方法"><a href="#肘部方法" class="headerlink" title="肘部方法"></a>肘部方法</h3><ul>
 <li>在实际模型的构建时，我们需要确定一个判断结果是否为1的阈值以输出二分类的结果。而阈值的选择是人为的，对模型的预测结果影响很大，所以需要一个科学的方法来确定阈值。</li>
 </ul>
-<ol type="1">
+<ol>
 <li>根据ROC图像的肘部可以确定阈值</li>
-<li>分析： 假设样本平衡，即<span class="math inline">\(P=N\)</span>，有如下证明：</li>
+<li>分析：<br>假设样本平衡，即$P=N$，有如下证明：</li>
 </ol>
-<p><span class="math display">\[
-FPR=\frac{FP}{N}=\frac{FP}{FP+TN}
-\]</span></p>
-<p><span class="math display">\[
-TPR=\frac{TP}{P}=\frac{TP}{TP+FN}
-\]</span></p>
-<p><span class="math display">\[
-\because{P=N} 
-\]</span></p>
-<p><span class="math display">\[
-\therefore{
-    \frac{FPR}{TPR}=\frac{FP}{TP}
-}
-\]</span></p>
+<p>$$<br>FPR=\frac{FP}{N}=\frac{FP}{FP+TN}<br>$$</p>
+<p>$$<br>TPR=\frac{TP}{P}=\frac{TP}{TP+FN}<br>$$</p>
+<p>$$<br>\because{P=N}<br>$$</p>
+<p>$$<br>\therefore{<br>    \frac{FPR}{TPR}=\frac{FP}{TP}<br>}<br>$$</p>
 <p>要使模型更好，则FP越小越好，TP越大越好；则纵坐标比横坐标的比值越大越好；在比值一定的情况下，若将FP和TP看作同等重要，则纵坐标越大越好（比值不变时，我们希望TP越大越好），所以选择肘部处的阈值最合适。</p>
-<h2 id="pr曲线">PR曲线</h2>
-<h3 id="pr曲线画法">PR曲线画法</h3>
-<ul>
+<h2 id="PR曲线"><a href="#PR曲线" class="headerlink" title="PR曲线"></a>PR曲线</h2><h3 id="PR曲线画法"><a href="#PR曲线画法" class="headerlink" title="PR曲线画法"></a>PR曲线画法</h3><ul>
 <li>人为设置不同阈值，以召回率recall（TP/P=TP/(TP+FN)），为横坐标，准确率Precision（TP/(TP+FP)）为纵坐标，绘制出PR曲线。</li>
 <li>PR曲线展示的是Precision vs Recall的曲线，PR曲线与ROC曲线的相同点是都采用了TPR (Recall)，都可以用AUC来衡量分类器的效果。不同点是ROC曲线使用了FPR，而PR曲线使用了Precision，因此PR曲线的两个指标都聚焦于正例。类别不平衡问题中由于主要关心正例，所以在此情况下PR曲线被认为优于ROC曲线。</li>
 </ul>
-<h3 id="pr曲线特点">PR曲线特点</h3>
-<p><img src="http://159.75.52.53/img/blogimg/ROC/PR.jpg"></p>
-<ol type="1">
+<h3 id="PR曲线特点"><a href="#PR曲线特点" class="headerlink" title="PR曲线特点"></a>PR曲线特点</h3><p><img src="http://159.75.52.53/img/blogimg/ROC/PR.jpg" alt=""></p>
+<ol>
 <li>PR曲线可以用来判定一个输出概率的模型（需要设定阈值）的好坏</li>
 <li>PR曲线越接近右上角，则模型越好</li>
 <li>PR曲线的面积（AUC）越接近1，则模型越好</li>
@@ -301,39 +290,29 @@ TPR=\frac{TP}{P}=\frac{TP}{TP+FN}
 <li>PR曲线使用了Recall与Precision，因此PR曲线的两个指标都聚焦于正例。</li>
 <li>综上，PR适合衡量一个模型在正样例上的表现，适合处理<strong>不平衡</strong>问题。</li>
 </ol>
-<h2 id="regression-error-characteristic">Regression Error Characteristic</h2>
-<h3 id="简介">简介</h3>
-<ul>
+<h2 id="Regression-Error-Characteristic"><a href="#Regression-Error-Characteristic" class="headerlink" title="Regression Error Characteristic"></a>Regression Error Characteristic</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
 <li>REC曲线是在ROC曲线的基础下提出的用来衡量<strong>回归模型</strong>好坏的方法。</li>
 </ul>
-<h3 id="作图方法">作图方法</h3>
-<ul>
+<h3 id="作图方法"><a href="#作图方法" class="headerlink" title="作图方法"></a>作图方法</h3><ul>
 <li>REC曲线的横坐标是回归误差容忍度ε，纵坐标是在容忍度内的“正确分类”的百分比，即若在容忍度内则记为“正确分类”时模型的准确率。通过更改容忍度可绘制出REC曲线。</li>
 <li>在容忍度内的定义：</li>
 </ul>
-<ol type="1">
+<ol>
 <li>首先定义一个代价函数，如差值平方、绝对值等。</li>
 <li>若代价函数小于ε，则认定该预测在容忍度内预测正确。</li>
 </ol>
-<h3 id="特点">特点</h3>
-<h4 id="aoc">AOC</h4>
-<ul>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><h4 id="AOC"><a href="#AOC" class="headerlink" title="AOC"></a>AOC</h4><ul>
 <li>AOC（area-over-the-curve）面积为该模型的不准确率的期望，即随机选择一个阈值时，1与其准确率的期望的差。</li>
 <li>其定义为：</li>
 </ul>
-<p><span class="math display">\[
-E(ε)=\int_{0}^{ε_{m}}p(ε)dε+\int_{ε_{m}}^{+\infty}p(ε)dε
-\]</span> 即曲线与y=1所围成的面积。</p>
+<p>$$<br>E(ε)=\int_{0}^{ε<em>{m}}p(ε)dε+\int</em>{ε_{m}}^{+\infty}p(ε)dε<br>$$<br>即曲线与y=1所围成的面积。</p>
 <p>（原论文中的公式如下，个人感觉不太对，在这里也贴出来：）</p>
-<p><span class="math display">\[
-E(ε)=\int_{0}^{ε_{m}}εp(ε)dε+\int_{ε_{m}}^{+\infty}εp(ε)dε
-\]</span></p>
-<p><img src="http://159.75.52.53/img/blogimg/ROC/REC.png"></p>
+<p>$$<br>E(ε)=\int_{0}^{ε<em>{m}}εp(ε)dε+\int</em>{ε_{m}}^{+\infty}εp(ε)dε<br>$$</p>
+<p><img src="http://159.75.52.53/img/blogimg/ROC/REC.png" alt=""></p>
 <ul>
-<li>由图像可以得出，AOC只需要计算<span class="math inline">\(ε_m\)</span>之前的积分就够了。</li>
+<li>由图像可以得出，AOC只需要计算$ε_m$之前的积分就够了。</li>
 </ul>
-<h4 id="rec曲线特点">REC曲线特点：</h4>
-<ol type="1">
+<h4 id="REC曲线特点："><a href="#REC曲线特点：" class="headerlink" title="REC曲线特点："></a>REC曲线特点：</h4><ol>
 <li>REC曲线可以用来判定一个输出概率的模型（需要设定阈值）的好坏</li>
 <li>REC曲线越接近左上角，则模型越好</li>
 <li>AOC越接近0，则模型越好</li>
@@ -341,13 +320,11 @@ E(ε)=\int_{0}^{ε_{m}}εp(ε)dε+\int_{ε_{m}}^{+\infty}εp(ε)dε
 <li>由于REC的横纵坐标与样本比例无关，与ROC类似，即使正例与负例的比例发生了很大变化（样本不平衡），REC曲线也不会产生大的变化。</li>
 <li>综上，REC适合衡量一个模型本身。</li>
 </ol>
-<h3 id="肘部方法-1">肘部方法</h3>
-<ul>
+<h3 id="肘部方法-1"><a href="#肘部方法-1" class="headerlink" title="肘部方法"></a>肘部方法</h3><ul>
 <li>与ROC类似，REC也有肘部方法可以用来确定合适的ε值，我们希望模型越精细越好，所以ε越小越好；同时我们也希望准确率越大越好。如果将这两个指标等同看待，则有肘部处的ε最好（证明方法跟ROC基本一致）。</li>
 </ul>
-<h2 id="参考资料">参考资料</h2>
-<ul>
-<li>https://zhuanlan.zhihu.com/p/34655990</li>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/34655990" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/34655990</a></li>
 <li><a href="https://pdfs.semanticscholar.org/2acd/f559300dd37f235642c0dbdbfe1d7118b250.pdf" target="_blank" rel="external">Regression Error Characteristic Curves</a></li>
 </ul>
 

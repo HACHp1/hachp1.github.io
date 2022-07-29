@@ -5,18 +5,18 @@
     
     <title>[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区 前言 最近日常刷刷buu，发现[网鼎杯2018]Unfinish这题的wp很多都出现了理解错误，将二次注入和insert注入混为一谈，遂手动调之，并作出自己的纠正。">
+    <meta name="description" content="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区前言最近日常刷刷buu，发现[网鼎杯2018]Unfinish这题的wp很多都出现了理解错误，将二次注入和insert注入混为一谈，遂手动调之，并作出自己的纠正。">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20201126-wdbunfinish.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区 前言 最近日常刷刷buu，发现[网鼎杯2018]Unfinish这题的wp很多都出现了理解错误，将二次注入和insert注入混为一谈，遂手动调之，并作出自己的纠正。">
+<meta property="og:description" content="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区前言最近日常刷刷buu，发现[网鼎杯2018]Unfinish这题的wp很多都出现了理解错误，将二次注入和insert注入混为一谈，遂手动调之，并作出自己的纠正。">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
 <meta property="og:updated_time" content="2021-10-29T11:39:32.403Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区">
-<meta name="twitter:description" content="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区 前言 最近日常刷刷buu，发现[网鼎杯2018]Unfinish这题的wp很多都出现了理解错误，将二次注入和insert注入混为一谈，遂手动调之，并作出自己的纠正。">
+<meta name="twitter:description" content="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区前言最近日常刷刷buu，发现[网鼎杯2018]Unfinish这题的wp很多都出现了理解错误，将二次注入和insert注入混为一谈，遂手动调之，并作出自己的纠正。">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
     
 
@@ -246,31 +246,25 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="网鼎杯2018unfinish-二次注入和insert注入的一个误区">[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</h1>
-<h2 id="前言">前言</h2>
-<p>最近日常刷刷buu，发现<code>[网鼎杯2018]Unfinish</code>这题的wp很多都出现了理解错误，将二次注入和insert注入混为一谈，遂手动调之，并作出自己的纠正。</p>
+			<h1 id="网鼎杯2018-Unfinish-二次注入和insert注入的一个误区"><a href="#网鼎杯2018-Unfinish-二次注入和insert注入的一个误区" class="headerlink" title="[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区"></a>[网鼎杯2018]Unfinish-二次注入和insert注入的一个误区</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近日常刷刷buu，发现<code>[网鼎杯2018]Unfinish</code>这题的wp很多都出现了理解错误，将二次注入和insert注入混为一谈，遂手动调之，并作出自己的纠正。</p>
 <a id="more"></a>
-<h2 id="误区">误区</h2>
-<ul>
+<h2 id="误区"><a href="#误区" class="headerlink" title="误区"></a>误区</h2><ul>
 <li>做题的时候搜了一下wp，看到各wp都说是二次注入，可能是看到注册功能就做题式地条件反射是二次注入；可是我仔细一想，这题不存在二次注入的条件：将数据库中的数据取出后，再一次代入查询语句中，因为直接查询出用户名就行了，并不需要将用户名再代入到语句中查询。</li>
 <li>然后我翻到源码，本地部署调试，发现并没有二次注入，是insert注入。</li>
-<li>再查了一下，发现很多大师傅的wp都写的二次注入，可见大家对二次注入的概念还存在很大误区： <img src="http://159.75.52.53/img/blogimg/wdbunfinish/search.png" alt="很多师傅存在误解"></li>
+<li>再查了一下，发现很多大师傅的wp都写的二次注入，可见大家对二次注入的概念还存在很大误区：<br><img src="http://159.75.52.53/img/blogimg/wdbunfinish/search.png" alt="很多师傅存在误解"></li>
 </ul>
-<h2 id="二次注入与insert注入">二次注入与insert注入</h2>
-<ul>
+<h2 id="二次注入与insert注入"><a href="#二次注入与insert注入" class="headerlink" title="二次注入与insert注入"></a>二次注入与insert注入</h2><ul>
 <li>二次注入：在第一次进行数据库插入数据的时候，仅仅只是使用了 <code>addslashes</code> 或者是借助 <code>get_magic_quotes_gpc</code> 对其中的特殊字符进行了转义，写入数据库时，转义符被去处。如果程序在下一次进行需要进行查询的时候，直接从数据库中取出脏数据拼接进入SQL语句，没有进行进一步的检验和处理，这样就会造成二次注入。</li>
 <li>insert注入，顾名思义，就是insert操作时过滤不严存在注入。</li>
 <li>两者完全是从不同维度对注入进行分类，二次注入是从数据流动过程来分类（payload被拼接进SQL语句两次）；insert注入则是从执行语句来分类（执行的是insert语句）；也就是说，insert注入可以是二次注入，也可以是一次注入，比如，在二次注入的过程中，第二次执行SQL语句用到的是insert语句，那么它就是个insert注入。</li>
 <li>回到题目，这题是个insert注入，具体分析见下文。</li>
 </ul>
-<h2 id="具体分析">具体分析</h2>
-<p>题目漏洞点很简单，用户名在入库时过滤不严，只调用了<code>waf</code>函数，对黑名单字符串进行判断： <img src="http://159.75.52.53/img/blogimg/wdbunfinish/waf.png" alt="waf函数"></p>
-<p>如果我们构造的语句使insert语句拼接后合法，就会造成insert注入，并将数据写入到数据库中： <img src="http://159.75.52.53/img/blogimg/wdbunfinish/SQLI.png" alt="注入点"></p>
+<h2 id="具体分析"><a href="#具体分析" class="headerlink" title="具体分析"></a>具体分析</h2><p>题目漏洞点很简单，用户名在入库时过滤不严，只调用了<code>waf</code>函数，对黑名单字符串进行判断：<br><img src="http://159.75.52.53/img/blogimg/wdbunfinish/waf.png" alt="waf函数"></p>
+<p>如果我们构造的语句使insert语句拼接后合法，就会造成insert注入，并将数据写入到数据库中：<br><img src="http://159.75.52.53/img/blogimg/wdbunfinish/SQLI.png" alt="注入点"></p>
 <p>需要注意的是，这里用到了数字注入，具体而言，字符串包裹的数字如果以<code>+</code>号连接，则被当做数字处理，可以进行运算：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">MariaDB [web]&gt; select &apos;1&apos;+&apos;1&apos;;</div><div class="line">+---------+</div><div class="line">| &apos;1&apos;+&apos;1&apos; |</div><div class="line">+---------+</div><div class="line">|       2 |</div><div class="line">+---------+</div></pre></td></tr></table></figure>
-<p>所以这题直接构造<code>username=0'%2b(select hex(database()))%2b'0</code>即可将<code>database()</code>插入数据库，登录后就能看到其十六进制编码结果，从而达到注入效果。很明显，这并不是一个二次注入。</p>
-<h2 id="总结">总结</h2>
-<ul>
+<p>所以这题直接构造<code>username=0&#39;%2b(select hex(database()))%2b&#39;0</code>即可将<code>database()</code>插入数据库，登录后就能看到其十六进制编码结果，从而达到注入效果。很明显，这并不是一个二次注入。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>注册处存在的注入不一定是二次注入，做题还是要在理解的基础上进行</li>
 <li>insert注入一般通过再次查询取出我们感兴趣的数据，这一点和二次注入有相似的地方，很可能是这里造成了很多师傅的误解。</li>
 </ul>
