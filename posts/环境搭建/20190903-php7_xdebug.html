@@ -5,18 +5,18 @@
     
     <title>docker中的php7代码调试 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="docker中的php7代码调试前言 最近想好好看看PHP反序列化POP链的构造，加上之前遇到的laravel的题，想把挖的坑埋了，于是开始漫长的环境搭建之旅。。。 由于laravel是在PHP7环境下的框架，我在物理机上使用的phpstudy怎么都无法成功调试，最近又迷上docker的一次搭建万年使用并且随时还原的方便（使用爽，构建火葬场）；使用docker可以做到php版本灵活切换，在这里把遇">
+    <meta name="description" content="docker中的php7代码调试 前言  最近想好好看看PHP反序列化POP链的构造，加上之前遇到的laravel的题，想把挖的坑埋了，于是开始漫长的环境搭建之旅。。。 由于laravel是在PHP7环境下的框架，我在物理机上使用的phpstudy怎么都无法成功调试，最近又迷上docker的一次搭建万年使用并且随时还原的方便（使用爽，构建火葬场）；使用docker可以做到php版本灵活切换">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="docker中的php7代码调试">
 <meta property="og:url" content="https://hachp1.github.io/posts/环境搭建/20190903-php7_xdebug.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="docker中的php7代码调试前言 最近想好好看看PHP反序列化POP链的构造，加上之前遇到的laravel的题，想把挖的坑埋了，于是开始漫长的环境搭建之旅。。。 由于laravel是在PHP7环境下的框架，我在物理机上使用的phpstudy怎么都无法成功调试，最近又迷上docker的一次搭建万年使用并且随时还原的方便（使用爽，构建火葬场）；使用docker可以做到php版本灵活切换，在这里把遇">
+<meta property="og:description" content="docker中的php7代码调试 前言  最近想好好看看PHP反序列化POP链的构造，加上之前遇到的laravel的题，想把挖的坑埋了，于是开始漫长的环境搭建之旅。。。 由于laravel是在PHP7环境下的框架，我在物理机上使用的phpstudy怎么都无法成功调试，最近又迷上docker的一次搭建万年使用并且随时还原的方便（使用爽，构建火葬场）；使用docker可以做到php版本灵活切换">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
 <meta property="og:updated_time" content="2021-10-29T11:39:31.311Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker中的php7代码调试">
-<meta name="twitter:description" content="docker中的php7代码调试前言 最近想好好看看PHP反序列化POP链的构造，加上之前遇到的laravel的题，想把挖的坑埋了，于是开始漫长的环境搭建之旅。。。 由于laravel是在PHP7环境下的框架，我在物理机上使用的phpstudy怎么都无法成功调试，最近又迷上docker的一次搭建万年使用并且随时还原的方便（使用爽，构建火葬场）；使用docker可以做到php版本灵活切换，在这里把遇">
+<meta name="twitter:description" content="docker中的php7代码调试 前言  最近想好好看看PHP反序列化POP链的构造，加上之前遇到的laravel的题，想把挖的坑埋了，于是开始漫长的环境搭建之旅。。。 由于laravel是在PHP7环境下的框架，我在物理机上使用的phpstudy怎么都无法成功调试，最近又迷上docker的一次搭建万年使用并且随时还原的方便（使用爽，构建火葬场）；使用docker可以做到php版本灵活切换">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
     
 
@@ -246,40 +246,43 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="docker中的php7代码调试"><a href="#docker中的php7代码调试" class="headerlink" title="docker中的php7代码调试"></a>docker中的php7代码调试</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
+			<h1 id="docker中的php7代码调试">docker中的php7代码调试</h1>
+<h2 id="前言">前言</h2>
+<ul>
 <li>最近想好好看看PHP反序列化POP链的构造，加上之前遇到的laravel的题，想把挖的坑埋了，于是开始漫长的环境搭建之旅。。。</li>
 <li>由于laravel是在PHP7环境下的框架，我在物理机上使用的phpstudy怎么都无法成功调试，最近又迷上docker的一次搭建万年使用并且随时还原的方便（使用爽，构建火葬场）；使用docker可以做到php版本灵活切换，在这里把遇到的坑和一些产物记录下来。</li>
 </ul>
 <a id="more"></a>
-<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><ul>
-<li>本文的搭建方法主要参考自<a href="http://ramkulkarni.com/blog/setting-up-and-debugging-php7-in-docker/" target="_blank" rel="external">http://ramkulkarni.com/blog/setting-up-and-debugging-php7-in-docker/</a></li>
+<h2 id="搭建过程">搭建过程</h2>
+<ul>
+<li>本文的搭建方法主要参考自http://ramkulkarni.com/blog/setting-up-and-debugging-php7-in-docker/</li>
 </ul>
-<h3 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h3><ul>
+<h3 id="坑">坑</h3>
+<ul>
 <li>国内环境下原Dockerfile不能成功下载程序</li>
 <li>原文中的VScode配置过时，需要更改为新的模式</li>
 <li>PHPstorm在配好环境后仍然不能正常debug，只能停在第一行的断点处，并且继续执行下一行时失去连接。抓包后可以看到双方都有通讯，从而不是服务器端的问题。</li>
 <li>吹爆VScode！</li>
 </ul>
-<h3 id="踩完坑后的搭建过程"><a href="#踩完坑后的搭建过程" class="headerlink" title="踩完坑后的搭建过程"></a>踩完坑后的搭建过程</h3><h4 id="Docker服务器端"><a href="#Docker服务器端" class="headerlink" title="Docker服务器端"></a>Docker服务器端</h4><ul>
-<li>Dockerfile已上传：<a href="https://github.com/HACHp1/docker_php7_apache_xdebug" target="_blank" rel="external">https://github.com/HACHp1/docker_php7_apache_xdebug</a></li>
-<li>首先，修改php.ini文件使之与你的环境一致：<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[xdebug]</div><div class="line">zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20160303/xdebug.so #（此处如果要更改php7的版本，则需要进一步操作，操作在后文中出现）</div><div class="line">xdebug.remote_enable=1</div><div class="line">xdebug.remote_autostart=1</div><div class="line">xdebug.remote_host=192.168.153.1 #（此处修改为你VScode所在的主机）</div><div class="line">xdebug.remote_port=9000</div></pre></td></tr></table></figure>
-</li>
+<h3 id="踩完坑后的搭建过程">踩完坑后的搭建过程</h3>
+<h4 id="docker服务器端">Docker服务器端</h4>
+<ul>
+<li>Dockerfile已上传：https://github.com/HACHp1/docker_php7_apache_xdebug</li>
+<li>首先，修改php.ini文件使之与你的环境一致： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">[xdebug]</div><div class="line">zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20160303/xdebug.so #（此处如果要更改php7的版本，则需要进一步操作，操作在后文中出现）</div><div class="line">xdebug.remote_enable=1</div><div class="line">xdebug.remote_autostart=1</div><div class="line">xdebug.remote_host=192.168.153.1 #（此处修改为你VScode所在的主机）</div><div class="line">xdebug.remote_port=9000</div></pre></td></tr></table></figure></li>
 </ul>
-<p>然后，build Dockerfile：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker build -t php7_xdebug .</div></pre></td></tr></table></figure></p>
+<p>然后，build Dockerfile： <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker build -t php7_xdebug .</div></pre></td></tr></table></figure></p>
 <p>记下返回的id。</p>
 <ul>
-<li>然后运行container：<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -d -p 10086:80 --name php7_xdebug --restart=always 刚刚返回的id</div></pre></td></tr></table></figure>
-</li>
+<li>然后运行container： <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">docker run -d -p 10086:80 --name php7_xdebug --restart=always 刚刚返回的id</div></pre></td></tr></table></figure></li>
 </ul>
-<h4 id="VScode端"><a href="#VScode端" class="headerlink" title="VScode端"></a>VScode端</h4><ul>
+<h4 id="vscode端">VScode端</h4>
+<ul>
 <li>在插件中直接搜索安装 PHP Debug</li>
-<li><p>在配置中设置，其中的<code>pathMappings</code>后面设置VScode端的项目路径，此处设置了本地到远程的文件目录映射：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">            &quot;name&quot;: &quot;Listen for XDebug&quot;,</div><div class="line">            &quot;type&quot;: &quot;php&quot;,</div><div class="line">            &quot;request&quot;: &quot;launch&quot;,</div><div class="line">            &quot;stopOnEntry&quot;: true,</div><div class="line">            &quot;pathMappings&quot;: &#123;</div><div class="line">                &quot;/var/www/html&quot;:&quot;C:\\Users\\...\\php7_docker&quot;</div><div class="line">            &#125;,</div><div class="line">            &quot;port&quot;: 9000</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
-</li>
-<li><p>至此，就可以打好断点愉快地debug了：<br><img src="http://159.75.52.53/img/blogimg/php7_xdebug/1.png" alt=""></p>
-</li>
+<li><p>在配置中设置，其中的<code>pathMappings</code>后面设置VScode端的项目路径，此处设置了本地到远程的文件目录映射： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">            &quot;name&quot;: &quot;Listen for XDebug&quot;,</div><div class="line">            &quot;type&quot;: &quot;php&quot;,</div><div class="line">            &quot;request&quot;: &quot;launch&quot;,</div><div class="line">            &quot;stopOnEntry&quot;: true,</div><div class="line">            &quot;pathMappings&quot;: &#123;</div><div class="line">                &quot;/var/www/html&quot;:&quot;C:\\Users\\...\\php7_docker&quot;</div><div class="line">            &#125;,</div><div class="line">            &quot;port&quot;: 9000</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p></li>
+<li><p>至此，就可以打好断点愉快地debug了： <img src="http://159.75.52.53/img/blogimg/php7_xdebug/1.png"></p></li>
 </ul>
-<h4 id="更改php7版本"><a href="#更改php7版本" class="headerlink" title="更改php7版本"></a>更改php7版本</h4><ul>
+<h4 id="更改php7版本">更改php7版本</h4>
+<ul>
 <li>首先修改Dockerfile中的php7版本</li>
 <li>构建并运行container后，输入：</li>
 </ul>
@@ -289,9 +292,10 @@
 <li>重新启动container中的服务器</li>
 <li>继续后续操作即可（换版本时主要是需要把php.ini中的路径重新设置好）</li>
 </ul>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="http://ramkulkarni.com/blog/setting-up-and-debugging-php7-in-docker/" target="_blank" rel="external">http://ramkulkarni.com/blog/setting-up-and-debugging-php7-in-docker/</a></li>
-<li><a href="https://jonathansblog.co.uk/remote-debugging-php-in-visual-studio-code-with-xdebug" target="_blank" rel="external">https://jonathansblog.co.uk/remote-debugging-php-in-visual-studio-code-with-xdebug</a></li>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li>http://ramkulkarni.com/blog/setting-up-and-debugging-php7-in-docker/</li>
+<li>https://jonathansblog.co.uk/remote-debugging-php-in-visual-studio-code-with-xdebug</li>
 </ul>
 
         
@@ -561,19 +565,15 @@
             <ul>
                 
                     <li>
-                        <a href="https://redogwu.github.io">redogWu</a>
-                    </li>
-                
-                    <li>
                         <a href="https://hpasserby.top/">Hpasserby</a>
                     </li>
                 
                     <li>
-                        <a href="https://xi4or0uji.github.io/">Xi4or0uji</a>
+                        <a href="https://redogwu.github.io">redogWu</a>
                     </li>
                 
                     <li>
-                        <a href="https://jygzyc.github.io">jygzyc</a>
+                        <a href="https://xi4or0uji.github.io/">Xi4or0uji</a>
                     </li>
                 
                     <li>

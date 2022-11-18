@@ -5,18 +5,18 @@
     
     <title>terminal和VIM的分屏简单命令 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Linux下的分屏在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。在这里小记一下几种简单的分屏命令。 1、terminal分屏使用tmux对terminal分屏，常用指令如下：  开启tmux：在terminal中输入tmux开启分屏。    tmux ls： 显示已有的tmux会话     tmux attach-session -t 数字： 选择tmux     tmux kill">
+    <meta name="description" content="Linux下的分屏 在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。 在这里小记一下几种简单的分屏命令。 1、terminal分屏 使用tmux对terminal分屏，常用指令如下：  开启tmux：在terminal中输入tmux开启分屏。 tmux ls： 显示已有的tmux会话 tmux attach-session -t 数字： 选择tmux tmux kill">
 <meta name="keywords" content="Linux日常">
 <meta property="og:type" content="article">
 <meta property="og:title" content="terminal和VIM的分屏简单命令">
 <meta property="og:url" content="https://hachp1.github.io/posts/Linux日常/20180406-vim&t.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="Linux下的分屏在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。在这里小记一下几种简单的分屏命令。 1、terminal分屏使用tmux对terminal分屏，常用指令如下：  开启tmux：在terminal中输入tmux开启分屏。    tmux ls： 显示已有的tmux会话     tmux attach-session -t 数字： 选择tmux     tmux kill">
+<meta property="og:description" content="Linux下的分屏 在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。 在这里小记一下几种简单的分屏命令。 1、terminal分屏 使用tmux对terminal分屏，常用指令如下：  开启tmux：在terminal中输入tmux开启分屏。 tmux ls： 显示已有的tmux会话 tmux attach-session -t 数字： 选择tmux tmux kill">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/vim.jpg">
 <meta property="og:updated_time" content="2022-02-22T12:12:08.583Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="terminal和VIM的分屏简单命令">
-<meta name="twitter:description" content="Linux下的分屏在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。在这里小记一下几种简单的分屏命令。 1、terminal分屏使用tmux对terminal分屏，常用指令如下：  开启tmux：在terminal中输入tmux开启分屏。    tmux ls： 显示已有的tmux会话     tmux attach-session -t 数字： 选择tmux     tmux kill">
+<meta name="twitter:description" content="Linux下的分屏 在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。 在这里小记一下几种简单的分屏命令。 1、terminal分屏 使用tmux对terminal分屏，常用指令如下：  开启tmux：在terminal中输入tmux开启分屏。 tmux ls： 显示已有的tmux会话 tmux attach-session -t 数字： 选择tmux tmux kill">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/vim.jpg">
     
 
@@ -246,77 +246,53 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="Linux下的分屏"><a href="#Linux下的分屏" class="headerlink" title="Linux下的分屏"></a>Linux下的分屏</h1><p>在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。<br>在这里小记一下几种简单的分屏命令。</p>
-<h2 id="1、terminal分屏"><a href="#1、terminal分屏" class="headerlink" title="1、terminal分屏"></a>1、terminal分屏</h2><p>使用tmux对terminal分屏，常用指令如下：</p>
+			<h1 id="linux下的分屏">Linux下的分屏</h1>
+<p>在远程登陆Linux时，要远程启动多个程序，分屏显得很重要。 在这里小记一下几种简单的分屏命令。</p>
+<h2 id="terminal分屏">1、terminal分屏</h2>
+<p>使用tmux对terminal分屏，常用指令如下：</p>
 <ul>
-<li><p>开启tmux：在terminal中输入tmux开启分屏。  </p>
-</li>
-<li><p>tmux ls： 显示已有的tmux会话   </p>
-</li>
-<li><p>tmux attach-session -t 数字： 选择tmux   </p>
-</li>
-<li><p>tmux kill-session -t session-name：关闭tmux    </p>
-</li>
-<li><p>开启鼠标移动、调节窗口大小等功能：[ctrl]+b+:后输入 set -g mouse on</p>
-</li>
+<li><p>开启tmux：在terminal中输入tmux开启分屏。</p></li>
+<li><p>tmux ls： 显示已有的tmux会话</p></li>
+<li><p>tmux attach-session -t 数字： 选择tmux</p></li>
+<li><p>tmux kill-session -t session-name：关闭tmux</p></li>
+<li><p>开启鼠标移动、调节窗口大小等功能：[ctrl]+b+:后输入 set -g mouse on</p></li>
 </ul>
 <a id="more"></a>
-<p>[ctrl+b]为tmux的指令输入前缀，以下指令为输入前缀指令后的指令：  </p>
+<p>[ctrl+b]为tmux的指令输入前缀，以下指令为输入前缀指令后的指令：</p>
 <ul>
-<li><p>上下分屏：”    </p>
-</li>
-<li><p>左右分屏: %    </p>
-</li>
-<li><p>切换屏幕：o    </p>
-</li>
-<li><p>关闭一个终端：x    </p>
-</li>
-<li><p>上下分屏与左右分屏切换：空格键    还可以调整分屏大小（平均化）</p>
-</li>
-<li><p>显示快捷键帮助：？   </p>
-</li>
-<li><p>移动到下一个窗口：n   貌似比较鸡肋</p>
-</li>
-<li><p>显示时钟：t （ps：显示效果还可以）   </p>
-</li>
-<li><p>临时退出session: d</p>
-</li>
-<li><p>列出session：tmux ls （不用前缀）</p>
-</li>
-<li><p>进入已存在的session：tmux a -t $session_name </p>
-</li>
-<li><p>关闭并删除所有session:[：]+ kill-server</p>
-</li>
-<li><p>复制模式 : [  空格标记复制开始，回车结束复制。</p>
-</li>
-<li><p>粘贴 ：]</p>
-</li>
+<li><p>上下分屏：&quot;</p></li>
+<li><p>左右分屏: %</p></li>
+<li><p>切换屏幕：o</p></li>
+<li><p>关闭一个终端：x</p></li>
+<li><p>上下分屏与左右分屏切换：空格键 还可以调整分屏大小（平均化）</p></li>
+<li><p>显示快捷键帮助：？</p></li>
+<li><p>移动到下一个窗口：n 貌似比较鸡肋</p></li>
+<li><p>显示时钟：t （ps：显示效果还可以）</p></li>
+<li><p>临时退出session: d</p></li>
+<li><p>列出session：tmux ls （不用前缀）</p></li>
+<li><p>进入已存在的session：tmux a -t $session_name</p></li>
+<li><p>关闭并删除所有session:[：]+ kill-server</p></li>
+<li><p>复制模式 : [ 空格标记复制开始，回车结束复制。</p></li>
+<li><p>粘贴 ：]</p></li>
 </ul>
-<h2 id="2、VIM分屏"><a href="#2、VIM分屏" class="headerlink" title="2、VIM分屏"></a>2、VIM分屏</h2><p>载入文件    </p>
+<h2 id="vim分屏">2、VIM分屏</h2>
+<p>载入文件</p>
 <ul>
-<li><p>在新的垂直分屏中打开文件:vs  文件路径/文件名    </p>
-</li>
-<li><p>在新的水平分屏中打开文件:sv  文件路径/文件名      </p>
-</li>
+<li><p>在新的垂直分屏中打开文件:vs 文件路径/文件名</p></li>
+<li><p>在新的水平分屏中打开文件:sv 文件路径/文件名</p></li>
 </ul>
-<p>与tmux类似，[ctrl+w]为VIM的指令输入前缀，以下指令为输入指令前缀后的指令： </p>
+<p>与tmux类似，[ctrl+w]为VIM的指令输入前缀，以下指令为输入指令前缀后的指令：</p>
 <ul>
-<li><p>下一个分屏：w   </p>
-</li>
-<li><p>上一个分屏：p   </p>
-</li>
-<li><p>使用 hjkl选择分屏  </p>
-</li>
-<li><p>新建分屏：n（new）貌似比较鸡肋   </p>
-</li>
-<li><p>水平分屏：s（split）貌似也比较鸡肋   </p>
-</li>
-<li><p>垂直分屏：v（vsplit) 还是比较鸡肋   </p>
-</li>
-<li><p>关闭分屏：c（close）或者直接命令模式 :q   </p>
-</li>
+<li><p>下一个分屏：w</p></li>
+<li><p>上一个分屏：p</p></li>
+<li><p>使用 hjkl选择分屏</p></li>
+<li><p>新建分屏：n（new）貌似比较鸡肋</p></li>
+<li><p>水平分屏：s（split）貌似也比较鸡肋</p></li>
+<li><p>垂直分屏：v（vsplit) 还是比较鸡肋</p></li>
+<li><p>关闭分屏：c（close）或者直接命令模式 :q</p></li>
 </ul>
-<h6 id="具体还有其他指令，不会再查，感觉够用了，懒得记"><a href="#具体还有其他指令，不会再查，感觉够用了，懒得记" class="headerlink" title="具体还有其他指令，不会再查，感觉够用了，懒得记:)"></a>具体还有其他指令，不会再查，感觉够用了，懒得记:)</h6>
+<h6 id="具体还有其他指令不会再查感觉够用了懒得记">具体还有其他指令，不会再查，感觉够用了，懒得记:)</h6>
+
         
         </div>
         
@@ -584,19 +560,15 @@
             <ul>
                 
                     <li>
-                        <a href="https://redogwu.github.io">redogWu</a>
-                    </li>
-                
-                    <li>
                         <a href="https://hpasserby.top/">Hpasserby</a>
                     </li>
                 
                     <li>
-                        <a href="https://xi4or0uji.github.io/">Xi4or0uji</a>
+                        <a href="https://redogwu.github.io">redogWu</a>
                     </li>
                 
                     <li>
-                        <a href="https://jygzyc.github.io">jygzyc</a>
+                        <a href="https://xi4or0uji.github.io/">Xi4or0uji</a>
                     </li>
                 
                     <li>

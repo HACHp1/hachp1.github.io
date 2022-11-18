@@ -5,18 +5,18 @@
     
     <title>GNN初探，The graph neural network model浅析 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="GNN初探，The graph neural network model浅析 目录    GNN初探，The graph neural network model浅析 图神经网络的任务分类 图神经网络的计算与优化过程 设计思路 数学定义 从单个节点总体认知GNN训练的大概流程 不动点的计算过程 反向传播 伪代码 Transition与Output函数的几种实现（原论文）   后记 参考资料">
+    <meta name="description" content="GNN初探，The graph neural network model浅析  目录  GNN初探，The graph neural network model浅析  图神经网络的任务分类 图神经网络的计算与优化过程  设计思路 数学定义 从单个节点总体认知GNN训练的大概流程 不动点的计算过程 反向传播 伪代码 Transition与Output函数的几种实现（原论文">
 <meta name="keywords" content="机器学习-算法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="GNN初探，The graph neural network model浅析">
 <meta property="og:url" content="https://hachp1.github.io/posts/机器学习/20200207-GNN_0.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="GNN初探，The graph neural network model浅析 目录    GNN初探，The graph neural network model浅析 图神经网络的任务分类 图神经网络的计算与优化过程 设计思路 数学定义 从单个节点总体认知GNN训练的大概流程 不动点的计算过程 反向传播 伪代码 Transition与Output函数的几种实现（原论文）   后记 参考资料">
+<meta property="og:description" content="GNN初探，The graph neural network model浅析  目录  GNN初探，The graph neural network model浅析  图神经网络的任务分类 图神经网络的计算与优化过程  设计思路 数学定义 从单个节点总体认知GNN训练的大概流程 不动点的计算过程 反向传播 伪代码 Transition与Output函数的几种实现（原论文">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/ml.jpg">
 <meta property="og:updated_time" content="2021-10-29T11:39:31.372Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GNN初探，The graph neural network model浅析">
-<meta name="twitter:description" content="GNN初探，The graph neural network model浅析 目录    GNN初探，The graph neural network model浅析 图神经网络的任务分类 图神经网络的计算与优化过程 设计思路 数学定义 从单个节点总体认知GNN训练的大概流程 不动点的计算过程 反向传播 伪代码 Transition与Output函数的几种实现（原论文）   后记 参考资料">
+<meta name="twitter:description" content="GNN初探，The graph neural network model浅析  目录  GNN初探，The graph neural network model浅析  图神经网络的任务分类 图神经网络的计算与优化过程  设计思路 数学定义 从单个节点总体认知GNN训练的大概流程 不动点的计算过程 反向传播 伪代码 Transition与Output函数的几种实现（原论文">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/ml.jpg">
     
 
@@ -246,14 +246,14 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="GNN初探，The-graph-neural-network-model浅析"><a href="#GNN初探，The-graph-neural-network-model浅析" class="headerlink" title="GNN初探，The graph neural network model浅析"></a>GNN初探，The graph neural network model浅析</h1><ul>
-<li>目录<!-- TOC -->
-</li>
-</ul>
+			<h1 id="gnn初探the-graph-neural-network-model浅析">GNN初探，The graph neural network model浅析</h1>
 <ul>
-<li><a href="#gnn初探the-graph-neural-network-model浅析">GNN初探，The graph neural network model浅析</a><ul>
+<li><p>目录 <!-- TOC --></p></li>
+<li><a href="#gnn初探the-graph-neural-network-model浅析">GNN初探，The graph neural network model浅析</a>
+<ul>
 <li><a href="#图神经网络的任务分类">图神经网络的任务分类</a></li>
-<li><a href="#图神经网络的计算与优化过程">图神经网络的计算与优化过程</a><ul>
+<li><a href="#图神经网络的计算与优化过程">图神经网络的计算与优化过程</a>
+<ul>
 <li><a href="#设计思路">设计思路</a></li>
 <li><a href="#数学定义">数学定义</a></li>
 <li><a href="#从单个节点总体认知gnn训练的大概流程">从单个节点总体认知GNN训练的大概流程</a></li>
@@ -261,105 +261,136 @@
 <li><a href="#反向传播">反向传播</a></li>
 <li><a href="#伪代码">伪代码</a></li>
 <li><a href="#transition与output函数的几种实现原论文">Transition与Output函数的几种实现（原论文）</a></li>
-</ul>
-</li>
+</ul></li>
 <li><a href="#后记">后记</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-<h2 id="图神经网络的任务分类"><a href="#图神经网络的任务分类" class="headerlink" title="图神经网络的任务分类"></a>图神经网络的任务分类</h2><ul>
+<h2 id="图神经网络的任务分类">图神经网络的任务分类</h2>
+<ul>
 <li>图神经网络的任务主要分为：graph-focused、node-focused；其中，graph-focused关心的是对整个图的分类，node-focused则更加精细，是以图中各节点为对象进行任务。</li>
 <li>graph-focused任务需要人为添加一个node用来代表整个神经网络的输出，从而与node-focused相统一。</li>
 </ul>
-<h2 id="图神经网络的计算与优化过程"><a href="#图神经网络的计算与优化过程" class="headerlink" title="图神经网络的计算与优化过程"></a>图神经网络的计算与优化过程</h2><h3 id="设计思路"><a href="#设计思路" class="headerlink" title="设计思路"></a>设计思路</h3><ul>
+<h2 id="图神经网络的计算与优化过程">图神经网络的计算与优化过程</h2>
+<h3 id="设计思路">设计思路</h3>
+<ul>
 <li>一般的嵌入方法难以生成稳定的嵌入网络，而GNN设计时紧靠Banach不动点理论进行，通过不动点的稳定性巧妙地得到可以稳定训练的网络。但是由于不动点的引进，训练过程较普通的神经网络更复杂。GNN的梯度下降过程由于不动点的引进不能直接使用，需要通过特定的公式进行更新。</li>
 </ul>
-<h3 id="数学定义"><a href="#数学定义" class="headerlink" title="数学定义"></a>数学定义</h3><ul>
-<li>图G：$(N, E)$，其中$N$表示节点（node）集合，$E$表示边（edge）集合。</li>
-<li>$ne[n]$表示节点$n$的邻居节点集合</li>
-<li>$co[n]$表示以节点$n$为顶点的边的集合。</li>
-<li>$l_n∈R^{lN}$表示节点$n$​的特征向量。</li>
-<li>$l_{(n_1, n_2)}∈R^{lE}$表示边$(n_1, n_2)$的特征向量</li>
-<li>$l$表示所有特征向量拼接的向量</li>
+<h3 id="数学定义">数学定义</h3>
+<ul>
+<li>图G：<span class="math inline">\((N, E)\)</span>，其中<span class="math inline">\(N\)</span>表示节点（node）集合，<span class="math inline">\(E\)</span>表示边（edge）集合。</li>
+<li><span class="math inline">\(ne[n]\)</span>表示节点<span class="math inline">\(n\)</span>的邻居节点集合</li>
+<li><span class="math inline">\(co[n]\)</span>表示以节点<span class="math inline">\(n\)</span>为顶点的边的集合。</li>
+<li><span class="math inline">\(l_n∈R^{lN}\)</span>表示节点<span class="math inline">\(n\)</span>​的特征向量。</li>
+<li><span class="math inline">\(l_{(n_1, n_2)}∈R^{lE}\)</span>表示边<span class="math inline">\((n_1, n_2)\)</span>的特征向量</li>
+<li><span class="math inline">\(l\)</span>表示所有特征向量拼接的向量</li>
 </ul>
-<h3 id="从单个节点总体认知GNN训练的大概流程"><a href="#从单个节点总体认知GNN训练的大概流程" class="headerlink" title="从单个节点总体认知GNN训练的大概流程"></a>从单个节点总体认知GNN训练的大概流程</h3><ul>
+<h3 id="从单个节点总体认知gnn训练的大概流程">从单个节点总体认知GNN训练的大概流程</h3>
+<ul>
 <li>GNN的训练过程与传统机器学习不同，每一大步训练都分为两个阶段：</li>
 </ul>
-<ol>
+<ol type="1">
 <li>图网络计算（更新的是<strong>各节点的状态值</strong>，依据Banach不动点理论，迭代出状态的收敛点）</li>
 <li>输出网络的训练（更新<strong>嵌入神经网络和输出神经网络的权重</strong>，根据特定的问题定制的LOSS函数使用梯度下降对输出网络的参数进行更新）</li>
 </ol>
 <ul>
-<li><p>经过以上这两步反复迭代多次，即可将GNN训练完成。</p>
-</li>
-<li><p>GNN的单个节点输入该点的状态值以及与其相关联的边特征、节点特征；输出为该节点的状态值（最后得到的状态值是不动点）</p>
-</li>
+<li><p>经过以上这两步反复迭代多次，即可将GNN训练完成。</p></li>
+<li><p>GNN的单个节点输入该点的状态值以及与其相关联的边特征、节点特征；输出为该节点的状态值（最后得到的状态值是不动点）</p></li>
 </ul>
-<h3 id="不动点的计算过程"><a href="#不动点的计算过程" class="headerlink" title="不动点的计算过程"></a>不动点的计算过程</h3><ul>
-<li>GNN中有两种主要函数（<strong>都包含待更新的权值</strong>，但求不动点时不更新）： <code>global transition function</code> $f_w$与 <code>global output function</code> $g_w$。 <code>global transition function</code> 将该点状态值、节点的邻居节点和邻接边的数据映射为该节点的状态值。 <code>global output function</code> 则根据具体任务将节点的状态值、节点的邻居节点和邻接边的数据映射为输出的结果。对于位置图（positional graph）（需要考虑节点之间的相对位置，如：在上方或下方连接）需要在$f_w$中加入inject函数：$\upsilon_n:ne[n]\to{1,…|N|}$以加入相对位置信息。</li>
-<li>两个函数的定义如下（节点$n$的状态表示为$x_n∈R^{s}$）：</li>
+<h3 id="不动点的计算过程">不动点的计算过程</h3>
+<ul>
+<li>GNN中有两种主要函数（<strong>都包含待更新的权值</strong>，但求不动点时不更新）： <code>global transition function</code> <span class="math inline">\(f_w\)</span>与 <code>global output function</code> <span class="math inline">\(g_w\)</span>。 <code>global transition function</code> 将该点状态值、节点的邻居节点和邻接边的数据映射为该节点的状态值。 <code>global output function</code> 则根据具体任务将节点的状态值、节点的邻居节点和邻接边的数据映射为输出的结果。对于位置图（positional graph）（需要考虑节点之间的相对位置，如：在上方或下方连接）需要在<span class="math inline">\(f_w\)</span>中加入inject函数：<span class="math inline">\(\upsilon_n:ne[n]\to{1,...|N|}\)</span>以加入相对位置信息。</li>
+<li>两个函数的定义如下（节点<span class="math inline">\(n\)</span>的状态表示为<span class="math inline">\(x_n∈R^{s}\)</span>）：</li>
 </ul>
-<p>$$x_n=f_w(l_n, l_{co[n]}, x_{ne[n]}, l_{ne[n]})$$<br>$$o_n=g_w(x_n, l_n)$$<br>依据Banach不动点理论（原论文是将整个图中所有节点的$f_w$与$g_w$分别叠加为$F_w$与$G_w$，根据不动点理论得出的结果，即每次把所有节点的特征值叠在一起当输入，输出所有节点的拼接值；单看一个节点，则有以下结论），以上两式可以迭代求出不动点：</p>
-<p>$$x_n(t+1)=f_w(l_n, l_{co[n]}, x_{ne[n]}(t), l_{ne[n]})$$<br>$$o_n(t)=g_w(x_n(T), l_n), n∈N$$</p>
+<p><span class="math display">\[x_n=f_w(l_n, l_{co[n]}, x_{ne[n]}, l_{ne[n]})\]</span> <span class="math display">\[o_n=g_w(x_n, l_n)\]</span> 依据Banach不动点理论（原论文是将整个图中所有节点的<span class="math inline">\(f_w\)</span>与<span class="math inline">\(g_w\)</span>分别叠加为<span class="math inline">\(F_w\)</span>与<span class="math inline">\(G_w\)</span>，根据不动点理论得出的结果，即每次把所有节点的特征值叠在一起当输入，输出所有节点的拼接值；单看一个节点，则有以下结论），以上两式可以迭代求出不动点：</p>
+<p><span class="math display">\[x_n(t+1)=f_w(l_n, l_{co[n]}, x_{ne[n]}(t), l_{ne[n]})\]</span> <span class="math display">\[o_n(t)=g_w(x_n(T), l_n), n∈N\]</span></p>
 <ul>
 <li>迭代求不动点的过程与嵌入类似（将一个节点的图信息转化为特征向量），可以看作图embedding。</li>
 </ul>
-<h3 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h3><ul>
-<li>迭代出不动点后，针对目标任务的LOSS函数，使用梯度下降等算法对$f_w$与$g_w$中的权重进行更新。但是由于不动点的引进不能像普通神经网络直接使用，需要通过特定的公式进行更新。</li>
+<h3 id="反向传播">反向传播</h3>
+<ul>
+<li>迭代出不动点后，针对目标任务的LOSS函数，使用梯度下降等算法对<span class="math inline">\(f_w\)</span>与<span class="math inline">\(g_w\)</span>中的权重进行更新。但是由于不动点的引进不能像普通神经网络直接使用，需要通过特定的公式进行更新。</li>
 <li>LOSS函数定义如下：</li>
 </ul>
-<p>$$<br>e_w=\sum^{p}_{i=1}\sum^{q_i}<em>{j=1}(t</em>{i, j}-\varphi_w(G_i, n_{i, j}))^2<br>$$</p>
-<p>$$<br>其中，t为数据的正确分类，\varphi_w(G, n)=[G_w(\Psi(w), l_N)]_n<br>$$</p>
-<p>$$<br>\Psi(w)=F_w(\Psi(w), l)<br>$$</p>
+<p><span class="math display">\[
+e_w=\sum^{p}_{i=1}\sum^{q_i}_{j=1}(t_{i, j}-\varphi_w(G_i, n_{i, j}))^2
+\]</span></p>
+<p><span class="math display">\[
+其中，t为数据的正确分类，\varphi_w(G, n)=[G_w(\Psi(w), l_N)]_n
+\]</span></p>
+<p><span class="math display">\[
+\Psi(w)=F_w(\Psi(w), l)
+\]</span></p>
 <ul>
-<li>首先，引入中间函数$z(t)$：</li>
+<li>首先，引入中间函数<span class="math inline">\(z(t)\)</span>：</li>
 </ul>
-<p>$$<br>z(t)=z(t+1)\cdot\frac{\partial F_w}{\partial x}(x, l)+\frac{\partial e_w}{\partial o}\cdot\frac{\partial G_w}{\partial x}(x, l_N)<br>$$</p>
+<p><span class="math display">\[
+z(t)=z(t+1)\cdot\frac{\partial F_w}{\partial x}(x, l)+\frac{\partial e_w}{\partial o}\cdot\frac{\partial G_w}{\partial x}(x, l_N)
+\]</span></p>
 <ul>
-<li>经证明，序列$z(t), z(t-1), …$收敛至一个向量$z$，即$z=\lim_{t \to -\infty}z(t)$，并且收敛速度为指数级收敛，且与$z(T)$初值无关。</li>
+<li>经证明，序列<span class="math inline">\(z(t), z(t-1), ...\)</span>收敛至一个向量<span class="math inline">\(z\)</span>，即<span class="math inline">\(z=\lim_{t \to -\infty}z(t)\)</span>，并且收敛速度为指数级收敛，且与<span class="math inline">\(z(T)\)</span>初值无关。</li>
 <li>此外，还存在：</li>
 </ul>
-<p>$$<br>\frac{\partial e_w}{\partial w}=\frac{\partial e_w}{\partial o}\cdot\frac{\partial G_w}{\partial x}(x, l_N)+z\cdot\frac{\partial F_w}{\partial w}(x, l), 其中，x为GNN的稳定状态<br>$$</p>
+<p><span class="math display">\[
+\frac{\partial e_w}{\partial w}=\frac{\partial e_w}{\partial o}\cdot\frac{\partial G_w}{\partial x}(x, l_N)+z\cdot\frac{\partial F_w}{\partial w}(x, l), 其中，x为GNN的稳定状态
+\]</span></p>
 <ul>
 <li>GNN即使用上式进行梯度下降。</li>
 </ul>
-<h3 id="伪代码"><a href="#伪代码" class="headerlink" title="伪代码"></a>伪代码</h3><ul>
+<h3 id="伪代码">伪代码</h3>
+<ul>
 <li>整个训练过程的伪代码如下：</li>
 </ul>
-<p><img src="http://159.75.52.53/img/etc/GNN_pseudo_code.png" alt="GNN伪代码"></p>
-<h3 id="Transition与Output函数的几种实现（原论文）"><a href="#Transition与Output函数的几种实现（原论文）" class="headerlink" title="Transition与Output函数的几种实现（原论文）"></a>Transition与Output函数的几种实现（原论文）</h3><ul>
-<li>由于要使用Banach不动点理论，$f_w$需要满足一定的条件（$g_w$不用满足，原文直接使用DNN）</li>
-<li>原文给出了两种可用的$f_w$。</li>
-<li>两种方法都基于将$f_w(l_n, l_{co[n]}, x_{ne[n]}, l_{ne[n]})$改写成</li>
+<figure>
+<img src="http://159.75.52.53/img/etc/GNN_pseudo_code.png" alt="GNN伪代码"><figcaption>GNN伪代码</figcaption>
+</figure>
+<h3 id="transition与output函数的几种实现原论文">Transition与Output函数的几种实现（原论文）</h3>
+<ul>
+<li>由于要使用Banach不动点理论，<span class="math inline">\(f_w\)</span>需要满足一定的条件（<span class="math inline">\(g_w\)</span>不用满足，原文直接使用DNN）</li>
+<li>原文给出了两种可用的<span class="math inline">\(f_w\)</span>。</li>
+<li>两种方法都基于将<span class="math inline">\(f_w(l_n, l_{co[n]}, x_{ne[n]}, l_{ne[n]})\)</span>改写成</li>
 </ul>
-<p>$$<br>\sum_{u\in ne[n]}h_w(l_n,l_{(n,u)},x_u,l_u),n\in N<br>$$<br>即，对各邻居节点计算$h_w$之后求和。然后在此基础上分为Linear和nonLinear两种。</p>
-<ol>
+<p><span class="math display">\[
+\sum_{u\in ne[n]}h_w(l_n,l_{(n,u)},x_u,l_u),n\in N
+\]</span> 即，对各邻居节点计算<span class="math inline">\(h_w\)</span>之后求和。然后在此基础上分为Linear和nonLinear两种。</p>
+<ol type="1">
 <li>Linear(nonpositional) GNN</li>
 </ol>
-<p>$$<br>h_w(l_n,l_{(n,u)},x_u,l_u)=A_{n,u}x_u+b_n<br>$$</p>
-<p>$$<br>A_{n,u}=\frac{\mu}{s|ne[u]|}\cdot resize(\phi_w(l_n,l_{n,u},l_u))<br>$$</p>
-<p>其中，s为状态向量的维度，即节点个数；$\phi_w$函数为一层激活函数为$tanh$（或其他使$f_w$满足压缩映射条件的激活函数）的DNN</p>
-<p>$$<br>b_w=\rho_w(l_n)<br>$$</p>
-<p>$b_w$将特征向量映射为与节点数相同维度的向量。</p>
-<ol start="2">
+<p><span class="math display">\[
+h_w(l_n,l_{(n,u)},x_u,l_u)=A_{n,u}x_u+b_n
+\]</span></p>
+<p><span class="math display">\[
+A_{n,u}=\frac{\mu}{s|ne[u]|}\cdot resize(\phi_w(l_n,l_{n,u},l_u))
+\]</span></p>
+<p>其中，s为状态向量的维度，即节点个数；<span class="math inline">\(\phi_w\)</span>函数为一层激活函数为<span class="math inline">\(tanh\)</span>（或其他使<span class="math inline">\(f_w\)</span>满足压缩映射条件的激活函数）的DNN</p>
+<p><span class="math display">\[
+b_w=\rho_w(l_n)
+\]</span></p>
+<p><span class="math inline">\(b_w\)</span>将特征向量映射为与节点数相同维度的向量。</p>
+<ol start="2" type="1">
 <li>Nonelinear(nonpositional) GNN</li>
 </ol>
 <ul>
-<li>$h_w$为DNN，但LOSS函数添加一个惩罚项以保证$F_w$为压缩映射函数：</li>
+<li><span class="math inline">\(h_w\)</span>为DNN，但LOSS函数添加一个惩罚项以保证<span class="math inline">\(F_w\)</span>为压缩映射函数：</li>
 </ul>
-<p>$$<br>e_w=\sum^{p}_{i=1}\sum^{q_i}<em>{j=1}(t</em>{i, j}-\varphi_w(G_i, n_{i, j}))^2+\beta L(\left|\frac{\partial F_w}{\partial x}\right|)<br>$$</p>
-<p>$$<br>其中，L(y)在y&gt;\mu时为(y-\mu)^2，在y\leq\mu时为0，\mu \in (0,1),\mu被称为F_w的压缩系数<br>$$</p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><ul>
+<p><span class="math display">\[
+e_w=\sum^{p}_{i=1}\sum^{q_i}_{j=1}(t_{i, j}-\varphi_w(G_i, n_{i, j}))^2+\beta L(\left\|\frac{\partial F_w}{\partial x}\right\|)
+\]</span></p>
+<p><span class="math display">\[
+其中，L(y)在y&gt;\mu时为(y-\mu)^2，在y\leq\mu时为0，\mu \in (0,1),\mu被称为F_w的压缩系数
+\]</span></p>
+<h2 id="后记">后记</h2>
+<ul>
 <li>GNN的数据在网络的训练中与一般的神经网络不同，GNN会将每个数据单独建立为一个节点，并且在每一大步训练中对整个图更新。</li>
 <li>节点的状态值实际上为图嵌入，与词嵌入的思想一致。</li>
 <li>GNN与普通神经网络的最大区别在于图嵌入的过程、压缩映射函数的选择和训练（前向传播中的迭代操作）。</li>
 </ul>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://ieeexplore.ieee.org/document/4700287" target="_blank" rel="external">https://ieeexplore.ieee.org/document/4700287</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/76290138" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/76290138</a></li>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li>https://ieeexplore.ieee.org/document/4700287</li>
+<li>https://zhuanlan.zhihu.com/p/76290138</li>
 </ul>
 
         
@@ -629,19 +660,15 @@
             <ul>
                 
                     <li>
-                        <a href="https://redogwu.github.io">redogWu</a>
-                    </li>
-                
-                    <li>
                         <a href="https://hpasserby.top/">Hpasserby</a>
                     </li>
                 
                     <li>
-                        <a href="https://xi4or0uji.github.io/">Xi4or0uji</a>
+                        <a href="https://redogwu.github.io">redogWu</a>
                     </li>
                 
                     <li>
-                        <a href="https://jygzyc.github.io">jygzyc</a>
+                        <a href="https://xi4or0uji.github.io/">Xi4or0uji</a>
                     </li>
                 
                     <li>
