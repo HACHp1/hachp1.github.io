@@ -5,18 +5,18 @@
     
     <title>WMCTF2020 两道AI相关题目WP | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="WMCTF2020 两道AI相关题目WP   wmctf2020 两道AI相关题目WP  前言 Performance_artist  CRC校验 如何“识别”字母 Performance_artist解题过程 总结  Music_game_2  题目解读 Music_game_2解题过程 总结  解题脚本">
+    <meta name="description" content="WMCTF2020 两道AI相关题目WP  wmctf2020 两道AI相关题目WP 前言 Performance_artist CRC校验 如何“识别”字母 Performance_artist解题过程 总结   Music_game_2 题目解读 Music_game_2解题过程 总结   解题脚本">
 <meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WMCTF2020 两道AI相关题目WP">
 <meta property="og:url" content="https://hachp1.github.io/posts/机器学习/20200814-wm2020.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="WMCTF2020 两道AI相关题目WP   wmctf2020 两道AI相关题目WP  前言 Performance_artist  CRC校验 如何“识别”字母 Performance_artist解题过程 总结  Music_game_2  题目解读 Music_game_2解题过程 总结  解题脚本">
+<meta property="og:description" content="WMCTF2020 两道AI相关题目WP  wmctf2020 两道AI相关题目WP 前言 Performance_artist CRC校验 如何“识别”字母 Performance_artist解题过程 总结   Music_game_2 题目解读 Music_game_2解题过程 总结   解题脚本">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_yellow.jpg">
 <meta property="og:updated_time" content="2021-10-29T11:39:31.909Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WMCTF2020 两道AI相关题目WP">
-<meta name="twitter:description" content="WMCTF2020 两道AI相关题目WP   wmctf2020 两道AI相关题目WP  前言 Performance_artist  CRC校验 如何“识别”字母 Performance_artist解题过程 总结  Music_game_2  题目解读 Music_game_2解题过程 总结  解题脚本">
+<meta name="twitter:description" content="WMCTF2020 两道AI相关题目WP  wmctf2020 两道AI相关题目WP 前言 Performance_artist CRC校验 如何“识别”字母 Performance_artist解题过程 总结   Music_game_2 题目解读 Music_game_2解题过程 总结   解题脚本">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_yellow.jpg">
     
 
@@ -246,92 +246,68 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="wmctf2020-两道ai相关题目wp">WMCTF2020 两道AI相关题目WP</h1>
-<!-- TOC -->
+			<h1 id="WMCTF2020-两道AI相关题目WP"><a href="#WMCTF2020-两道AI相关题目WP" class="headerlink" title="WMCTF2020 两道AI相关题目WP"></a>WMCTF2020 两道AI相关题目WP</h1><!-- TOC -->
 <ul>
-<li><a href="#wmctf2020-两道ai相关题目wp">wmctf2020 两道AI相关题目WP</a>
-<ul>
+<li><a href="#wmctf2020-两道ai相关题目wp">wmctf2020 两道AI相关题目WP</a><ul>
 <li><a href="#前言">前言</a></li>
-<li><a href="#performance_artist">Performance_artist</a>
-<ul>
+<li><a href="#performance_artist">Performance_artist</a><ul>
 <li><a href="#crc校验">CRC校验</a></li>
 <li><a href="#如何识别字母">如何“识别”字母</a></li>
 <li><a href="#performance_artist解题过程">Performance_artist解题过程</a></li>
 <li><a href="#总结">总结</a></li>
-</ul></li>
-<li><a href="#music_game_2">Music_game_2</a>
-<ul>
+</ul>
+</li>
+<li><a href="#music_game_2">Music_game_2</a><ul>
 <li><a href="#题目解读">题目解读</a></li>
 <li><a href="#music_game_2解题过程">Music_game_2解题过程</a></li>
 <li><a href="#总结-1">总结</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#解题脚本">解题脚本</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-<h2 id="前言">前言</h2>
-<p>最近忙着搞论文的事情，已经有一段时间没有更新博客了；但是今年的wmctf2020中出现了两道AI相关的题目，吸引了我的目光。本来我是没有准备打这次比赛的，看到群里有大哥在说比赛有机器学习题目，这一下子引起了我的兴趣，不说了，干它就完事。<br>
-其实说的两道AI题目，实际用到AI技术的只有第二题。</p>
-<h2 id="performance_artist">Performance_artist</h2>
-<p>题目给出了一张拼接图片，并提示将flag以十六进制的手写形式储存在图片里，所以需要将图片“识别”为对应的数字或字母。</p>
-<h3 id="crc校验">CRC校验</h3>
-<p>首先，图片显示不全，需要根据crc校验还原其高度，经过还原后的图片：</p>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/wm2020/1.png" alt="attachment.png"><figcaption>attachment.png</figcaption>
-</figure>
-<h3 id="如何识别字母">如何“识别”字母</h3>
-<ul>
-<li>接触过机器学习的师傅对mnist数据集一定十分熟悉，这张图一眼就能看出mnist的痕迹，但是mnist是没有字母的。在网上搜了一下，发现是emnist数据集中的字母（mnist数据集的拓展数据集）<br>
-</li>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近忙着搞论文的事情，已经有一段时间没有更新博客了；但是今年的wmctf2020中出现了两道AI相关的题目，吸引了我的目光。本来我是没有准备打这次比赛的，看到群里有大哥在说比赛有机器学习题目，这一下子引起了我的兴趣，不说了，干它就完事。<br>其实说的两道AI题目，实际用到AI技术的只有第二题。</p>
+<h2 id="Performance-artist"><a href="#Performance-artist" class="headerlink" title="Performance_artist"></a>Performance_artist</h2><p>题目给出了一张拼接图片，并提示将flag以十六进制的手写形式储存在图片里，所以需要将图片“识别”为对应的数字或字母。</p>
+<h3 id="CRC校验"><a href="#CRC校验" class="headerlink" title="CRC校验"></a>CRC校验</h3><p>首先，图片显示不全，需要根据crc校验还原其高度，经过还原后的图片：</p>
+<p><img src="http://159.75.52.53/img/blogimg/wm2020/1.png" alt="attachment.png"></p>
+<h3 id="如何“识别”字母"><a href="#如何“识别”字母" class="headerlink" title="如何“识别”字母"></a>如何“识别”字母</h3><ul>
+<li>接触过机器学习的师傅对mnist数据集一定十分熟悉，这张图一眼就能看出mnist的痕迹，但是mnist是没有字母的。在网上搜了一下，发现是emnist数据集中的字母（mnist数据集的拓展数据集）  </li>
 <li>看到这个图，很多人第一时间想到的是训练一个神经网络来识别，但是神经网络识别跟肉眼识别差不多甚至效果更差，群里已经有师傅肉眼识别过了，发现不太行。这一点也卡了我一些时间。</li>
 <li>后来一想：这图既然是使用emnist和mnist数据集中的图片拼接成的，那么直接去数据集中寻找标准答案不就可以了吗。</li>
 </ul>
-<h3 id="performance_artist解题过程">Performance_artist解题过程</h3>
-<ul>
+<h3 id="Performance-artist解题过程"><a href="#Performance-artist解题过程" class="headerlink" title="Performance_artist解题过程"></a>Performance_artist解题过程</h3><ul>
 <li>接下来就好办了，参考mnist和emnist数据集官网的教程，直接下载原数据进行解析。能够读取数据集之后，我将题目中的图片按照像素的16进制储存为字符串，然后同样的，将原数据集中所有图片都存为16进制-label的key-value键值对。然后尝试解析了一下，能出结果了，解析出一个zip。这里有个坑：emnist数据集解析时横纵坐标颠倒了，需要再倒过来才行（这个点有点坑，我被坑了不少时间）；解题完整的脚本在本文文末，两个图像字符串化的关键代码为：</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">np2str</span><span class="params">(np_image)</span>:</span></div><div class="line">    tmp = <span class="string">''</span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> np_image:</div><div class="line">        tmp += hex(int(i))[<span class="number">2</span>:]</div><div class="line">    <span class="keyword">return</span> tmp</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">img2str</span><span class="params">(image)</span>:</span></div><div class="line">    tmp = <span class="string">''</span></div><div class="line">    np_img = np.array(image).reshape(<span class="number">-1</span>)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> np_img:</div><div class="line">        tmp += hex(int(i))[<span class="number">2</span>:]</div><div class="line">    <span class="keyword">return</span> tmp</div></pre></td></tr></table></figure>
 <ul>
 <li>直接解压zip，报错说有密码，套娃了，直接伪加密解压成功：</li>
 </ul>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/wm2020/2.png" alt="zip"><figcaption>zip</figcaption>
-</figure>
+<p><img src="http://159.75.52.53/img/blogimg/wm2020/2.png" alt="zip"></p>
 <p>提示brainfxxk编码，解码后得到flag：</p>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/wm2020/3.png" alt="flag"><figcaption>flag</figcaption>
-</figure>
-<h3 id="总结">总结</h3>
-<p>此题主要考做题者对机器学习数据集的熟练度，如果对mnist数据集比较熟悉，还是能够想到直接去原数据集找图片的。另外，此题还套娃了几层。</p>
-<h2 id="music_game_2">Music_game_2</h2>
-<p>这道题很有意思，坦克大战移动坦克。我没做 <code>Music_game_1</code> ，是听群里有师傅说是AI题我才看的。看群里师傅说 <code>Music_game_1</code> 要标准的英式发音来移动坦克走迷宫，感觉挺有意思的。</p>
-<h3 id="题目解读">题目解读</h3>
-<p>题目给出了一个网页，一个机器学习检测的源码、训练好的机器学习模型和一个left.wav的声音源。机器学习检测源码如下：</p>
+<p><img src="http://159.75.52.53/img/blogimg/wm2020/3.png" alt="flag"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>此题主要考做题者对机器学习数据集的熟练度，如果对mnist数据集比较熟悉，还是能够想到直接去原数据集找图片的。另外，此题还套娃了几层。</p>
+<h2 id="Music-game-2"><a href="#Music-game-2" class="headerlink" title="Music_game_2"></a>Music_game_2</h2><p>这道题很有意思，坦克大战移动坦克。我没做 <code>Music_game_1</code> ，是听群里有师傅说是AI题我才看的。看群里师傅说 <code>Music_game_1</code> 要标准的英式发音来移动坦克走迷宫，感觉挺有意思的。</p>
+<h3 id="题目解读"><a href="#题目解读" class="headerlink" title="题目解读"></a>题目解读</h3><p>题目给出了一个网页，一个机器学习检测的源码、训练好的机器学习模型和一个left.wav的声音源。机器学习检测源码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> librosa, librosa.display</div><div class="line"></div><div class="line"><span class="keyword">from</span> tensorflow <span class="keyword">import</span> keras</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_wav_mfcc</span><span class="params">(wav_path)</span>:</span></div><div class="line">    y, sr = librosa.load(wav_path,sr=<span class="keyword">None</span>)</div><div class="line">    data=librosa.feature.mfcc(y,sr=sr)</div><div class="line">    data=np.array(data)</div><div class="line"></div><div class="line">    <span class="string">'''to unified format'''</span></div><div class="line">    <span class="keyword">while</span> len(data[<span class="number">0</span>])&gt;<span class="number">30</span>:</div><div class="line">        data=np.delete(data,<span class="number">-1</span>,axis=<span class="number">1</span>)</div><div class="line">        data=np.delete(data,<span class="number">0</span>,axis=<span class="number">1</span>)</div><div class="line">    <span class="keyword">while</span> len(data[<span class="number">0</span>])&lt;<span class="number">30</span>:</div><div class="line">        data=np.insert(data,<span class="number">-1</span>,values=data.T[<span class="number">-1</span>],axis=<span class="number">1</span>)</div><div class="line">    <span class="keyword">return</span> data.T</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">checkdifferent</span><span class="params">(path)</span>:</span></div><div class="line">    mfcc1=get_wav_mfcc(<span class="string">'example.wav'</span>)</div><div class="line">    mfcc2=get_wav_mfcc(path)</div><div class="line">    <span class="keyword">if</span> np.mean(np.abs(mfcc1-mfcc2))&lt;<span class="number">4</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    <span class="keyword">else</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"></div><div class="line">model = keras.models.load_model(<span class="string">'model.h5'</span>)</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">detect</span><span class="params">(path)</span>:</span></div><div class="line">    ret=model.predict(get_wav_mfcc(path).reshape(<span class="number">1</span>,<span class="number">30</span>,<span class="number">20</span>))</div><div class="line">    <span class="keyword">return</span> (ret.max(),ret.argmax())</div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    path=<span class="string">'yours.wav'</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> checkdifferent(path):</div><div class="line">                print(<span class="string">'sorry,it is too different with example.wav'</span>)</div><div class="line">                exit()</div><div class="line">        (num,lable)=detect(path)</div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        print(<span class="string">'ERROR'</span>)</div><div class="line">        exit()</div><div class="line">    <span class="keyword">if</span> num&lt;<span class="number">0.9</span>:</div><div class="line">            print(<span class="string">"I can't detect with certainty"</span>)</div><div class="line">            exit()</div><div class="line">    <span class="keyword">if</span> lable==<span class="number">0</span>:</div><div class="line">        print(<span class="string">'up'</span>)</div><div class="line">    <span class="keyword">elif</span> lable==<span class="number">1</span>:</div><div class="line">        print(<span class="string">'left'</span>)</div><div class="line">    <span class="keyword">elif</span> lable==<span class="number">2</span>:</div><div class="line">        print(<span class="string">'down'</span>)</div><div class="line">    <span class="keyword">elif</span> lable==<span class="number">3</span>:</div><div class="line">        print(<span class="string">'right'</span>)</div><div class="line">    print(num)</div></pre></td></tr></table></figure>
 <p>给出的机器学习检测源码是一个将音频分类为上下左右四类的分类器，输出四个类别的概率。并且要求音源与给出的left.wav满足范式：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">np.mean(np.abs(mfcc1-mfcc2))&lt;<span class="number">4</span></div></pre></td></tr></table></figure>
 <p>还要输出的概率大于90%：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> num&lt;<span class="number">0.9</span>:</div><div class="line">            print(<span class="string">"I can't detect with certainty"</span>)</div><div class="line">            exit()</div></pre></td></tr></table></figure>
 <p>我们需要通过向网页发送音频文件来移动坦克，使之走迷宫并到达目的地，而后台使用这个机器学习分类器来识别我们给出的音频。意图很明显，我们需要找到left.wav的其他三个方向（上、下、右）的对抗样本，从而移动坦克，属于有目标逃逸攻击。</p>
-<h3 id="music_game_2解题过程">Music_game_2解题过程</h3>
-<ul>
+<h3 id="Music-game-2解题过程"><a href="#Music-game-2解题过程" class="headerlink" title="Music_game_2解题过程"></a>Music_game_2解题过程</h3><ul>
 <li>由于我之前接触过对抗样本，拿现成的代码来跑是很快的，但是我没做过音频的，此处生成的对抗样本是直接输入机器学习模型的向量。卡在了将对抗样本（mfcc特征）逆向转化为wav文件这步。卡了很久，查了很多资料才发现，最新的librosa库支持mfcc特征逆向转化为wav（就很难受）。接下来尝试fgm有目标攻击，直接调了三个方向的目标，得到了三个对抗样本。经测试，三个对抗样本都满足范式的要求，并且置信度大于90%。</li>
 <li>接下来到了最兴奋的环境，移动坦克！写个脚本传给网页，移动坦克走迷宫。坦克成功移动了：</li>
 </ul>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/wm2020/4.png" alt="坦克移动了"><figcaption>坦克移动了</figcaption>
-</figure>
+<p><img src="http://159.75.52.53/img/blogimg/wm2020/4.png" alt="坦克移动了"></p>
 <p>刚开始我还认真数了一张地图的移动次数和方向，但后来发现坦克的地图每个session都不一样，很难受。最后发现目的地总是在地图的右下角，我就先一通绕，最后几步无脑下下下右右右，终于拿到了flag：</p>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/wm2020/5.png" alt="拿到了flag"><figcaption>拿到了flag</figcaption>
-</figure>
+<p><img src="http://159.75.52.53/img/blogimg/wm2020/5.png" alt="拿到了flag"></p>
 <p>拿到flag的时候比赛已经快结束了，拿了个三血，挺激动的，整个题目的解题脚本在文末给出了地址。</p>
-<h3 id="总结-1">总结</h3>
-<p>这道题是一道很有意思的题目，结合了坦克大战游戏、Web脚本编写和对抗样本三个元素，游戏的背景让这题很有趣，并且较创新地考察了对抗样本技术。</p>
-<h2 id="解题脚本">解题脚本</h2>
-<ul>
-<li>最后，附上这两道AI相关的题目的解题脚本地址：<a href="https://github.com/HACHp1/WMCTF2020_MISC_AI_WP" class="uri" target="_blank" rel="external">https://github.com/HACHp1/WMCTF2020_MISC_AI_WP</a></li>
+<h3 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h3><p>这道题是一道很有意思的题目，结合了坦克大战游戏、Web脚本编写和对抗样本三个元素，游戏的背景让这题很有趣，并且较创新地考察了对抗样本技术。</p>
+<h2 id="解题脚本"><a href="#解题脚本" class="headerlink" title="解题脚本"></a>解题脚本</h2><ul>
+<li>最后，附上这两道AI相关的题目的解题脚本地址：<a href="https://github.com/HACHp1/WMCTF2020_MISC_AI_WP" target="_blank" rel="external">https://github.com/HACHp1/WMCTF2020_MISC_AI_WP</a></li>
 </ul>
 
         
@@ -630,7 +606,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2022 HACHp1<br>
+            &copy; 2023 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

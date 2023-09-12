@@ -244,27 +244,26 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="wmctf2020-两道ai相关题目wp">WMCTF2020 两道AI相关题目WP</h1>
-<!-- TOC -->
+            <p><h1 id="WMCTF2020-两道AI相关题目WP"><a href="#WMCTF2020-两道AI相关题目WP" class="headerlink" title="WMCTF2020 两道AI相关题目WP"></a>WMCTF2020 两道AI相关题目WP</h1><!-- TOC -->
 <ul>
-<li><a href="#wmctf2020-两道ai相关题目wp">wmctf2020 两道AI相关题目WP</a>
-<ul>
+<li><a href="#wmctf2020-两道ai相关题目wp">wmctf2020 两道AI相关题目WP</a><ul>
 <li><a href="#前言">前言</a></li>
-<li><a href="#performance_artist">Performance_artist</a>
-<ul>
+<li><a href="#performance_artist">Performance_artist</a><ul>
 <li><a href="#crc校验">CRC校验</a></li>
 <li><a href="#如何识别字母">如何“识别”字母</a></li>
 <li><a href="#performance_artist解题过程">Performance_artist解题过程</a></li>
 <li><a href="#总结">总结</a></li>
-</ul></li>
-<li><a href="#music_game_2">Music_game_2</a>
-<ul>
+</ul>
+</li>
+<li><a href="#music_game_2">Music_game_2</a><ul>
 <li><a href="#题目解读">题目解读</a></li>
 <li><a href="#music_game_2解题过程">Music_game_2解题过程</a></li>
 <li><a href="#总结-1">总结</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#解题脚本">解题脚本</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC --></p>
             <p class="article-more-link">
@@ -413,33 +412,29 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="pickle反序列化初探">pickle反序列化初探</h1>
-<p>本文首发于先知社区，链接：<a href="https://xz.aliyun.com/t/7436" class="uri" target="_blank" rel="external">https://xz.aliyun.com/t/7436</a></p>
+            <p><h1 id="pickle反序列化初探"><a href="#pickle反序列化初探" class="headerlink" title="pickle反序列化初探"></a>pickle反序列化初探</h1><p>本文首发于先知社区，链接：<a href="https://xz.aliyun.com/t/7436" target="_blank" rel="external">https://xz.aliyun.com/t/7436</a></p>
 <!-- TOC -->
 <ul>
-<li><a href="#pickle反序列化初探">pickle反序列化初探</a>
-<ul>
+<li><a href="#pickle反序列化初探">pickle反序列化初探</a><ul>
 <li><a href="#前言">前言</a></li>
-<li><a href="#基本知识">基本知识</a>
-<ul>
+<li><a href="#基本知识">基本知识</a><ul>
 <li><a href="#pickle简介">pickle简介</a></li>
 <li><a href="#可序列化的对象">可序列化的对象</a></li>
 <li><a href="#object__reduce__-函数"><code>object.__reduce__()</code> 函数</a></li>
-</ul></li>
-<li><a href="#pickle过程详细解读">pickle过程详细解读</a>
-<ul>
-<li><a href="#opcode简介">opcode简介</a>
-<ul>
+</ul>
+</li>
+<li><a href="#pickle过程详细解读">pickle过程详细解读</a><ul>
+<li><a href="#opcode简介">opcode简介</a><ul>
 <li><a href="#opcode版本">opcode版本</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#pickletools">pickletools</a></li>
-</ul></li>
-<li><a href="#漏洞利用">漏洞利用</a>
-<ul>
+</ul>
+</li>
+<li><a href="#漏洞利用">漏洞利用</a><ul>
 <li><a href="#利用思路">利用思路</a></li>
 <li><a href="#初步认识pickle-exp的简单demo">初步认识：pickle EXP的简单demo</a></li>
-<li><a href="#如何手写opcode">如何手写opcode</a>
-<ul>
+<li><a href="#如何手写opcode">如何手写opcode</a><ul>
 <li><a href="#常用opcode解析">常用opcode解析</a></li>
 <li><a href="#拼接opcode">拼接opcode</a></li>
 <li><a href="#全局变量覆盖">全局变量覆盖</a></li>
@@ -447,28 +442,28 @@
 <li><a href="#实例化对象">实例化对象</a></li>
 <li><a href="#pker的使用推荐">pker的使用（推荐）</a></li>
 <li><a href="#注意事项">注意事项</a></li>
-</ul></li>
-<li><a href="#ctf实战">CTF实战</a>
-<ul>
+</ul>
+</li>
+<li><a href="#ctf实战">CTF实战</a><ul>
 <li><a href="#做题之前了解pickleunpicklerfind_class">做题之前：了解<code>pickle.Unpickler.find_class()</code></a></li>
 <li><a href="#code-breakingpicklecode">Code-Breaking:picklecode</a></li>
 <li><a href="#watevrctf-2019pickle-store">watevrCTF-2019:Pickle Store</a></li>
 <li><a href="#高校战疫网络安全分享赛webtmp">高校战疫网络安全分享赛:webtmp</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#pker使用说明">pker使用说明</a>
-<ul>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#pker使用说明">pker使用说明</a><ul>
 <li><a href="#简介">简介</a></li>
 <li><a href="#pker能做的事">pker能做的事</a></li>
-<li><a href="#使用方法与示例">使用方法与示例</a>
-<ul>
+<li><a href="#使用方法与示例">使用方法与示例</a><ul>
 <li><a href="#pker全局变量覆盖">pker：全局变量覆盖</a></li>
 <li><a href="#pker函数执行">pker：函数执行</a></li>
 <li><a href="#pker实例化对象">pker：实例化对象</a></li>
 <li><a href="#手动辅助">手动辅助</a></li>
-</ul></li>
-<li><a href="#pkerctf实战">pker：CTF实战</a>
-<ul>
+</ul>
+</li>
+<li><a href="#pkerctf实战">pker：CTF实战</a><ul>
 <li><a href="#code-breaking-picklecode">Code-Breaking: picklecode</a></li>
 <li><a href="#balsnctfpyshv1">BalsnCTF:pyshv1</a></li>
 <li><a href="#balsnctfpyshv2">BalsnCTF:pyshv2</a></li>
@@ -476,11 +471,14 @@
 <li><a href="#watevrctf-2019-pickle-store">watevrCTF-2019: Pickle Store</a></li>
 <li><a href="#suctf-2019guess_game">SUCTF-2019:guess_game</a></li>
 <li><a href="#高校战疫网络安全分享赛-webtmp">高校战疫网络安全分享赛: webtmp</a></li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a href="#后记">后记</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC --></p>
             <p class="article-more-link">
@@ -629,27 +627,26 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="deepfool-a-simple-and-accurate-method-to-fool-deep-neural-networks浅读">DeepFool: a simple and accurate method to fool deep neural networks浅读</h1>
-<!-- TOC -->
+            <p><h1 id="DeepFool-a-simple-and-accurate-method-to-fool-deep-neural-networks浅读"><a href="#DeepFool-a-simple-and-accurate-method-to-fool-deep-neural-networks浅读" class="headerlink" title="DeepFool: a simple and accurate method to fool deep neural networks浅读"></a>DeepFool: a simple and accurate method to fool deep neural networks浅读</h1><!-- TOC -->
 <ul>
-<li><a href="#deepfool-a-simple-and-accurate-method-to-fool-deep-neural-networks浅读">DeepFool: a simple and accurate method to fool deep neural networks浅读</a>
-<ul>
+<li><a href="#deepfool-a-simple-and-accurate-method-to-fool-deep-neural-networks浅读">DeepFool: a simple and accurate method to fool deep neural networks浅读</a><ul>
 <li><a href="#简介">简介</a></li>
-<li><a href="#二分类下的公式证明">二分类下的公式证明</a>
-<ul>
+<li><a href="#二分类下的公式证明">二分类下的公式证明</a><ul>
 <li><a href="#证明">证明</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#多类别">多类别</a></li>
 <li><a href="#其他结论">其他结论</a></li>
-<li><a href="#经过小实验得到的一些结论">经过小实验得到的一些结论</a>
-<ul>
+<li><a href="#经过小实验得到的一些结论">经过小实验得到的一些结论</a><ul>
 <li><a href="#代码">代码</a></li>
 <li><a href="#注意事项">注意事项</a></li>
 <li><a href="#改变overshoot值得到生成样本">改变overshoot值得到生成样本</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#总结">总结</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC --></p>
             <p class="article-more-link">
@@ -798,14 +795,14 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="gnn初探the-graph-neural-network-model浅析">GNN初探，The graph neural network model浅析</h1>
+            <p><h1 id="GNN初探，The-graph-neural-network-model浅析"><a href="#GNN初探，The-graph-neural-network-model浅析" class="headerlink" title="GNN初探，The graph neural network model浅析"></a>GNN初探，The graph neural network model浅析</h1><ul>
+<li>目录<!-- TOC -->
+</li>
+</ul>
 <ul>
-<li><p>目录 <!-- TOC --></p></li>
-<li><a href="#gnn初探the-graph-neural-network-model浅析">GNN初探，The graph neural network model浅析</a>
-<ul>
+<li><a href="#gnn初探the-graph-neural-network-model浅析">GNN初探，The graph neural network model浅析</a><ul>
 <li><a href="#图神经网络的任务分类">图神经网络的任务分类</a></li>
-<li><a href="#图神经网络的计算与优化过程">图神经网络的计算与优化过程</a>
-<ul>
+<li><a href="#图神经网络的计算与优化过程">图神经网络的计算与优化过程</a><ul>
 <li><a href="#设计思路">设计思路</a></li>
 <li><a href="#数学定义">数学定义</a></li>
 <li><a href="#从单个节点总体认知gnn训练的大概流程">从单个节点总体认知GNN训练的大概流程</a></li>
@@ -813,10 +810,12 @@
 <li><a href="#反向传播">反向传播</a></li>
 <li><a href="#伪代码">伪代码</a></li>
 <li><a href="#transition与output函数的几种实现原论文">Transition与Output函数的几种实现（原论文）</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#后记">后记</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC --></p>
             <p class="article-more-link">
@@ -965,9 +964,7 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="tensorflow2入门">Tensorflow2入门</h1>
-<h2 id="前言">前言</h2>
-<ul>
+            <p><h1 id="Tensorflow2入门"><a href="#Tensorflow2入门" class="headerlink" title="Tensorflow2入门"></a>Tensorflow2入门</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
 <li>最近更新了TF2，发现以前的TF代码都跑不了了。改动是真的很大。并且在重写原来的代码的时候遇到了很多坑，在这里记录一下学习过程。</li>
 <li>没有安装TF2之前，我对其印象停留在TF2强行引入了keras。但是我上手的时候受到了震惊：placeholder与session都被删除了。。。</li>
 <li>官方有一个简单的代码升级脚本，但是其仅仅是把tf替换为tf.compat.v1，并没有太大的作用。</li>
@@ -1119,9 +1116,7 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="使用模型预测模型的准确率conformal-prediction-共型预测与mpp">使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP</h1>
-<h2 id="要解决的问题">要解决的问题</h2>
-<ul>
+            <p><h1 id="使用模型预测模型的准确率：Conformal-Prediction-共型预测-与MPP"><a href="#使用模型预测模型的准确率：Conformal-Prediction-共型预测-与MPP" class="headerlink" title="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP"></a>使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP</h1><h2 id="要解决的问题"><a href="#要解决的问题" class="headerlink" title="要解决的问题"></a>要解决的问题</h2><ul>
 <li>机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。</li>
 <li>同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新。而这一过程如果由人力来操作则是复杂甚至不现实的，因此最好是由自动化的算法实现。工业生产中的数据往往没有标注，因此传统的将预测结果和标注对比的方式并不能预测生产过程中机器学习模型的准确度。</li>
 <li>为了尝试解决以上这些问题，预测模型的准确率的方法被提出。</li>
@@ -1272,9 +1267,7 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="attention与transformer结构浅析">attention与Transformer结构浅析</h1>
-<h2 id="前言">前言</h2>
-<ul>
+            <p><h1 id="attention与Transformer结构浅析"><a href="#attention与Transformer结构浅析" class="headerlink" title="attention与Transformer结构浅析"></a>attention与Transformer结构浅析</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
 <li>attention机制除了“attention”之外，另一个关键词是“相似度”，阅读attention结构时记住“相似度”这个词。</li>
 <li>为了对attention模型提出的原因作出解释，我们首先分析RNN的一些特点。</li>
 </ul></p>
@@ -1424,7 +1417,7 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="rocpr和rec曲线aucaoc与肘部方法浅析">ROC、PR和REC曲线、AUC、AOC与肘部方法浅析</h1></p>
+            <p><h1 id="ROC、PR和REC曲线、AUC、AOC与肘部方法浅析"><a href="#ROC、PR和REC曲线、AUC、AOC与肘部方法浅析" class="headerlink" title="ROC、PR和REC曲线、AUC、AOC与肘部方法浅析"></a>ROC、PR和REC曲线、AUC、AOC与肘部方法浅析</h1></p>
             <p class="article-more-link">
                 <a href="/posts/机器学习/20191005-ROC_REC_PR.html#more">查看更多</a>
             </p>
@@ -1571,30 +1564,28 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="laravel-pop链简析">Laravel POP链简析</h1>
-<!-- TOC -->
+            <p><h1 id="Laravel-POP链简析"><a href="#Laravel-POP链简析" class="headerlink" title="Laravel POP链简析"></a>Laravel POP链简析</h1><!-- TOC -->
 <ul>
-<li><a href="#laravel-pop链简析">Laravel POP链简析</a>
-<ul>
+<li><a href="#laravel-pop链简析">Laravel POP链简析</a><ul>
 <li><a href="#前言">前言</a></li>
 <li><a href="#基本概念">基本概念</a></li>
-<li><a href="#0x00-symfony-pop链">0x00 Symfony POP链</a>
-<ul>
+<li><a href="#0x00-symfony-pop链">0x00 Symfony POP链</a><ul>
 <li><a href="#复现">复现</a></li>
 <li><a href="#pop链跟踪">POP链跟踪</a></li>
-</ul></li>
-<li><a href="#0x01-laravel-58-pop链">0x01 Laravel 5.8 POP链</a>
-<ul>
+</ul>
+</li>
+<li><a href="#0x01-laravel-58-pop链">0x01 Laravel 5.8 POP链</a><ul>
 <li><a href="#复现-1">复现</a></li>
 <li><a href="#pop链分析">POP链分析</a></li>
-</ul></li>
+</ul>
+</li>
 <li><a href="#总结">总结</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <!-- /TOC -->
-<h2 id="前言">前言</h2>
-<ul>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
 <li>POP链与PHP反序列化漏洞利用是密不可分的概念，反序列化漏洞相关的知识在网上有很多，这里不再赘述。本文主要对laravel的POP链简析。</li>
 </ul></p>
             <p class="article-more-link">
@@ -1743,9 +1734,7 @@
         
         <div class="article-entry" itemprop="articleBody">
         
-            <p><h1 id="docker中的php7代码调试">docker中的php7代码调试</h1>
-<h2 id="前言">前言</h2>
-<ul>
+            <p><h1 id="docker中的php7代码调试"><a href="#docker中的php7代码调试" class="headerlink" title="docker中的php7代码调试"></a>docker中的php7代码调试</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><ul>
 <li>最近想好好看看PHP反序列化POP链的构造，加上之前遇到的laravel的题，想把挖的坑埋了，于是开始漫长的环境搭建之旅。。。</li>
 <li>由于laravel是在PHP7环境下的框架，我在物理机上使用的phpstudy怎么都无法成功调试，最近又迷上docker的一次搭建万年使用并且随时还原的方便（使用爽，构建火葬场）；使用docker可以做到php版本灵活切换，在这里把遇到的坑和一些产物记录下来。</li>
 </ul></p>
@@ -2002,7 +1991,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2022 HACHp1<br>
+            &copy; 2023 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>
