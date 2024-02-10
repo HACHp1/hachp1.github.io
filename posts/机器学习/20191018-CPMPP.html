@@ -5,19 +5,19 @@
     
     <title>使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP要解决的问题 机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。 同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新。而这一过程">
+    <meta name="description" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP 要解决的问题  机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。 同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新">
 <meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP">
 <meta property="og:url" content="https://hachp1.github.io/posts/机器学习/20191018-CPMPP.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP要解决的问题 机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。 同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新。而这一过程">
-<meta property="og:image" content="http://159.75.52.53/img/thumbnails/ml.jpg">
-<meta property="og:updated_time" content="2021-10-29T11:39:32.037Z">
+<meta property="og:description" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP 要解决的问题  机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。 同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新">
+<meta property="og:image" content="http://129.204.230.95/img/thumbnails/ml.jpg">
+<meta property="og:updated_time" content="2024-02-10T12:30:19.245Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP">
-<meta name="twitter:description" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP要解决的问题 机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。 同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新。而这一过程">
-<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/ml.jpg">
+<meta name="twitter:description" content="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP 要解决的问题  机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。 同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新">
+<meta name="twitter:image" content="http://129.204.230.95/img/thumbnails/ml.jpg">
     
 
     
@@ -158,7 +158,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                45
+                46
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -192,7 +192,7 @@
         
             
 	
-		<img src="http://159.75.52.53/img/banner/ML.jpg" class="article-banner" />
+		<img src="http://129.204.230.95/img/banner/ML.jpg" class="article-banner" />
 	
 
 
@@ -246,46 +246,59 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="使用模型预测模型的准确率：Conformal-Prediction-共型预测-与MPP"><a href="#使用模型预测模型的准确率：Conformal-Prediction-共型预测-与MPP" class="headerlink" title="使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP"></a>使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP</h1><h2 id="要解决的问题"><a href="#要解决的问题" class="headerlink" title="要解决的问题"></a>要解决的问题</h2><ul>
+			<h1 id="使用模型预测模型的准确率conformal-prediction-共型预测与mpp">使用模型预测模型的准确率：Conformal Prediction (共型预测)与MPP</h1>
+<h2 id="要解决的问题">要解决的问题</h2>
+<ul>
 <li>机器学习模型的表现好坏多由训练数据与待预测的真实数据决定，模型的泛化力不同，根据收到的数据不同，预测效果也好坏不一。因此，如何选择适合的模型、如何预测模型是否会失效、模型的准确度如何，都是需要解决的问题。</li>
 <li>同时，真实数据多根据外界环境的变化而有敏锐的改变，因此机器学习模型也需要不断更新。而这一过程如果由人力来操作则是复杂甚至不现实的，因此最好是由自动化的算法实现。工业生产中的数据往往没有标注，因此传统的将预测结果和标注对比的方式并不能预测生产过程中机器学习模型的准确度。</li>
 <li>为了尝试解决以上这些问题，预测模型的准确率的方法被提出。</li>
 </ul>
 <a id="more"></a>
-<h2 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h2><ul>
+<h2 id="基本思想">基本思想</h2>
+<ul>
 <li>在原模型的基础上，使用另一个模型预测原模型在数据集上的准确率。</li>
 </ul>
-<h2 id="实现过程"><a href="#实现过程" class="headerlink" title="实现过程"></a>实现过程</h2><h3 id="共型预测-Conformal-Prediction（CP）的过程"><a href="#共型预测-Conformal-Prediction（CP）的过程" class="headerlink" title="共型预测 Conformal Prediction（CP）的过程"></a>共型预测 Conformal Prediction（CP）的过程</h3><ul>
+<h2 id="实现过程">实现过程</h2>
+<h3 id="共型预测-conformal-predictioncp的过程">共型预测 Conformal Prediction（CP）的过程</h3>
+<ul>
 <li>CP是一种使用模型预测准确率的方法，大致过程如下：</li>
 </ul>
-<ol>
+<ol type="1">
 <li>使用训练集训练出一个模型，此处简称原模型</li>
 <li>使用训练集的数据以及原模型对训练集作出的预测相结合作为训练集，训练出一个新的模型（此处称为CP模型）</li>
-<li>CP模型的输入特征可以与原模型的输入不同（两个模型的特征相关但不一定要完全一致）<br>CP模型的输出是1个置信度和1个不一致程度。CP模型直接使用新模型去拟合原模型输出是否与真实y值不一致的程度（如直接拟合差值的绝对值等，原论文中未出现明确的方法）<br>然后会通过公式将该值映射到0~1之间的值：</li>
+<li>CP模型的输入特征可以与原模型的输入不同（两个模型的特征相关但不一定要完全一致）<br>
+CP模型的输出是1个置信度和1个不一致程度。CP模型直接使用新模型去拟合原模型输出是否与真实y值不一致的程度（如直接拟合差值的绝对值等，原论文中未出现明确的方法） 然后会通过公式将该值映射到0~1之间的值：</li>
 </ol>
-<p>$$<br>p^y=\frac{|{i=1,…,n|α_i^y\geα_n^y}|}{n}，其中，||代表数量值<br>$$<br>可以看到，该映射将α按样本的数量等距映射到0~1之间，并且α的值越大，映射出的p值越小；因为α是不一致性，那么p值就用来衡量一致性的大小。</p>
-<ol start="4">
+<p><span class="math display">\[
+p^y=\frac{|\{i=1,...,n|α_i^y\geα_n^y\}|}{n}，其中，||代表数量值
+\]</span> 可以看到，该映射将α按样本的数量等距映射到0~1之间，并且α的值越大，映射出的p值越小；因为α是不一致性，那么p值就用来衡量一致性的大小。</p>
+<ol start="4" type="1">
 <li>经过以上步骤，我们得到了一个可以判断原模型是否准确的CP模型。</li>
 </ol>
 <ul>
 <li>CP模型输出了原模型是否可信的p值。</li>
 </ul>
-<h3 id="Model-Performance-Prediction（MPP）的过程"><a href="#Model-Performance-Prediction（MPP）的过程" class="headerlink" title="Model Performance Prediction（MPP）的过程"></a>Model Performance Prediction（MPP）的过程</h3><ul>
+<h3 id="model-performance-predictionmpp的过程">Model Performance Prediction（MPP）的过程</h3>
+<ul>
 <li>MPP是另一种使用模型预测准确率的方法，大致过程如下：</li>
 </ul>
-<ol>
+<ol type="1">
 <li>使用训练集训练出一个模型，此处简称原模型</li>
-<li>使用训练集的数据以及原模型对训练集作出的预测相结合作为训练集，训练出一个新的模型（此处称为MPP模型）<br>MPP模型的输入特征可以与原模型的输入不同（两个模型的特征相关但不一定要完全一致）<br>MPP模型的输出是0（预测错误）或1（预测正确），在这里有两种情况：分类与拟合，在分类时，原模型预测正确则向MPP模型输入<code>y=1</code>，反之输入<code>y=0</code>；在拟合时，人为规定一个阈值ε，如果原模型预测的结果与真实值相差小于阈值则判断为预测正确，向MPP模型输入<code>y=1</code>，反之输入<code>y=0</code></li>
+<li>使用训练集的数据以及原模型对训练集作出的预测相结合作为训练集，训练出一个新的模型（此处称为MPP模型）<br>
+MPP模型的输入特征可以与原模型的输入不同（两个模型的特征相关但不一定要完全一致）<br>
+MPP模型的输出是0（预测错误）或1（预测正确），在这里有两种情况：分类与拟合，在分类时，原模型预测正确则向MPP模型输入<code>y=1</code>，反之输入<code>y=0</code>；在拟合时，人为规定一个阈值ε，如果原模型预测的结果与真实值相差小于阈值则判断为预测正确，向MPP模型输入<code>y=1</code>，反之输入<code>y=0</code></li>
 <li>在拟合问题中，阈值ε的取值使用了空模型理论（the null model concept）与<a href="https://hachp1.github.io/posts/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/20191005-ROC_REC_PR.html">REC(Regression Error Characteristic)肘部法则</a>来确定。</li>
 <li>经过以上步骤，我们得到了一个可以判断原模型是否准确的MPP模型。</li>
 </ol>
 <ul>
 <li>可以看出MPP模型是一个<strong>二分类</strong>模型，其输出了原模型是否会预测正确的判断。</li>
 </ul>
-<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><ul>
+<h2 id="思考">思考</h2>
+<ul>
 <li>整体来看，使用新模型判断原模型是否正确或者预测原模型的准确率的做法与提升模型（boosting）有类似的地方。提升模型是使用新的模型预测原模型结果与真实结果的差值，并且可以迭代多次，典型的模型有GBDT、XGBoost、LGBM等。提升模型更像是直接使用新模型来整合到整个模型中为最后的结果做出贡献。而结果预测模型则是输出一个供人作参考的值，用来对原模型作出评判。</li>
 </ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<h2 id="参考">参考</h2>
+<ul>
 <li><a href="https://arxiv.org/pdf/1902.08638.pdf" target="_blank" rel="external">MPP：Model Performance Prediction</a></li>
 <li><a href="https://zhuanlan.zhihu.com/p/66403673" target="_blank" rel="external">OpML 2019提前看：模型表现预测与分布式机器学习</a></li>
 <li><a href="https://pdfs.semanticscholar.org/2acd/f559300dd37f235642c0dbdbfe1d7118b250.pdf" target="_blank" rel="external">Regression Error Characteristic Curves</a></li>
@@ -436,10 +449,29 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/posts/杂文/20240210-thinking2.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/cat.jpg)" alt="江城子 甲辰随想" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/杂文/">杂文</a></p>
+                            <p class="item-title"><a href="/posts/杂文/20240210-thinking2.html" class="title">江城子 甲辰随想</a></p>
+                            <p class="item-date"><time datetime="2024-02-10T10:22:11.000Z" itemprop="datePublished">2024-02-10</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/posts/静态分析/20220723-graph-sa-1.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="基于图数据库的静态分析技术初探（一）" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/planet_red.png)" alt="基于图数据库的静态分析技术初探（一）" class="thumbnail-image"></span>
     
 </a>
 
@@ -458,7 +490,7 @@
                             <a href="/posts/Web安全/20220414-spring4shell.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Spring4Shell简析（CVE-2022-22965）" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/eggs.jpg)" alt="Spring4Shell简析（CVE-2022-22965）" class="thumbnail-image"></span>
     
 </a>
 
@@ -477,7 +509,7 @@
                             <a href="/posts/Web安全/20220407-cc_analysis.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Commons Collections链分析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/planet_red.png)" alt="Commons Collections链分析" class="thumbnail-image"></span>
     
 </a>
 
@@ -496,7 +528,7 @@
                             <a href="/posts/Web安全/20220325-fastjson.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Fastjson 1.2.24反序列化漏洞浅析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/eggs.jpg)" alt="Fastjson 1.2.24反序列化漏洞浅析" class="thumbnail-image"></span>
     
 </a>
 
@@ -509,25 +541,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20220307-log4shell.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Log4shell（CVE-2021-44228）调试分析" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20220307-log4shell.html" class="title">Log4shell（CVE-2021-44228）调试分析</a></p>
-                            <p class="item-date"><time datetime="2022-03-07T09:33:49.000Z" itemprop="datePublished">2022-03-07</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -537,7 +550,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -546,7 +559,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a> <a href="/tags/静态分析/" style="font-size: 10px;">静态分析</a>
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 11.67px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a> <a href="/tags/静态分析/" style="font-size: 10px;">静态分析</a>
         </div>
     </div>
 
@@ -587,7 +600,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2023 HACHp1<br>
+            &copy; 2024 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

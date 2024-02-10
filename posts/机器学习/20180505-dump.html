@@ -5,19 +5,19 @@
     
     <title>杂·sklearn 保存训练结果 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="一、使用joblib保存结果代码如下：123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnClass">
+    <meta name="description" content="一、使用joblib保存结果 代码如下： 123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnCl">
 <meta name="keywords" content="机器学习">
 <meta property="og:type" content="article">
 <meta property="og:title" content="杂·sklearn 保存训练结果">
 <meta property="og:url" content="https://hachp1.github.io/posts/机器学习/20180505-dump.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="一、使用joblib保存结果代码如下：123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnClass">
-<meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
-<meta property="og:updated_time" content="2021-10-29T11:39:32.225Z">
+<meta property="og:description" content="一、使用joblib保存结果 代码如下： 123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnCl">
+<meta property="og:image" content="http://129.204.230.95/img/thumbnails/planet_red.png">
+<meta property="og:updated_time" content="2024-02-10T12:30:19.333Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="杂·sklearn 保存训练结果">
-<meta name="twitter:description" content="一、使用joblib保存结果代码如下：123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnClass">
-<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
+<meta name="twitter:description" content="一、使用joblib保存结果 代码如下： 123456789from sklearn.externals import joblib#此处假设已训练好的模型为learnClassifier#保存训练模型joblib.dump(learnClassifier, &apos;learnClassifier.model&apos;)#载入训练模型learnClassifier = joblib.load(&apos;learnCl">
+<meta name="twitter:image" content="http://129.204.230.95/img/thumbnails/planet_red.png">
     
 
     
@@ -158,7 +158,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                45
+                46
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -192,7 +192,7 @@
         
             
 	
-		<img src="http://159.75.52.53/img/banner/Eur3.jpg" class="article-banner" />
+		<img src="http://129.204.230.95/img/banner/Eur3.jpg" class="article-banner" />
 	
 
 
@@ -246,9 +246,13 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h2 id="一、使用joblib保存结果"><a href="#一、使用joblib保存结果" class="headerlink" title="一、使用joblib保存结果"></a>一、使用joblib保存结果</h2><p>代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.externals <span class="keyword">import</span> joblib</div><div class="line"></div><div class="line"><span class="comment">#此处假设已训练好的模型为learnClassifier</span></div><div class="line"></div><div class="line"><span class="comment">#保存训练模型</span></div><div class="line">joblib.dump(learnClassifier, <span class="string">'learnClassifier.model'</span>)</div><div class="line"></div><div class="line"><span class="comment">#载入训练模型</span></div><div class="line">learnClassifier = joblib.load(<span class="string">'learnClassifier.model'</span>)</div></pre></td></tr></table></figure></p>
+			<h2 id="一使用joblib保存结果">一、使用joblib保存结果</h2>
+<p>代码如下： <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> sklearn.externals <span class="keyword">import</span> joblib</div><div class="line"></div><div class="line"><span class="comment">#此处假设已训练好的模型为learnClassifier</span></div><div class="line"></div><div class="line"><span class="comment">#保存训练模型</span></div><div class="line">joblib.dump(learnClassifier, <span class="string">'learnClassifier.model'</span>)</div><div class="line"></div><div class="line"><span class="comment">#载入训练模型</span></div><div class="line">learnClassifier = joblib.load(<span class="string">'learnClassifier.model'</span>)</div></pre></td></tr></table></figure></p>
 <a id="more"></a>
-<h2 id="二、使用pickle保存结果"><a href="#二、使用pickle保存结果" class="headerlink" title="二、使用pickle保存结果"></a>二、使用pickle保存结果</h2><p>与joblib相比，pickle实际上是序列化和反序列化的函数。<br>注：pickle函数加s表示在bytes层面（程序变量中）的操作，而不加s的则是对文件的操作。<br>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#保存训练模型</div><div class="line">dump=pickle.dumps(classifier)</div><div class="line">with open(&apos;classifier_dump.pickle&apos;,&apos;w&apos;) as f:</div><div class="line">    f.write(dump)</div><div class="line">#载入训练模型</div><div class="line">with open(&apos;classifier_dump.pickle&apos;,&apos;r&apos;) as f:</div><div class="line">    classifier=pickle.load(f.read())</div></pre></td></tr></table></figure></p>
+<h2 id="二使用pickle保存结果">二、使用pickle保存结果</h2>
+<p>与joblib相比，pickle实际上是序列化和反序列化的函数。<br>
+注：pickle函数加s表示在bytes层面（程序变量中）的操作，而不加s的则是对文件的操作。<br>
+代码如下： <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">#保存训练模型</div><div class="line">dump=pickle.dumps(classifier)</div><div class="line">with open(&apos;classifier_dump.pickle&apos;,&apos;w&apos;) as f:</div><div class="line">    f.write(dump)</div><div class="line">#载入训练模型</div><div class="line">with open(&apos;classifier_dump.pickle&apos;,&apos;r&apos;) as f:</div><div class="line">    classifier=pickle.load(f.read())</div></pre></td></tr></table></figure></p>
 
         
         </div>
@@ -395,10 +399,29 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/posts/杂文/20240210-thinking2.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/cat.jpg)" alt="江城子 甲辰随想" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/杂文/">杂文</a></p>
+                            <p class="item-title"><a href="/posts/杂文/20240210-thinking2.html" class="title">江城子 甲辰随想</a></p>
+                            <p class="item-date"><time datetime="2024-02-10T10:22:11.000Z" itemprop="datePublished">2024-02-10</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/posts/静态分析/20220723-graph-sa-1.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="基于图数据库的静态分析技术初探（一）" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/planet_red.png)" alt="基于图数据库的静态分析技术初探（一）" class="thumbnail-image"></span>
     
 </a>
 
@@ -417,7 +440,7 @@
                             <a href="/posts/Web安全/20220414-spring4shell.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Spring4Shell简析（CVE-2022-22965）" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/eggs.jpg)" alt="Spring4Shell简析（CVE-2022-22965）" class="thumbnail-image"></span>
     
 </a>
 
@@ -436,7 +459,7 @@
                             <a href="/posts/Web安全/20220407-cc_analysis.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Commons Collections链分析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/planet_red.png)" alt="Commons Collections链分析" class="thumbnail-image"></span>
     
 </a>
 
@@ -455,7 +478,7 @@
                             <a href="/posts/Web安全/20220325-fastjson.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Fastjson 1.2.24反序列化漏洞浅析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/eggs.jpg)" alt="Fastjson 1.2.24反序列化漏洞浅析" class="thumbnail-image"></span>
     
 </a>
 
@@ -468,25 +491,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20220307-log4shell.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Log4shell（CVE-2021-44228）调试分析" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20220307-log4shell.html" class="title">Log4shell（CVE-2021-44228）调试分析</a></p>
-                            <p class="item-date"><time datetime="2022-03-07T09:33:49.000Z" itemprop="datePublished">2022-03-07</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -496,7 +500,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -505,7 +509,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a> <a href="/tags/静态分析/" style="font-size: 10px;">静态分析</a>
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 11.67px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a> <a href="/tags/静态分析/" style="font-size: 10px;">静态分析</a>
         </div>
     </div>
 
@@ -546,7 +550,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2023 HACHp1<br>
+            &copy; 2024 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

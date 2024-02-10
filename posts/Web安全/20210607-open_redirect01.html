@@ -5,19 +5,19 @@
     
     <title>由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS  由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS 涉及到的知识点 漏洞点分析 fileSystem.Open的绕过 fi.IsDir()的绕过 获取flag的payload 重定向为相对路径下的漏洞 参考资料">
+    <meta name="description" content="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS   由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS  涉及到的知识点 漏洞点分析 fileSystem.Open的绕过 fi.IsDir()的绕过 获取flag的payload 重定向为相对路径下的漏洞 参考资料">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20210607-open_redirect01.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS  由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS 涉及到的知识点 漏洞点分析 fileSystem.Open的绕过 fi.IsDir()的绕过 获取flag的payload 重定向为相对路径下的漏洞 参考资料">
-<meta property="og:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
-<meta property="og:updated_time" content="2021-10-29T11:39:32.342Z">
+<meta property="og:description" content="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS   由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS  涉及到的知识点 漏洞点分析 fileSystem.Open的绕过 fi.IsDir()的绕过 获取flag的payload 重定向为相对路径下的漏洞 参考资料">
+<meta property="og:image" content="http://129.204.230.95/img/thumbnails/eggs.jpg">
+<meta property="og:updated_time" content="2024-02-10T12:30:19.382Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS">
-<meta name="twitter:description" content="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS  由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS 涉及到的知识点 漏洞点分析 fileSystem.Open的绕过 fi.IsDir()的绕过 获取flag的payload 重定向为相对路径下的漏洞 参考资料">
-<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/eggs.jpg">
+<meta name="twitter:description" content="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS   由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS  涉及到的知识点 漏洞点分析 fileSystem.Open的绕过 fi.IsDir()的绕过 获取flag的payload 重定向为相对路径下的漏洞 参考资料">
+<meta name="twitter:image" content="http://129.204.230.95/img/thumbnails/eggs.jpg">
     
 
     
@@ -158,7 +158,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                45
+                46
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -192,7 +192,7 @@
         
             
 	
-		<img src="http://159.75.52.53/img/banner/Eur1.jpg" class="article-banner" />
+		<img src="http://129.204.230.95/img/banner/Eur1.jpg" class="article-banner" />
 	
 
 
@@ -246,9 +246,11 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS"><a href="#由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS" class="headerlink" title="由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS"></a>由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</h1><!-- TOC -->
+			<h1 id="由一道ctf学习相对路径重定向引发的开放重定向津门杯2021-gooss">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</h1>
+<!-- TOC -->
 <ul>
-<li><a href="#由一道ctf学习相对路径重定向引发的开放重定向津门杯2021-gooss">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a><ul>
+<li><a href="#由一道ctf学习相对路径重定向引发的开放重定向津门杯2021-gooss">由一道CTF学习相对路径重定向引发的开放重定向：津门杯2021-GoOSS</a>
+<ul>
 <li><a href="#涉及到的知识点">涉及到的知识点</a></li>
 <li><a href="#漏洞点分析">漏洞点分析</a></li>
 <li><a href="#filesystemopen的绕过"><code>fileSystem.Open</code>的绕过</a></li>
@@ -256,37 +258,41 @@
 <li><a href="#获取flag的payload">获取flag的payload</a></li>
 <li><a href="#重定向为相对路径下的漏洞">重定向为相对路径下的漏洞</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-<h2 id="涉及到的知识点"><a href="#涉及到的知识点" class="headerlink" title="涉及到的知识点"></a>涉及到的知识点</h2><ul>
+<h2 id="涉及到的知识点">涉及到的知识点</h2>
+<ul>
 <li>文件路径解析过程和URL的差异</li>
 <li>相对路径重定向</li>
 <li>开放重定向</li>
 <li>题外话：对象存储服务(Object Storage Service,简称OSS)；本题的OSS只是一个幌子。</li>
 </ul>
-<h2 id="漏洞点分析"><a href="#漏洞点分析" class="headerlink" title="漏洞点分析"></a>漏洞点分析</h2><ul>
+<h2 id="漏洞点分析">漏洞点分析</h2>
+<ul>
 <li>在文件中间件处，存在一处相对路径重定向的操作：<code>c.Redirect(302, c.Request.URL.String()+&quot;/&quot;)</code>，这里的开发目的很好理解：如果用户输入的为路径，但又没有加<code>/</code>，则使用相对重定向（相对重定向是关键，在后文会讲）将url定向到路径（添加一个<code>/</code>）</li>
 <li>但是利用时有3个条件：<code>fileSystem.Open(c.Request.URL.String())</code>成功，<code>fi.IsDir()</code>为true，并且路径不以<code>/</code>结尾：</li>
 </ul>
 <figure class="highlight go"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">fileMidderware</span><span class="params">(c *gin.Context)</span></span> &#123;</div><div class="line">	...</div><div class="line">	f, err := fileSystem.Open(c.Request.URL.String())</div><div class="line"></div><div class="line">	<span class="keyword">if</span> f == <span class="literal">nil</span> &#123;</div><div class="line">		c.Next()</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	...</div><div class="line"></div><div class="line">	<span class="keyword">if</span> fi.IsDir() &#123;</div><div class="line">		<span class="keyword">if</span> !strings.HasSuffix(c.Request.URL.String(), <span class="string">"/"</span>) &#123;</div><div class="line">			c.Redirect(<span class="number">302</span>, c.Request.URL.String()+<span class="string">"/"</span>)</div><div class="line">			<span class="comment">//go的302定向可以不输入协议(http:)，即 //127.0.0.1/?file=xxx</span></div></pre></td></tr></table></figure>
 <p>前两个条件在绕过时充分体现了Orange大表哥的“不同协议解析差异”问题，此处为文件路径和url解析不同的问题。</p>
-<h2 id="fileSystem-Open的绕过"><a href="#fileSystem-Open的绕过" class="headerlink" title="fileSystem.Open的绕过"></a><code>fileSystem.Open</code>的绕过</h2><p>要触发SSRF，首先要使fileSystem.Open(path)正确返回一个文件夹，fileSystem.Open支持<strong>虚拟路径</strong>，可以用<code>../</code>绕过，在讲绕过方法前，我们先看一下文件路径解析的几种情况（可以体会一下和url解析的差异）：</p>
-<ol>
+<h2 id="filesystem.open的绕过"><code>fileSystem.Open</code>的绕过</h2>
+<p>要触发SSRF，首先要使fileSystem.Open(path)正确返回一个文件夹，fileSystem.Open支持<strong>虚拟路径</strong>，可以用<code>../</code>绕过，在讲绕过方法前，我们先看一下文件路径解析的几种情况（可以体会一下和url解析的差异）：</p>
+<ol type="1">
 <li><code>/../</code>：返回上一层</li>
 <li><code>/flag/</code>：flag文件夹</li>
 <li><code>/flag&amp;../</code>：一个名为<code>flag&amp;..</code>的路径</li>
 <li><code>/127.0.0.1:1234/</code>：一个名为<code>127.0.0.1:1234</code>的路径</li>
 </ol>
 <p>理解了这四种解析，就可以很容易的理解这道题的绕过方法了，此题有两种绕过方法：</p>
-<ol>
+<ol type="1">
 <li><code>{&quot;url&quot;:&quot;http://127.0.0.1:1234//127.0.0.1?file=../../../../../flag&amp;../..&quot;}</code></li>
-<li><code>{&quot;url&quot;:&quot;http://127.0.0.1:1234//159.75.52.53/..&quot;}</code></li>
+<li><code>{&quot;url&quot;:&quot;http://127.0.0.1:1234//129.204.230.95/..&quot;}</code></li>
 </ol>
-<h2 id="fi-IsDir-的绕过"><a href="#fi-IsDir-的绕过" class="headerlink" title="fi.IsDir()的绕过"></a><code>fi.IsDir()</code>的绕过</h2><p>直接在路径最后加上<code>/..</code>就会被识别为路径；此外，使用<code>/</code>也会被识别为路径，但本题由于需要结尾不出现<code>/</code>所以不能用。</p>
-<h2 id="获取flag的payload"><a href="#获取flag的payload" class="headerlink" title="获取flag的payload"></a>获取flag的payload</h2><p>以json格式发送请求：<code>Content-Type: application/json</code>，最终可以有两种利用方法拿flag（直接打127和利用恶意服务器进行重定向）：</p>
+<h2 id="fi.isdir的绕过"><code>fi.IsDir()</code>的绕过</h2>
+<p>直接在路径最后加上<code>/..</code>就会被识别为路径；此外，使用<code>/</code>也会被识别为路径，但本题由于需要结尾不出现<code>/</code>所以不能用。</p>
+<h2 id="获取flag的payload">获取flag的payload</h2>
+<p>以json格式发送请求：<code>Content-Type: application/json</code>，最终可以有两种利用方法拿flag（直接打127和利用恶意服务器进行重定向）：</p>
 <ul>
 <li>wp1:</li>
 </ul>
@@ -295,7 +301,8 @@
 <li>wp2（xx为自己的302跳转的恶意VPS）:</li>
 </ul>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> /vul</div><div class="line">&#123;<span class="attr">"url"</span>:<span class="string">"http://127.0.0.1:1234//xx.xx.xx.xx/.."</span>&#125;</div></pre></td></tr></table></figure>
-<h2 id="重定向为相对路径下的漏洞"><a href="#重定向为相对路径下的漏洞" class="headerlink" title="重定向为相对路径下的漏洞"></a>重定向为相对路径下的漏洞</h2><p>跳脱题目本身，我们来看看真实情况下的开发动机和案例。</p>
+<h2 id="重定向为相对路径下的漏洞">重定向为相对路径下的漏洞</h2>
+<p>跳脱题目本身，我们来看看真实情况下的开发动机和案例。</p>
 <p>在RFC标准中，302重定向如果没有协议信息，则为相对重定向：<a href="https://datatracker.ietf.org/doc/html/rfc7231#section-7.1.2" target="_blank" rel="external">Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content</a>：</p>
 <p>例：</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">Location</span>: /People.html#tim</div></pre></td></tr></table></figure>
@@ -304,7 +311,8 @@
 <p>这样很容易造成开放重定向：</p>
 <p>就如本题一样，为了有更好的用户体验，很多框架都有<strong>自动处理无斜杠的路径</strong>的操作：<code>xxx.com/123</code>被重定向至<code>xxx.com/123/</code>（使用相对重定向<code>/123</code>-&gt;<code>/123/</code>）。</p>
 <p>然而如果url为<code>xxx.com//evil.com</code>，如果没有过滤，就会被重定向至<code>//evil.com/</code>，从而从相对路径逃逸到绝对路径。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<h2 id="参考资料">参考资料</h2>
+<ul>
 <li><a href="https://xz.aliyun.com/t/3302" target="_blank" rel="external">Django URL跳转漏洞分析（CVE-2018-14574 ）</a></li>
 <li><a href="https://github.com/go-macaron/macaron/issues/198" target="_blank" rel="external">vulnerability: open redirect in static handler</a></li>
 </ul>
@@ -454,10 +462,29 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/posts/杂文/20240210-thinking2.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/cat.jpg)" alt="江城子 甲辰随想" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/杂文/">杂文</a></p>
+                            <p class="item-title"><a href="/posts/杂文/20240210-thinking2.html" class="title">江城子 甲辰随想</a></p>
+                            <p class="item-date"><time datetime="2024-02-10T10:22:11.000Z" itemprop="datePublished">2024-02-10</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/posts/静态分析/20220723-graph-sa-1.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="基于图数据库的静态分析技术初探（一）" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/planet_red.png)" alt="基于图数据库的静态分析技术初探（一）" class="thumbnail-image"></span>
     
 </a>
 
@@ -476,7 +503,7 @@
                             <a href="/posts/Web安全/20220414-spring4shell.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Spring4Shell简析（CVE-2022-22965）" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/eggs.jpg)" alt="Spring4Shell简析（CVE-2022-22965）" class="thumbnail-image"></span>
     
 </a>
 
@@ -495,7 +522,7 @@
                             <a href="/posts/Web安全/20220407-cc_analysis.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Commons Collections链分析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/planet_red.png)" alt="Commons Collections链分析" class="thumbnail-image"></span>
     
 </a>
 
@@ -514,7 +541,7 @@
                             <a href="/posts/Web安全/20220325-fastjson.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Fastjson 1.2.24反序列化漏洞浅析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/eggs.jpg)" alt="Fastjson 1.2.24反序列化漏洞浅析" class="thumbnail-image"></span>
     
 </a>
 
@@ -527,25 +554,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20220307-log4shell.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Log4shell（CVE-2021-44228）调试分析" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20220307-log4shell.html" class="title">Log4shell（CVE-2021-44228）调试分析</a></p>
-                            <p class="item-date"><time datetime="2022-03-07T09:33:49.000Z" itemprop="datePublished">2022-03-07</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -555,7 +563,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -564,7 +572,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a> <a href="/tags/静态分析/" style="font-size: 10px;">静态分析</a>
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 11.67px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a> <a href="/tags/静态分析/" style="font-size: 10px;">静态分析</a>
         </div>
     </div>
 
@@ -605,7 +613,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2023 HACHp1<br>
+            &copy; 2024 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>

